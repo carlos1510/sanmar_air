@@ -70,6 +70,15 @@
                                 </div>
                             </div>
                             <div class="row">
+                                <div class="col-md-3">
+                                    <div class="mb-3 ">
+                                        <label for="choices-single-default" class="form-label ">Fecha de Cita:</label>
+                                        <input type="text" class="form-control" id="validationTooltip03" placeholder="City" required>
+                                        <div class="invalid-tooltip">
+                                            Please provide a valid city.
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="col-md-6">
                                     <div class="mb-3 ">
                                         <label for="choices-single-default" class="form-label ">Empresa</label>
@@ -85,10 +94,86 @@
                                 </div>
 
                             </div>
-                            <button class="btn btn-primary" type="submit"><i class="fas fa-save"></i> Guardar</button>
-                            <button class="btn btn-warning" type="submit"><i class="fas fa-save"></i> Limpiar</button>
-                            <button class="btn btn-danger" type="submit"><i class="fas fa-save"></i> Salir</button>
                         </form>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-primary" type="submit"><i class="fas fa-save"></i> Guardar</button>
+                        <button class="btn btn-warning" type="submit"><i class="fas fa-brain"></i> Limpiar</button>
+                        <button class="btn btn-danger" type="submit"><i class="fas fa-recycle"></i> Salir</button>
+                    </div>
+                </div>
+                <!-- end card -->
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xl-5">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Motivo de Rechazar Envio</h4>
+                    </div>
+                    <div class="card-body">
+
+                        <form class="needs-validation" novalidate>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="mb-3 ">
+                                        <label for="choices-single-default" class="form-label ">Descripcion del Motivo</label>
+                                        <textarea class="form-control"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-primary" type="submit"><i class="fas fa-save"></i> Guardar</button>
+                        <button class="btn btn-danger" type="submit"><i class="fas fa-recycle"></i> Salir</button>
+                    </div>
+                </div>
+                <!-- end card -->
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Confirmar la Fecha y Hora Programada</h4>
+                    </div>
+                    <div class="card-body">
+
+                        <form class="needs-validation" novalidate>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="mb-3 position-relative">
+                                        <label class="form-label" for="validationTooltipUsername">Fecha: </label>
+                                        <input type="text" class="form-control" id="validationTooltipUsername" placeholder="Username" aria-describedby="validationTooltipUsernamePrepend" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-3 position-relative">
+                                        <label class="form-label" for="validationTooltipUsername">Hora: </label>
+                                        <input type="text" class="form-control" id="validationTooltipUsername" placeholder="Username" aria-describedby="validationTooltipUsernamePrepend" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-3 position-relative">
+                                        <label class="form-label" for="validationTooltipUsername">Costo: </label>
+                                        <input type="text" class="form-control" id="validationTooltipUsername" placeholder="Username" aria-describedby="validationTooltipUsernamePrepend" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-3 position-relative">
+                                        <label class="form-label" for="validationTooltipUsername">Nro. Boleto: </label>
+                                        <input type="text" class="form-control" id="validationTooltipUsername" placeholder="Username" aria-describedby="validationTooltipUsernamePrepend" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-primary" type="submit"><i class="fas fa-save"></i> Guardar</button>
+                        <button class="btn btn-danger" type="submit"><i class="fas fa-recycle"></i> Salir</button>
                     </div>
                 </div>
                 <!-- end card -->
@@ -116,17 +201,19 @@
                             <table class="table table-bordered">
                                 <thead>
                                 <th>#</th>
-                                <th>Tipo Doc.</th>
+                                <th>Estado</th>
                                 <th>Nro. Doc.</th>
                                 <th>Nombre del Paciente</th>
                                 <th>HC</th>
-                                <th>Sexo</th>
-                                <th>Telefono</th>
-                                <th>Fecha Nac.</th>
+                                <th>Fecha de Cita</th>
+                                <th>Empresa</th>
+                                <th>Fecha y Hora Programada</th>
+                                <th>Costo</th>
                                 <th>Acción</th>
                                 </thead>
                                 <tbody>
                                 <tr>
+                                    <td></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
