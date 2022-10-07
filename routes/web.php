@@ -15,10 +15,10 @@ use App\Http\Controllers\HomeController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'App\Http\Controllers\HomeController@viewLogin');
+Route::get('/home', 'App\Http\Controllers\HomeController@viewHome');
 Route::get('/paciente', 'App\Http\Controllers\HomeController@viewPatient');
 Route::get('/empresa', 'App\Http\Controllers\HomeController@viewCompany');
 Route::get('/usuario', 'App\Http\Controllers\HomeController@viewUser');
 Route::get('/seguimiento', 'App\Http\Controllers\HomeController@viewTracing');
+Route::get('/reporte_seguimiento', 'App\Http\Controllers\HomeController@viewReportTracing');

@@ -27,6 +27,40 @@ class HomeController extends Controller
     }
 
     /**
+     * Login
+     * @param Request $request
+     * @return void
+     */
+    public function viewLogin(Request $request)
+    {
+        /*$id = Session::get('idusuario');
+        if(isset($id)){
+            Session::put('menu_primario', 'configuracion');
+            return view('configuracion/importar');
+        }else{
+            return redirect('/');
+        }*/
+        return view('auth.login');
+    }
+
+    /**
+     * Login
+     * @param Request $request
+     * @return void
+     */
+    public function viewHome(Request $request)
+    {
+        /*$id = Session::get('idusuario');
+        if(isset($id)){
+            Session::put('menu_primario', 'configuracion');
+            return view('configuracion/importar');
+        }else{
+            return redirect('/');
+        }*/
+        return view('welcome');
+    }
+
+    /**
      * Vista Paciente
      * @param Request $request
      * @return void
@@ -92,5 +126,22 @@ class HomeController extends Controller
             return redirect('/');
         }*/
         return view('moduls.tracing.tracing');
+    }
+
+    /**
+     * Vista Reporte Seguimiento
+     * @param Request $request
+     * @return void
+     */
+    public function viewReportTracing(Request $request)
+    {
+        /*$id = Session::get('idusuario');
+        if(isset($id)){
+            Session::put('menu_primario', 'configuracion');
+            return view('configuracion/importar');
+        }else{
+            return redirect('/');
+        }*/
+        return view('moduls.report.reportTracing');
     }
 }

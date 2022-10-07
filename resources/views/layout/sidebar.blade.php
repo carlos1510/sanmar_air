@@ -9,7 +9,7 @@
                 <li class="menu-title" data-key="t-menu">Menu</li>
 
                 <li>
-                    <a href="{{ url('/') }}">
+                    <a href="{{ url('home') }}">
                         <i data-feather="home"></i>
                         <span data-key="t-dashboard">Inicio</span>
                     </a>
@@ -43,7 +43,7 @@
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li>
-                            <a href="javascript: void(0);">
+                            <a href="{{ url('reporte_seguimiento') }}">
                                 <span><i class="far fa-circle"></i> Seguimiento</span>
                             </a>
                         </li>

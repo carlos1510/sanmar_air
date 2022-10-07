@@ -22,69 +22,88 @@
         </div>
 
         <div class="row">
-            <div class="col-xl-6">
+            <div class="col-xl-12">
                 <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">Bootstrap Validation (Tooltips)</h4>
-                        <p class="card-title-desc">If your form layout allows it, you can swap the <code>.{valid|invalid}-feedback</code> classes for <code>.{valid|invalid}-tooltip</code> classes to display validation feedback in a styled tooltip.</p>
+                    <div class="card-header align-items-center d-flex">
+                        <h4 class="card-title mb-0 flex-grow-1">Lista de Seguimientos</h4>
+                        <div class="flex-shrink-0">
+                            <ul class="nav justify-content-end nav-pills card-header-pills" role="tablist">
+                                <li class="nav-item">
+                                    <button type="button" class="btn btn-primary"><i class="fas fa-plus"></i> Nuevo</button>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="card-body">
-
-                        <form class="needs-validation" novalidate>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="mb-3 position-relative">
-                                        <label class="form-label" for="validationTooltip01">First name</label>
-                                        <input type="text" class="form-control" id="validationTooltip01" placeholder="First name" value="Mark" required>
-                                        <div class="valid-tooltip">
-                                            Looks good!
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="mb-3 position-relative">
-                                        <label class="form-label" for="validationTooltip02">Last name</label>
-                                        <input type="text" class="form-control" id="validationTooltip02" placeholder="Last name" value="Otto" required>
-                                        <div class="valid-tooltip">
-                                            Looks good!
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="mb-3 position-relative">
-                                        <label class="form-label" for="validationTooltipUsername">Username</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text" id="validationTooltipUsernamePrepend">@</span>
-                                            <input type="text" class="form-control" id="validationTooltipUsername" placeholder="Username" aria-describedby="validationTooltipUsernamePrepend" required>
-                                            <div class="invalid-tooltip">
-                                                Please choose a unique and valid username.
-                                            </div>
-                                        </div>
-                                    </div>
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label>Fecha Inicio: </label>
+                                    <input type="text" class="form-control" />
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3 position-relative">
-                                        <label class="form-label" for="validationTooltip03">City</label>
-                                        <input type="text" class="form-control" id="validationTooltip03" placeholder="City" required>
-                                        <div class="invalid-tooltip">
-                                            Please provide a valid city.
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3 position-relative">
-                                        <label class="form-label" for="validationTooltip04">State</label>
-                                        <input type="text" class="form-control" id="validationTooltip04" placeholder="State" required>
-                                        <div class="invalid-tooltip">
-                                            Please provide a valid state.
-                                        </div>
-                                    </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label>Fecha Final: </label>
+                                    <input type="text" class="form-control" />
                                 </div>
                             </div>
-                            <button class="btn btn-primary" type="submit">Submit form</button>
-                        </form>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label>Destino: </label>
+                                    <select class="form-control" data-trigger name="choices-single-default"
+                                            id="choices-single-default"
+                                            placeholder="This is a search placeholder">
+                                        <option value="">---</option>
+                                        <option value="Choice 1">Choice 1</option>
+                                        <option value="Choice 2">Choice 2</option>
+                                        <option value="Choice 3">Choice 3</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label>Empresa: </label>
+                                    <select class="form-control" data-trigger name="choices-single-default"
+                                            id="choices-single-default"
+                                            placeholder="This is a search placeholder">
+                                        <option value="">---</option>
+                                        <option value="Choice 1">Choice 1</option>
+                                        <option value="Choice 2">Choice 2</option>
+                                        <option value="Choice 3">Choice 3</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <hr/>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Buscar</button>
+                        <button type="button" class="btn btn-success"><i class="fas fa-file-excel"></i> Exportar</button>
+                    </div>
+                    <div class="card-footer p-0">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                <th>#</th>
+                                <th>Unidad</th>
+                                <th>Codigo</th>
+                                <th>Descripcion</th>
+                                <th>Cant.</th>
+                                <th>Prec. Unit.</th>
+                                <th>Total</th>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 <!-- end card -->

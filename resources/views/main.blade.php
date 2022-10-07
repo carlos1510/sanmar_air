@@ -40,7 +40,6 @@
     @include('layout.sidebar')
 
     <div class="main-content">
-
         <div class="page-content">
             @yield('content')
         </div>
@@ -205,9 +204,15 @@
 
 <script src="{{ asset('assets/js/app.js') }}"></script>
 
+<script src="{{ asset('js/angular/angular.min.js') }}"></script>
+<script src="{{ asset('js/angular/app.js') }}"></script>
+<script src="{{ asset('js/angular/services.js') }}"></script>
+{{--<script src="{{ asset('js/angular/angular-datatables.min.js') }}"></script>--}}
+<script src="{{ asset('js/angular/ng-alertify.js') }}"></script>
+<script src="{{ asset('js/accesorios.js') }}"></script>
+<script src="{{ asset('js/numeric.js') }}"></script>
+
 </body>
 
-
-<!-- Mirrored from themesbrand.com/minia/layouts/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 03 Oct 2022 17:20:52 GMT -->
 </html>
 

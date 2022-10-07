@@ -1,5 +1,9 @@
 @extends('main')
 
+@section('title')
+    Inicio
+@endsection
+
 @section('content')
     <div class="container-fluid">
 
