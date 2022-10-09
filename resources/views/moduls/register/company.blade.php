@@ -1,5 +1,13 @@
 @extends('main')
 
+@section('title')
+    Empresa
+@endsection
+
+@section('bodycontroller')
+    id='companyController' ng-controller='companyController'
+@endsection
+
 @section('content')
     <div class="container-fluid">
 
@@ -20,7 +28,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row" ng-show="estado_registro == 1">
             <div class="col-xl-12">
                 <div class="card">
                     <div class="card-header">
@@ -32,7 +40,7 @@
                                 <div class="col-md-3">
                                     <div class="mb-3 position-relative">
                                         <label class="form-label" for="validationTooltip01">RUC.:</label>
-                                        <input type="text" class="form-control" id="validationTooltip01" placeholder="First name" value="Mark" required>
+                                        <input type="text" class="form-control" id="validationTooltip01" placeholder="" ng-model="registro.ruc" required>
                                         <div class="valid-tooltip">
                                             Looks good!
                                         </div>
@@ -41,7 +49,7 @@
                                 <div class="col-md-6">
                                     <div class="mb-3 position-relative">
                                         <label class="form-label" for="validationTooltip02">RAZON SOCIAL:</label>
-                                        <input type="text" class="form-control" id="validationTooltip02" placeholder="Last name" value="Otto" required>
+                                        <input type="text" class="form-control" id="validationTooltip02" ng-model="registro.razon_social" required>
                                         <div class="valid-tooltip">
                                             Looks good!
                                         </div>
@@ -50,13 +58,7 @@
                                 <div class="col-md-3">
                                     <div class="mb-3 position-relative">
                                         <label class="form-label" for="validationTooltipUsername">TELEFONO:</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text" id="validationTooltipUsernamePrepend">@</span>
-                                            <input type="text" class="form-control" id="validationTooltipUsername" placeholder="Username" aria-describedby="validationTooltipUsernamePrepend" required>
-                                            <div class="invalid-tooltip">
-                                                Please choose a unique and valid username.
-                                            </div>
-                                        </div>
+                                        <input type="text" class="form-control" id="validationTooltipUsername" ng-model="registro.telefono" required>
                                     </div>
                                 </div>
                             </div>
@@ -64,7 +66,7 @@
                                 <div class="col-md-6">
                                     <div class="mb-3 position-relative">
                                         <label class="form-label" for="validationTooltip03">DIRECCION</label>
-                                        <input type="text" class="form-control" id="validationTooltip03" placeholder="City" required>
+                                        <input type="text" class="form-control" id="validationTooltip03" ng-model="registro.direccion" required>
                                         <div class="invalid-tooltip">
                                             Please provide a valid city.
                                         </div>
@@ -73,10 +75,8 @@
                                 <div class="col-md-6">
                                     <div class="mb-3 position-relative">
                                         <label class="form-label" for="validationTooltip04">CORREO ELECTRONICO</label>
-                                        <input type="text" class="form-control" id="validationTooltip04" placeholder="State" required>
-                                        <div class="invalid-tooltip">
-                                            Please provide a valid state.
-                                        </div>
+                                        <span class="input-group-text" id="validationTooltipUsernamePrepend">@</span>
+                                        <input type="text" class="form-control" id="validationTooltipUsername" ng-model="registro.correo" required>
                                     </div>
                                 </div>
                             </div>
@@ -88,7 +88,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row" ng-show="estado_registro == 0">
             <div class="col-xl-12">
                 <div class="card">
                     <div class="card-header align-items-center d-flex">
@@ -138,4 +138,9 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('javascripts')
+    @parent
+    <script src="js/angular/controller/register/companyController.js"></script>
 @endsection

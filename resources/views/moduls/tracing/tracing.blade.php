@@ -1,11 +1,18 @@
 @extends('main')
 
+@section('title')
+    Seguimiento
+@endsection
+
 @section('stylesheets')
     @parent
     <!-- choices css -->
     <link href="assets/libs/choices.js/public/assets/styles/choices.min.css" rel="stylesheet" type="text/css" />
 @endsection
 
+@section('bodycontroller')
+    id='tracingController' ng-controller='tracingController'
+@endsection
 
 @section('content')
     <div class="container-fluid">
@@ -244,4 +251,5 @@
     <!-- choices js -->
     <script src="assets/libs/choices.js/public/assets/scripts/choices.min.js"></script>
     <script src="assets/js/pages/form-advanced.init.js"></script>
+    <script src="js/angular/controller/tracing/tracingController.js"></script>
 @endsection

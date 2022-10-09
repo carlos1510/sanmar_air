@@ -1,5 +1,13 @@
 @extends('main')
 
+@section('title')
+    Usuarios
+@endsection
+
+@section('bodycontroller')
+    id='userController' ng-controller='userController'
+@endsection
+
 @section('content')
     <div class="container-fluid">
 
@@ -329,4 +337,9 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('javascripts')
+    @parent
+    <script src="js/angular/controller/setting/userController.js"></script>
 @endsection

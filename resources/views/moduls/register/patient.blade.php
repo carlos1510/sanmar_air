@@ -1,5 +1,13 @@
 @extends('main')
 
+@section('title')
+    Paciente
+@endsection
+
+@section('bodycontroller')
+    id='patientController' ng-controller='patientController'
+@endsection
+
 @section('stylesheets')
     @parent
     <!-- choices css -->
@@ -198,4 +206,5 @@
     <!-- choices js -->
     <script src="assets/libs/choices.js/public/assets/scripts/choices.min.js"></script>
     <script src="assets/js/pages/form-advanced.init.js"></script>
+    <script src="js/angular/controller/register/patientController.js"></script>
 @endsection

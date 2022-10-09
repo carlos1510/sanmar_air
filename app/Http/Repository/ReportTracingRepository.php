@@ -13,7 +13,8 @@ class ReportTracingRepository
 {
     public function reporteSeguimiento($params){
         try {
-            //
+            $sql = "";
+            return DB::select($sql);
         }catch (Exception $ex){
             //
         }

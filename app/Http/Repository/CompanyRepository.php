@@ -14,7 +14,17 @@ class CompanyRepository
 
     public function registrarEmpresa($params){
         try {
-            //
+            if (isset($params->idempresa)){
+                //editar
+                $sql = "";
+                DB::update($sql, array());
+            }else{
+                //registrar
+                $sql = "";
+                DB::insert($sql, []);
+            }
+            $data['confirm'] = true;
+            return $data;
         }catch (Exception $ex){
             //
         }
@@ -22,15 +32,20 @@ class CompanyRepository
 
     public function eliminarEmpresa($params){
         try {
-            //
+            $sql = "";
+            DB::update($sql, array());
+            $data['confirm'] = true;
+            return $data;
         }catch (Exception $ex){
-            //
+            $data['confirm'] = false;
+            return $data;
         }
     }
 
     public function listarEmpresa($params){
         try {
-            //
+            $sql = "";
+            return DB::select($sql);
         }catch (Exception $ex){
             //
         }

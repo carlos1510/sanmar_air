@@ -1,5 +1,13 @@
 @extends('main')
 
+@section('title')
+    Reporte Seguimiento
+@endsection
+
+@section('bodycontroller')
+    id='reportTracingController' ng-controller='reportTracingController'
+@endsection
+
 @section('content')
     <div class="container-fluid">
 
@@ -111,4 +119,9 @@
         </div>
 
     </div>
+@endsection
+
+@section('javascripts')
+    @parent
+    <script src="js/angular/controller/report/reportTracingController.js"></script>
 @endsection

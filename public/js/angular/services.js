@@ -17,7 +17,7 @@ app.factory('homeService', function($http){
     }
 });
 
-app.factory('personaService', function($http){
+app.factory('pacienteService', function($http){
     return {
         getPersonaByDNI: function ($params) {
             return $http.post("persona/getPersonaByDNI", $params)
@@ -34,7 +34,7 @@ app.factory('personaService', function($http){
     }
 });
 
-app.factory('vacunaCovidService', function($http){
+app.factory('empresaService', function($http){
     return {
         listarProfesionalVacunaRed: function ($params) {
             return $http.post("vacunacovid/listarProfesionalVacunaRed", $params)
@@ -62,29 +62,11 @@ app.factory('vacunaCovidService', function($http){
         },
         reporteCoberturaVacuna: function ($params) {
             return $http.post("vacunacovid/reporteCoberturaVacuna", $params)
-        },
-        reporteCoberturaVacunaDistritos: function ($params) {
-            return $http.post("vacunacovid/reporteCoberturaVacunaDistritos", $params)
-        },
-        getPacienteVacunadoByDNI: function ($params) {
-            return $http.post("vacunacovid/getPacienteVacunadoByDNI", $params)
-        },
-        getPacientesVacunaByNombres: function ($params) {
-            return $http.post("vacunacovid/getPacientesVacunaByNombres", $params)
-        },
-        reporteAvancePorEstablecimiento: function ($params) {
-            return $http.post("vacunacovid/reporteAvancePorEstablecimiento", $params)
-        },
-        reporteVacunaEpidemiologia: function ($params) {
-            return $http.post("vacunacovid/reporteVacunaEpidemiologia", $params)
-        },
-        getReporteCoberturaVacunaRegular: function ($params) {
-            return $http.post("vacunacovid/getReporteCoberturaVacunaRegular", $params)
-        },
+        }
     }
 });
 
-app.factory('profesionalService', function($http){
+app.factory('usuarioService', function($http){
     return {
         getLista: function ($params) {
             return $http.post("profesional/getLista", $params)
@@ -124,75 +106,6 @@ app.factory('accesorioService', function($http){
         procesarDataPlanificacionFamiliar: function ($params) {
             return $http.post("accesorio/procesarDataPlanificacionFamiliar", $params)
         },
-        procesarDataSaludMental: function ($params) {
-            return $http.post("accesorio/procesarDataSaludMental", $params)
-        },
-        procesarDenominadorS3Apendis: function ($params) {
-            return $http.post("accesorio/procesarDenominadorS3Apendis", $params)
-        },
-        procesarGestantesCnv: function ($params) {
-            return $http.post("accesorio/procesarGestantesCnv", $params)
-        },
-        procesarIndicadorS3: function ($params) {
-            return $http.post("accesorio/procesarIndicadorS3", $params)
-        },
-        procesarDenominadorS1GestanteExamen: function ($params) {
-            return $http.post("accesorio/procesarDenominadorS1GestanteExamen", $params)
-        },
-        procesarIndicadorS1GestanteExamen: function ($params) {
-            return $http.post("accesorio/procesarIndicadorS1GestanteExamen", $params)
-        },
-        procesarAtencionesHisNinioProfilaxis: function ($params) {
-            return $http.post("accesorio/procesarAtencionesHisNinioProfilaxis", $params)
-        },
-        procesarDenominadorNinioProfilaxis: function ($params) {
-            return $http.post("accesorio/procesarDenominadorNinioProfilaxis", $params)
-        },
-        procesarIndicadorNinioProfilaxis: function ($params) {
-            return $http.post("accesorio/procesarIndicadorNinioProfilaxis", $params)
-        },
-        getRedes: function ($params) {
-            return $http.post("accesorio/getRedes", $params)
-        },
-        getMicroRedes: function ($params) {
-            return $http.post("accesorio/getMicroRedes", $params)
-        },
-        getEESS: function ($params) {
-            return $http.post("accesorio/getEESS", $params)
-        },
-        getEtnias: function ($params) {
-            return $http.post("accesorio/getEtnias", $params)
-        },
-        getMicroRedByRed: function ($params) {
-            return $http.post("accesorio/getMicroRedByRed", $params)
-        },
-        getEstablecimientoByMicrored: function ($params) {
-            return $http.post("accesorio/getEstablecimientoByMicrored", $params)
-        },
-        procesar_indicador1_sis: function ($params) {
-            return $http.post("accesorio/procesar_indicador1_sis", $params)
-        },
-        procesar_indicador3_sis: function ($params) {
-            return $http.post("accesorio/procesar_indicador3_sis", $params)
-        },
-        limpiarDataProduccionDigitadores: function ($params) {
-            return $http.post("accesorio/limpiarDataProduccionDigitadores", $params)
-        },
-        procesarDataProduccionDigitador: function ($params) {
-            return $http.post("accesorio/procesarDataProduccionDigitador", $params)
-        },
-        getEESSUbigeo: function ($params) {
-            return $http.post("accesorio/getEESSUbigeo", $params)
-        },
-        getListarProfesion: function ($params) {
-            return $http.post("accesorio/getListarProfesion", $params)
-        },
-        getUltimaFechaActualizacion: function ($params) {
-            return $http.post("accesorio/getUltimaFechaActualizacion", $params)
-        },
-        procesarPadronSaludMentalByTipo: function ($params) {
-            return $http.post("accesorio/procesarPadronSaludMentalByTipo", $params)
-        },
     }
 });
 
@@ -207,55 +120,10 @@ app.factory('reportesService', function($http){
         tramaC1: function ($params) {
             return $http.post("reporte/tramaC1", $params)
         },
-        tramaC2: function ($params) {
-            return $http.post("reporte/tramaC2", $params)
-        },
-        tramaD1: function ($params) {
-            return $http.post("reporte/tramaD1", $params)
-        },
-        tramaD2: function ($params) {
-            return $http.post("reporte/tramaD2", $params)
-        },
-        tramaG: function ($params) {
-            return $http.post("reporte/tramaG", $params)
-        },
-        tramaA: function ($params) {
-            return $http.post("reporte/tramaA", $params)
-        },
-        reporteVisitaProfam: function ($params) {
-            return $http.post("reporte/reporteVisitaProfam", $params)
-        },
-        reporteEpidemologico: function ($params) {
-            return $http.post("reporte/reporteEpidemologico", $params)
-        },
-        indicadorS3Apendis: function ($params) {
-            return $http.post("reporte/indicadorS3Apendis", $params)
-        },
-        indicadorS3ApendisNominal: function ($params) {
-            return $http.post("reporte/indicadorS3ApendisNominal", $params)
-        },
-        reporteTeleSalud: function ($params) {
-            return $http.post("reporte/reporteTeleSalud", $params)
-        },
-        reporte40: function ($params) {
-            return $http.post("reporte/reporte40", $params)
-        },
-        reporteProduccionDigitador: function ($params) {
-            return $http.post("reporte/reporteProduccionDigitador", $params)
-        },
-        reporteProduccionProfesionalVacunaByTipo: function ($params) {
-            return $http.post("reporte/reporteProduccionProfesionalVacunaByTipo", $params)
-        },
-        reporteSaludMentalTeleSalud: function ($params) {
-            return $http.post("reporte/reporteSaludMentalTeleSalud", $params)
-        },
-        reporteProduccionProfesionalByMes: function ($params) {
-            return $http.post("reporte/reporteProduccionProfesionalByMes", $params)
-        },
     }
 });
 
-app.factory('epidemiologiaService', function($http){
+app.factory('seguimientoService', function($http){
     return {
         listarPacientesDengue: function ($params) {
             return $http.post("epidemiologia/listarPacientesDengue", $params)
