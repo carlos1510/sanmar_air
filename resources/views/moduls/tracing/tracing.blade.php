@@ -34,7 +34,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row" ng-show="estado_registro == 1">
             <div class="col-xl-12">
                 <div class="card">
                     <div class="card-header">
@@ -49,11 +49,11 @@
                                         <label for="choices-single-default" class="form-label ">Tipo Documento</label>
                                         <select class="form-control" data-trigger name="choices-single-default"
                                                 id="choices-single-default"
-                                                placeholder="This is a search placeholder">
+                                                placeholder="This is a search placeholder" ng-model="registro.idtipo_documento">
                                             <option value="">---</option>
-                                            <option value="Choice 1">Choice 1</option>
-                                            <option value="Choice 2">Choice 2</option>
-                                            <option value="Choice 3">Choice 3</option>
+                                            <option value="1">DNI</option>
+                                            <option value="2">CARNET DE EXTRANJERIA</option>
+                                            <option value="3">PASAPORTE</option>
                                         </select>
                                     </div>
                                 </div>
@@ -61,7 +61,7 @@
                                     <div class="mb-3 position-relative">
                                         <label class="form-label" for="validationTooltipUsername">Numero Documento</label>
                                         <div class="input-group">
-                                            <input type="text" class="form-control" id="validationTooltipUsername" placeholder="Username" aria-describedby="validationTooltipUsernamePrepend" required>
+                                            <input type="text" class="form-control" id="validationTooltipUsername" placeholder="Username" ng-model="registro.numero_documento" required>
                                             <a href="javascript:void(0)" class="btn btn-primary"><i class="fas fa-search"></i></a>
                                         </div>
                                     </div>
@@ -69,7 +69,7 @@
                                 <div class="col-md-6">
                                     <div class="mb-3 position-relative">
                                         <label class="form-label" for="validationTooltip03">Paciente</label>
-                                        <input type="text" class="form-control" id="validationTooltip03" placeholder="City" required>
+                                        <input type="text" class="form-control" id="validationTooltip03" ng-model="registro.nombres_paciente" readonly>
                                         <div class="invalid-tooltip">
                                             Please provide a valid city.
                                         </div>
@@ -80,7 +80,7 @@
                                 <div class="col-md-3">
                                     <div class="mb-3 ">
                                         <label for="choices-single-default" class="form-label ">Fecha de Cita:</label>
-                                        <input type="text" class="form-control" id="validationTooltip03" placeholder="City" required>
+                                        <input type="text" class="form-control" id="validationTooltip03" placeholder="City" ng-model="registro.fecha_cita" required>
                                         <div class="invalid-tooltip">
                                             Please provide a valid city.
                                         </div>
@@ -91,11 +91,9 @@
                                         <label for="choices-single-default" class="form-label ">Empresa</label>
                                         <select class="form-control" data-trigger name="choices-single-default"
                                                 id="choices-single-default"
-                                                placeholder="This is a search placeholder">
+                                                placeholder="This is a search placeholder" ng-model="registro.idempresa">
                                             <option value="">---</option>
                                             <option value="Choice 1">Choice 1</option>
-                                            <option value="Choice 2">Choice 2</option>
-                                            <option value="Choice 3">Choice 3</option>
                                         </select>
                                     </div>
                                 </div>
@@ -113,7 +111,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row" ng-show="estado_registro == 2">
             <div class="col-xl-5">
                 <div class="card">
                     <div class="card-header">
@@ -126,7 +124,7 @@
                                 <div class="col-md-12">
                                     <div class="mb-3 ">
                                         <label for="choices-single-default" class="form-label ">Descripcion del Motivo</label>
-                                        <textarea class="form-control"></textarea>
+                                        <textarea class="form-control" ng-model="motivo.descripcion"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -141,7 +139,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row" ng-show="estado_registro == 3">
             <div class="col-xl-12">
                 <div class="card">
                     <div class="card-header">
@@ -154,25 +152,25 @@
                                 <div class="col-md-3">
                                     <div class="mb-3 position-relative">
                                         <label class="form-label" for="validationTooltipUsername">Fecha: </label>
-                                        <input type="text" class="form-control" id="validationTooltipUsername" placeholder="Username" aria-describedby="validationTooltipUsernamePrepend" required>
+                                        <input type="text" class="form-control" id="validationTooltipUsername" placeholder="" ng-model="confirmacion.fecha" required>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-3 position-relative">
                                         <label class="form-label" for="validationTooltipUsername">Hora: </label>
-                                        <input type="text" class="form-control" id="validationTooltipUsername" placeholder="Username" aria-describedby="validationTooltipUsernamePrepend" required>
+                                        <input type="text" class="form-control" id="validationTooltipUsername" placeholder="" ng-model="confirmacion.hora" required>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-3 position-relative">
                                         <label class="form-label" for="validationTooltipUsername">Costo: </label>
-                                        <input type="text" class="form-control" id="validationTooltipUsername" placeholder="Username" aria-describedby="validationTooltipUsernamePrepend" required>
+                                        <input type="text" class="form-control" id="validationTooltipUsername" placeholder="" ng-model="confirmacion.costo" required>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mb-3 position-relative">
                                         <label class="form-label" for="validationTooltipUsername">Nro. Boleto: </label>
-                                        <input type="text" class="form-control" id="validationTooltipUsername" placeholder="Username" aria-describedby="validationTooltipUsernamePrepend" required>
+                                        <input type="text" class="form-control" id="validationTooltipUsername" placeholder="" ng-model="confirmacion.nro_boleto" required>
                                     </div>
                                 </div>
                             </div>
@@ -187,7 +185,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row" ng-show="estado_registro == 4">
             <div class="col-xl-12">
                 <div class="card">
                     <div class="card-header align-items-center d-flex">
@@ -219,7 +217,7 @@
                                 <th>Acción</th>
                                 </thead>
                                 <tbody>
-                                <tr>
+                                <tr ng-repeat="item in lista">
                                     <td></td>
                                     <td></td>
                                     <td></td>

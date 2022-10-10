@@ -28,7 +28,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row" ng-show="estado_registro == 1">
             <div class="col-xl-12">
                 <div class="card">
                     <div class="card-header align-items-center d-flex">
@@ -63,11 +63,11 @@
                                                 <label for="choices-single-default" class="form-label ">Tipo Documento</label>
                                                 <select class="form-control" data-trigger name="choices-single-default"
                                                         id="choices-single-default"
-                                                        placeholder="This is a search placeholder">
+                                                        placeholder="This is a search placeholder" ng-model="registro.idtipo_documento">
                                                     <option value="">---</option>
-                                                    <option value="Choice 1">Choice 1</option>
-                                                    <option value="Choice 2">Choice 2</option>
-                                                    <option value="Choice 3">Choice 3</option>
+                                                    <option value="1">DNI</option>
+                                                    <option value="2">CARNET DE EXTRANJERIA</option>
+                                                    <option value="3">PASAPORTE</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -75,7 +75,7 @@
                                             <div class="mb-3 position-relative">
                                                 <label class="form-label" for="validationTooltipUsername">Numero Documento</label>
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control" id="validationTooltipUsername" placeholder="Username" aria-describedby="validationTooltipUsernamePrepend" required>
+                                                    <input type="text" class="form-control" id="validationTooltipUsername" ng-model="registro.numero_documento" required>
                                                     <a href="javascript:void(0)" class="btn btn-primary"><i class="fas fa-search"></i></a>
                                                 </div>
                                             </div>
@@ -83,7 +83,7 @@
                                         <div class="col-md-3">
                                             <div class="mb-3 position-relative">
                                                 <label class="form-label" for="validationTooltip01">Apellido Paterno</label>
-                                                <input type="text" class="form-control" id="validationTooltip01" placeholder="First name" value="Mark" required>
+                                                <input type="text" class="form-control" id="validationTooltip01" ng-model="registro.apellido_paterno" required>
                                                 <div class="valid-tooltip">
                                                     Looks good!
                                                 </div>
@@ -92,7 +92,7 @@
                                         <div class="col-md-3">
                                             <div class="mb-3 position-relative">
                                                 <label class="form-label" for="validationTooltip02">Apellido Materno</label>
-                                                <input type="text" class="form-control" id="validationTooltip02" placeholder="Last name" value="Otto" required>
+                                                <input type="text" class="form-control" id="validationTooltip02" ng-model="registro.apellido_materno" required>
                                                 <div class="valid-tooltip">
                                                     Looks good!
                                                 </div>
@@ -104,7 +104,7 @@
                                         <div class="col-md-3">
                                             <div class="mb-3 position-relative">
                                                 <label class="form-label" for="validationTooltip03">Nombres</label>
-                                                <input type="text" class="form-control" id="validationTooltip03" placeholder="City" required>
+                                                <input type="text" class="form-control" id="validationTooltip03" ng-model="registro.nombres" required>
                                                 <div class="invalid-tooltip">
                                                     Please provide a valid city.
                                                 </div>
@@ -113,7 +113,7 @@
                                         <div class="col-md-3">
                                             <div class="mb-3 position-relative">
                                                 <label class="form-label" for="validationTooltip04">Fecha Nacimiento</label>
-                                                <input type="text" class="form-control" id="validationTooltip04" placeholder="State" required>
+                                                <input type="text" class="form-control" id="validationTooltip04" ng-model="registro.fecha_nacimiento">
                                                 <div class="invalid-tooltip">
                                                     Please provide a valid state.
                                                 </div>
@@ -124,17 +124,17 @@
                                                 <label for="choices-single-default" class="form-label ">Sexo</label>
                                                 <select class="form-control" data-trigger name="choices-single-default"
                                                         id="choices-single-default"
-                                                        placeholder="This is a search placeholder">
+                                                        placeholder="This is a search placeholder" ng-model="registro.sexo">
                                                     <option value="">---</option>
-                                                    <option value="Choice 1">Choice 1</option>
-                                                    <option value="Choice 2">Choice 2</option>
+                                                    <option value="Masculino">Masculino</option>
+                                                    <option value="Femenino">Femenino</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="mb-3 ">
                                                 <label for="choices-single-default" class="form-label ">Telefono</label>
-                                                <input type="text" class="form-control" id="validationTooltip04" placeholder="State" required>
+                                                <input type="text" class="form-control" id="validationTooltip04" maxlength="9" ng-model="registro.telefono">
                                                 <div class="invalid-tooltip">
                                                     Please provide a valid state.
                                                 </div>
@@ -145,7 +145,7 @@
                                         <div class="col-md-5">
                                             <div class="mb-3 ">
                                                 <label for="choices-single-default" class="form-label ">Correo</label>
-                                                <input type="text" class="form-control" id="validationTooltip04" placeholder="State" required>
+                                                <input type="text" class="form-control" id="validationTooltip04" ng-model="registro.correo">
                                                 <div class="invalid-tooltip">
                                                     Please provide a valid state.
                                                 </div>
@@ -159,10 +159,10 @@
                                                 <label for="choices-single-default" class="form-label ">Acceso: </label>
                                                 <select class="form-control" data-trigger name="choices-single-default"
                                                         id="choices-single-default"
-                                                        placeholder="This is a search placeholder">
+                                                        placeholder="This is a search placeholder" ng-model="registro.acceso">
                                                     <option value="">---</option>
-                                                    <option value="Choice 1">SI</option>
-                                                    <option value="Choice 2">NO</option>
+                                                    <option value="1">SI</option>
+                                                    <option value="0">NO</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -171,17 +171,18 @@
                                                 <label for="choices-single-default" class="form-label ">Nivel de Usuario: </label>
                                                 <select class="form-control" data-trigger name="choices-single-default"
                                                         id="choices-single-default"
-                                                        placeholder="This is a search placeholder">
+                                                        placeholder="This is a search placeholder" ng-model="registro.idnivel">
                                                     <option value="">---</option>
-                                                    <option value="Choice 1">Administrador</option>
-                                                    <option value="Choice 2">--</option>
+                                                    <option value="1">Administrador</option>
+                                                    <option value="2">--</option>
+                                                    <option value="3">--</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="mb-3 position-relative">
                                                 <label class="form-label" for="validationTooltip02">Usuario:</label>
-                                                <input type="text" class="form-control" id="validationTooltip02" placeholder="Last name" value="Otto" required>
+                                                <input type="text" class="form-control" id="validationTooltip02" ng-model="registro.usuario">
                                                 <div class="valid-tooltip">
                                                     Looks good!
                                                 </div>
@@ -192,7 +193,7 @@
                                                 <label class="form-label" for="validationTooltipUsername">Contraseña:</label>
                                                 <div class="input-group">
                                                     <span class="input-group-text" id="validationTooltipUsernamePrepend">@</span>
-                                                    <input type="text" class="form-control" id="validationTooltipUsername" placeholder="Username" aria-describedby="validationTooltipUsernamePrepend" required>
+                                                    <input type="text" class="form-control" id="validationTooltipUsername" ng-model="registro.password">
                                                     <div class="invalid-tooltip">
                                                         Please choose a unique and valid username.
                                                     </div>
@@ -211,7 +212,7 @@
                                             <div class="mb-3 position-relative">
                                                 <label class="form-label" for="validationTooltipUsername">RUC.</label>
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control" id="validationTooltipUsername" placeholder="Username" aria-describedby="validationTooltipUsernamePrepend" required>
+                                                    <input type="text" class="form-control" id="validationTooltipUsername" ng-model="registro.ruc" required>
                                                     <a href="javascript:void(0)" class="btn btn-primary"><i class="fas fa-search"></i></a>
                                                 </div>
                                             </div>
@@ -219,7 +220,7 @@
                                         <div class="col-md-6">
                                             <div class="mb-3 position-relative">
                                                 <label class="form-label" for="validationTooltip01">Razon social</label>
-                                                <input type="text" class="form-control" id="validationTooltip01" placeholder="First name" value="Mark" required>
+                                                <input type="text" class="form-control" id="validationTooltip01" ng-model="registro.razon_social" required>
                                                 <div class="valid-tooltip">
                                                     Looks good!
                                                 </div>
@@ -233,10 +234,10 @@
                                                 <label for="choices-single-default" class="form-label ">Acceso: </label>
                                                 <select class="form-control" data-trigger name="choices-single-default"
                                                         id="choices-single-default"
-                                                        placeholder="This is a search placeholder">
+                                                        placeholder="This is a search placeholder" ng-model="registro.acceso">
                                                     <option value="">---</option>
-                                                    <option value="Choice 1">SI</option>
-                                                    <option value="Choice 2">NO</option>
+                                                    <option value="1">SI</option>
+                                                    <option value="0">NO</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -245,17 +246,16 @@
                                                 <label for="choices-single-default" class="form-label ">Nivel de Usuario: </label>
                                                 <select class="form-control" data-trigger name="choices-single-default"
                                                         id="choices-single-default"
-                                                        placeholder="This is a search placeholder">
+                                                        placeholder="This is a search placeholder" ng-model="registro.idnivel">
                                                     <option value="">---</option>
-                                                    <option value="Choice 1">Administrador</option>
-                                                    <option value="Choice 2">--</option>
+                                                    <option value="3">--</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="mb-3 position-relative">
                                                 <label class="form-label" for="validationTooltip02">Usuario:</label>
-                                                <input type="text" class="form-control" id="validationTooltip02" placeholder="Last name" value="Otto" required>
+                                                <input type="text" class="form-control" id="validationTooltip02" ng-model="registro.usuario">
                                                 <div class="valid-tooltip">
                                                     Looks good!
                                                 </div>
@@ -266,7 +266,7 @@
                                                 <label class="form-label" for="validationTooltipUsername">Contraseña:</label>
                                                 <div class="input-group">
                                                     <span class="input-group-text" id="validationTooltipUsernamePrepend">@</span>
-                                                    <input type="text" class="form-control" id="validationTooltipUsername" placeholder="Username" aria-describedby="validationTooltipUsernamePrepend" required>
+                                                    <input type="text" class="form-control" id="validationTooltipUsername" ng-model="registro.password">
                                                     <div class="invalid-tooltip">
                                                         Please choose a unique and valid username.
                                                     </div>
@@ -283,7 +283,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row" ng-show="estado_registro == 0">
             <div class="col-xl-12">
                 <div class="card">
                     <div class="card-header align-items-center d-flex">
@@ -291,7 +291,7 @@
                         <div class="flex-shrink-0">
                             <ul class="nav justify-content-end nav-pills card-header-pills" role="tablist">
                                 <li class="nav-item">
-                                    <button type="button" class="btn btn-primary"><i class="fas fa-plus"></i> Nuevo</button>
+                                    <button type="button" class="btn btn-primary" ng-click="nuevo()"><i class="fas fa-plus"></i> Nuevo</button>
                                 </li>
                             </ul>
                         </div>
@@ -314,7 +314,7 @@
                                 <th>Acción</th>
                                 </thead>
                                 <tbody>
-                                <tr>
+                                <tr ng-repeat="item in lista">
                                     <td></td>
                                     <td></td>
                                     <td></td>

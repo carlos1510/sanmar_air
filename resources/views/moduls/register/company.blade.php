@@ -117,7 +117,7 @@
                                 <th>Acción</th>
                                 </thead>
                                 <tbody>
-                                <tr>
+                                <tr ng-repeat="item in lista">
                                     <td></td>
                                     <td></td>
                                     <td></td>
