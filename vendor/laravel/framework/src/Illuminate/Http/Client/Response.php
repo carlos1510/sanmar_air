@@ -107,7 +107,9 @@ class Response implements ArrayAccess
      */
     public function headers()
     {
-        return $this->response->getHeaders();
+        return collect($this->response->getHeaders())->mapWithKeys(function ($v, $k) {
+            return [$k => $v];
+        })->all();
     }
 
     /**
@@ -118,16 +120,6 @@ class Response implements ArrayAccess
     public function status()
     {
         return (int) $this->response->getStatusCode();
-    }
-
-    /**
-     * Get the reason phrase of the response.
-     *
-     * @return string
-     */
-    public function reason()
-    {
-        return $this->response->getReasonPhrase();
     }
 
     /**
@@ -171,26 +163,6 @@ class Response implements ArrayAccess
     }
 
     /**
-     * Determine if the response was a 401 "Unauthorized" response.
-     *
-     * @return bool
-     */
-    public function unauthorized()
-    {
-        return $this->status() === 401;
-    }
-
-    /**
-     * Determine if the response was a 403 "Forbidden" response.
-     *
-     * @return bool
-     */
-    public function forbidden()
-    {
-        return $this->status() === 403;
-    }
-
-    /**
      * Determine if the response indicates a client or server error occurred.
      *
      * @return bool
@@ -223,7 +195,7 @@ class Response implements ArrayAccess
     /**
      * Execute the given callback if there was a server or client error.
      *
-     * @param  callable  $callback
+     * @param  \Closure|callable $callback
      * @return $this
      */
     public function onError(callable $callback)
@@ -310,19 +282,6 @@ class Response implements ArrayAccess
         }
 
         return $this;
-    }
-
-    /**
-     * Throw an exception if a server or client error occurred and the given condition evaluates to true.
-     *
-     * @param  bool  $condition
-     * @return $this
-     *
-     * @throws \Illuminate\Http\Client\RequestException
-     */
-    public function throwIf($condition)
-    {
-        return $condition ? $this->throw() : $this;
     }
 
     /**

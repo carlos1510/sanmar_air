@@ -73,67 +73,57 @@ class PdoSessionHandler extends AbstractSessionHandler
     private $pdo;
 
     /**
-     * DSN string or null for session.save_path or false when lazy connection disabled.
-     *
-     * @var string|false|null
+     * @var string|false|null DSN string or null for session.save_path or false when lazy connection disabled
      */
     private $dsn = false;
 
     /**
-     * @var string|null
+     * @var string Database driver
      */
     private $driver;
 
     /**
-     * @var string
+     * @var string Table name
      */
     private $table = 'sessions';
 
     /**
-     * @var string
+     * @var string Column for session id
      */
     private $idCol = 'sess_id';
 
     /**
-     * @var string
+     * @var string Column for session data
      */
     private $dataCol = 'sess_data';
 
     /**
-     * @var string
+     * @var string Column for lifetime
      */
     private $lifetimeCol = 'sess_lifetime';
 
     /**
-     * @var string
+     * @var string Column for timestamp
      */
     private $timeCol = 'sess_time';
 
     /**
-     * Username when lazy-connect.
-     *
-     * @var string
+     * @var string Username when lazy-connect
      */
     private $username = '';
 
     /**
-     * Password when lazy-connect.
-     *
-     * @var string
+     * @var string Password when lazy-connect
      */
     private $password = '';
 
     /**
-     * Connection options when lazy-connect.
-     *
-     * @var array
+     * @var array Connection options when lazy-connect
      */
     private $connectionOptions = [];
 
     /**
-     * The strategy for locking, see constants.
-     *
-     * @var int
+     * @var int The strategy for locking, see constants
      */
     private $lockMode = self::LOCK_TRANSACTIONAL;
 
@@ -145,23 +135,17 @@ class PdoSessionHandler extends AbstractSessionHandler
     private $unlockStatements = [];
 
     /**
-     * True when the current session exists but expired according to session.gc_maxlifetime.
-     *
-     * @var bool
+     * @var bool True when the current session exists but expired according to session.gc_maxlifetime
      */
     private $sessionExpired = false;
 
     /**
-     * Whether a transaction is active.
-     *
-     * @var bool
+     * @var bool Whether a transaction is active
      */
     private $inTransaction = false;
 
     /**
-     * Whether gc() has been called.
-     *
-     * @var bool
+     * @var bool Whether gc() has been called
      */
     private $gcCalled = false;
 
@@ -268,7 +252,7 @@ class PdoSessionHandler extends AbstractSessionHandler
      *
      * Can be used to distinguish between a new session and one that expired due to inactivity.
      *
-     * @return bool
+     * @return bool Whether current session expired
      */
     public function isSessionExpired()
     {
@@ -344,7 +328,7 @@ class PdoSessionHandler extends AbstractSessionHandler
      */
     protected function doWrite(string $sessionId, string $data)
     {
-        $maxlifetime = (int) \ini_get('session.gc_maxlifetime');
+        $maxlifetime = (int) ini_get('session.gc_maxlifetime');
 
         try {
             // We use a single MERGE SQL query when supported by the database.
@@ -391,7 +375,7 @@ class PdoSessionHandler extends AbstractSessionHandler
     #[\ReturnTypeWillChange]
     public function updateTimestamp($sessionId, $data)
     {
-        $expiry = time() + (int) \ini_get('session.gc_maxlifetime');
+        $expiry = time() + (int) ini_get('session.gc_maxlifetime');
 
         try {
             $updateStmt = $this->pdo->prepare(
@@ -446,7 +430,6 @@ class PdoSessionHandler extends AbstractSessionHandler
 
         if (false !== $this->dsn) {
             $this->pdo = null; // only close lazy-connection
-            $this->driver = null;
         }
 
         return true;
@@ -663,7 +646,7 @@ class PdoSessionHandler extends AbstractSessionHandler
         $selectStmt->bindParam(':id', $sessionId, \PDO::PARAM_STR);
         $insertStmt = null;
 
-        while (true) {
+        do {
             $selectStmt->execute();
             $sessionRows = $selectStmt->fetchAll(\PDO::FETCH_NUM);
 
@@ -687,7 +670,7 @@ class PdoSessionHandler extends AbstractSessionHandler
                 throw new \RuntimeException('Failed to read session: INSERT reported a duplicate id but next SELECT did not return any data.');
             }
 
-            if (!filter_var(\ini_get('session.use_strict_mode'), \FILTER_VALIDATE_BOOLEAN) && self::LOCK_TRANSACTIONAL === $this->lockMode && 'sqlite' !== $this->driver) {
+            if (!filter_var(ini_get('session.use_strict_mode'), \FILTER_VALIDATE_BOOLEAN) && self::LOCK_TRANSACTIONAL === $this->lockMode && 'sqlite' !== $this->driver) {
                 // In strict mode, session fixation is not possible: new sessions always start with a unique
                 // random id, so that concurrency is not possible and this code path can be skipped.
                 // Exclusive-reading of non-existent rows does not block, so we need to do an insert to block
@@ -712,7 +695,7 @@ class PdoSessionHandler extends AbstractSessionHandler
             }
 
             return '';
-        }
+        } while (true);
     }
 
     /**
@@ -935,7 +918,7 @@ class PdoSessionHandler extends AbstractSessionHandler
     protected function getConnection()
     {
         if (null === $this->pdo) {
-            $this->connect($this->dsn ?: \ini_get('session.save_path'));
+            $this->connect($this->dsn ?: ini_get('session.save_path'));
         }
 
         return $this->pdo;

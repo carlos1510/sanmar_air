@@ -65,10 +65,14 @@ class UserRepository
 
     public function obtenerUsuarioSesion($params){
         try {
-            $sql = "";
+            $sql = "SELECT * FROM usuario WHERE usuario='$params->usuario' AND password='$params->password' AND estado=1 AND acceso=1 LIMIT 1";
             $resultado = DB::selectOne($sql);
+            $data['confirm'] = true;
+            $data['user'] = $resultado;
+            return $data;
         }catch (Exception $ex){
-            //
+            $data['confirm'] = false;
+            return  $data;
         }
     }
 }

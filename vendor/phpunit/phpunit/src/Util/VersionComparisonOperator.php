@@ -14,7 +14,6 @@ use function sprintf;
 
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
- *
  * @psalm-immutable
  */
 final class VersionComparisonOperator
@@ -32,7 +31,7 @@ final class VersionComparisonOperator
     }
 
     /**
-     * @return '!='|'<'|'<='|'<>'|'='|'=='|'>'|'>='|'eq'|'ge'|'gt'|'le'|'lt'|'ne'
+     * @return '<'|'lt'|'<='|'le'|'>'|'gt'|'>='|'ge'|'=='|'='|'eq'|'!='|'<>'|'ne'
      */
     public function asString(): string
     {

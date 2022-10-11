@@ -48,17 +48,3 @@ function bloquear_desbloquear_campo(lista, accion){
         }
     }
 }
-
-function obtenerNombreMes(nro_mes){
-    var nombre_mes = "";
-    var meses = [[{mes: 1}, {nombre_mes: 'ENERO'}], [{mes: 2}, {nombre_mes: 'FEBRERO'}], [{mes: 3}, {nombre_mes: 'MARZO'}], [{mes: 4}, {nombre_mes: 'ABRIL'}], [{mes: 5}, {nombre_mes: 'MAYO'}], [{mes: 6}, {nombre_mes: 'JUNIO'}],
-        [{mes: 7}, {nombre_mes: 'JULIO'}]];
-    for (var i = 0; i < meses.length; i++){
-        if (nro_mes == meses[i][0].mes){
-            nombre_mes = meses[i][1].nombre_mes;
-            break
-        }
-
-    }
-    return nombre_mes;
-}

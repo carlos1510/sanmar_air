@@ -158,21 +158,6 @@ class SimpleMessage
     }
 
     /**
-     * Add lines of text to the notification.
-     *
-     * @param  iterable  $lines
-     * @return $this
-     */
-    public function lines($lines)
-    {
-        foreach ($lines as $line) {
-            $this->line($line);
-        }
-
-        return $this;
-    }
-
-    /**
      * Add a line of text to the notification.
      *
      * @param  mixed  $line

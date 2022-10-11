@@ -11,18 +11,15 @@ use GuzzleHttp\HandlerStack;
 use Illuminate\Http\Client\Events\ConnectionFailed;
 use Illuminate\Http\Client\Events\RequestSending;
 use Illuminate\Http\Client\Events\ResponseReceived;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use Psr\Http\Message\MessageInterface;
-use Psr\Http\Message\RequestInterface;
 use Symfony\Component\VarDumper\VarDumper;
 
 class PendingRequest
 {
-    use Conditionable, Macroable;
+    use Macroable;
 
     /**
      * The factory instance.
@@ -102,13 +99,6 @@ class PendingRequest
     protected $retryDelay = 100;
 
     /**
-     * The callback that will determine if the request should be retried.
-     *
-     * @var callable|null
-     */
-    protected $retryWhenCallback = null;
-
-    /**
      * The callbacks that should execute before the request is sent.
      *
      * @var \Illuminate\Support\Collection
@@ -149,20 +139,6 @@ class PendingRequest
      * @var \Illuminate\Http\Client\Request|null
      */
     protected $request;
-
-    /**
-     * The Guzzle request options that are mergable via array_merge_recursive.
-     *
-     * @var array
-     */
-    protected $mergableOptions = [
-        'cookies',
-        'form_params',
-        'headers',
-        'json',
-        'multipart',
-        'query',
-    ];
 
     /**
      * Create a new HTTP Client instance.
@@ -391,9 +367,7 @@ class PendingRequest
      */
     public function withUserAgent($userAgent)
     {
-        return tap($this, function ($request) use ($userAgent) {
-            return $this->options['headers']['User-Agent'] = trim($userAgent);
-        });
+        return $this->withHeaders(['User-Agent' => $userAgent]);
     }
 
     /**
@@ -467,20 +441,18 @@ class PendingRequest
      *
      * @param  int  $times
      * @param  int  $sleep
-     * @param  callable|null  $when
      * @return $this
      */
-    public function retry(int $times, int $sleep = 0, ?callable $when = null)
+    public function retry(int $times, int $sleep = 0)
     {
         $this->tries = $times;
         $this->retryDelay = $sleep;
-        $this->retryWhenCallback = $when;
 
         return $this;
     }
 
     /**
-     * Replace the specified options on the request.
+     * Merge new options into the client.
      *
      * @param  array  $options
      * @return $this
@@ -488,10 +460,7 @@ class PendingRequest
     public function withOptions(array $options)
     {
         return tap($this, function ($request) use ($options) {
-            return $this->options = array_replace_recursive(
-                array_merge_recursive($this->options, Arr::only($options, $this->mergableOptions)),
-                $options
-            );
+            return $this->options = array_merge_recursive($this->options, $options);
         });
     }
 
@@ -564,7 +533,7 @@ class PendingRequest
      */
     public function get(string $url, $query = null)
     {
-        return $this->send('GET', $url, func_num_args() === 1 ? [] : [
+        return $this->send('GET', $url, [
             'query' => $query,
         ]);
     }
@@ -578,7 +547,7 @@ class PendingRequest
      */
     public function head(string $url, $query = null)
     {
-        return $this->send('HEAD', $url, func_num_args() === 1 ? [] : [
+        return $this->send('HEAD', $url, [
             'query' => $query,
         ]);
     }
@@ -710,7 +679,7 @@ class PendingRequest
 
                 throw new ConnectionException($e->getMessage(), 0, $e);
             }
-        }, $this->retryDelay ?? 100, $this->retryWhenCallback);
+        }, $this->retryDelay ?? 100);
     }
 
     /**
@@ -820,28 +789,6 @@ class PendingRequest
      * @return \GuzzleHttp\Client
      */
     public function buildClient()
-    {
-        return $this->requestsReusableClient()
-               ? $this->getReusableClient()
-               : $this->createClient($this->buildHandlerStack());
-    }
-
-    /**
-     * Determine if a reusable client is required.
-     *
-     * @return bool
-     */
-    protected function requestsReusableClient()
-    {
-        return ! is_null($this->client) || $this->async;
-    }
-
-    /**
-     * Retrieve a reusable Guzzle client.
-     *
-     * @return \GuzzleHttp\Client
-     */
-    protected function getReusableClient()
     {
         return $this->client = $this->client ?: $this->createClient($this->buildHandlerStack());
     }
@@ -985,37 +932,28 @@ class PendingRequest
      *
      * @param  \GuzzleHttp\Psr7\RequestInterface  $request
      * @param  array  $options
-     * @return \GuzzleHttp\Psr7\RequestInterface
+     * @return \Closure
      */
     public function runBeforeSendingCallbacks($request, array $options)
     {
-        return tap($request, function (&$request) use ($options) {
-            $this->beforeSendingCallbacks->each(function ($callback) use (&$request, $options) {
-                $callbackResult = call_user_func(
-                    $callback, (new Request($request))->withData($options['laravel_data']), $options, $this
-                );
-
-                if ($callbackResult instanceof RequestInterface) {
-                    $request = $callbackResult;
-                } elseif ($callbackResult instanceof Request) {
-                    $request = $callbackResult->toPsrRequest();
-                }
-            });
+        return tap($request, function ($request) use ($options) {
+            $this->beforeSendingCallbacks->each->__invoke(
+                (new Request($request))->withData($options['laravel_data']),
+                $options,
+                $this
+            );
         });
     }
 
     /**
-     * Replace the given options with the current request options.
+     * Merge the given options with the current request options.
      *
      * @param  array  $options
      * @return array
      */
     public function mergeOptions(...$options)
     {
-        return array_replace_recursive(
-            array_merge_recursive($this->options, Arr::only($options, $this->mergableOptions)),
-            ...$options
-        );
+        return array_merge_recursive($this->options, ...$options);
     }
 
     /**
@@ -1120,15 +1058,5 @@ class PendingRequest
         );
 
         return $this;
-    }
-
-    /**
-     * Get the pending request options.
-     *
-     * @return array
-     */
-    public function getOptions()
-    {
-        return $this->options;
     }
 }

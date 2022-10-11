@@ -56,7 +56,7 @@ class InputArgument
     /**
      * Returns the argument name.
      *
-     * @return string
+     * @return string The argument name
      */
     public function getName()
     {
@@ -92,7 +92,7 @@ class InputArgument
      */
     public function setDefault($default = null)
     {
-        if ($this->isRequired() && null !== $default) {
+        if (self::REQUIRED === $this->mode && null !== $default) {
             throw new LogicException('Cannot set a default value except for InputArgument::OPTIONAL mode.');
         }
 
@@ -120,7 +120,7 @@ class InputArgument
     /**
      * Returns the description text.
      *
-     * @return string
+     * @return string The description text
      */
     public function getDescription()
     {

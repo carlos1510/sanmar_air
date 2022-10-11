@@ -41,7 +41,7 @@ abstract class AbstractSurrogate implements SurrogateInterface
     /**
      * Returns a new cache strategy instance.
      *
-     * @return ResponseCacheStrategyInterface
+     * @return ResponseCacheStrategyInterface A ResponseCacheStrategyInterface instance
      */
     public function createCacheStrategy()
     {
@@ -95,7 +95,7 @@ abstract class AbstractSurrogate implements SurrogateInterface
         try {
             $response = $cache->handle($subRequest, HttpKernelInterface::SUB_REQUEST, true);
 
-            if (!$response->isSuccessful() && Response::HTTP_NOT_MODIFIED !== $response->getStatusCode()) {
+            if (!$response->isSuccessful()) {
                 throw new \RuntimeException(sprintf('Error when rendering "%s" (Status code is %d).', $subRequest->getUri(), $response->getStatusCode()));
             }
 

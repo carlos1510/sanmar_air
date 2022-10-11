@@ -1,5 +1,4 @@
 @ECHO OFF
 setlocal DISABLEDELAYEDEXPANSION
-SET BIN_TARGET=%~dp0/commonmark
-SET COMPOSER_RUNTIME_BIN_DIR=%~dp0
+SET BIN_TARGET=%~dp0/../league/commonmark/bin/commonmark
 php "%BIN_TARGET%" %*

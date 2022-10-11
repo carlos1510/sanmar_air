@@ -120,7 +120,9 @@ class Request implements ArrayAccess
      */
     public function headers()
     {
-        return $this->request->getHeaders();
+        return collect($this->request->getHeaders())->mapWithKeys(function ($values, $header) {
+            return [$header => $values];
+        })->all();
     }
 
     /**

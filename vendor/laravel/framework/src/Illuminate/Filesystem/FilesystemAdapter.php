@@ -2,7 +2,6 @@
 
 namespace Illuminate\Filesystem;
 
-use Closure;
 use Illuminate\Contracts\Filesystem\Cloud as CloudFilesystemContract;
 use Illuminate\Contracts\Filesystem\FileExistsException as ContractFileExistsException;
 use Illuminate\Contracts\Filesystem\FileNotFoundException as ContractFileNotFoundException;
@@ -46,13 +45,6 @@ class FilesystemAdapter implements CloudFilesystemContract
     protected $driver;
 
     /**
-     * The temporary URL builder callback.
-     *
-     * @var \Closure|null
-     */
-    protected $temporaryUrlCallback;
-
-    /**
      * Create a new filesystem adapter instance.
      *
      * @param  \League\Flysystem\FilesystemInterface  $driver
@@ -72,8 +64,6 @@ class FilesystemAdapter implements CloudFilesystemContract
      */
     public function assertExists($path, $content = null)
     {
-        clearstatcache();
-
         $paths = Arr::wrap($path);
 
         foreach ($paths as $path) {
@@ -103,8 +93,6 @@ class FilesystemAdapter implements CloudFilesystemContract
      */
     public function assertMissing($path)
     {
-        clearstatcache();
-
         $paths = Arr::wrap($path);
 
         foreach ($paths as $path) {
@@ -234,7 +222,7 @@ class FilesystemAdapter implements CloudFilesystemContract
      * Write the contents of a file.
      *
      * @param  string  $path
-     * @param  \Psr\Http\Message\StreamInterface|\Illuminate\Http\File|\Illuminate\Http\UploadedFile|string|resource  $contents
+     * @param  string|resource  $contents
      * @param  mixed  $options
      * @return bool
      */
@@ -586,19 +574,11 @@ class FilesystemAdapter implements CloudFilesystemContract
 
         if (method_exists($adapter, 'getTemporaryUrl')) {
             return $adapter->getTemporaryUrl($path, $expiration, $options);
-        }
-
-        if ($this->temporaryUrlCallback) {
-            return $this->temporaryUrlCallback->bindTo($this, static::class)(
-                $path, $expiration, $options
-            );
-        }
-
-        if ($adapter instanceof AwsS3Adapter) {
+        } elseif ($adapter instanceof AwsS3Adapter) {
             return $this->getAwsTemporaryUrl($adapter, $path, $expiration, $options);
+        } else {
+            throw new RuntimeException('This driver does not support creating temporary URLs.');
         }
-
-        throw new RuntimeException('This driver does not support creating temporary URLs.');
     }
 
     /**
@@ -671,7 +651,7 @@ class FilesystemAdapter implements CloudFilesystemContract
      */
     public function files($directory = null, $recursive = false)
     {
-        $contents = $this->driver->listContents($directory ?? '', $recursive);
+        $contents = $this->driver->listContents($directory, $recursive);
 
         return $this->filterContentsByType($contents, 'file');
     }
@@ -696,7 +676,7 @@ class FilesystemAdapter implements CloudFilesystemContract
      */
     public function directories($directory = null, $recursive = false)
     {
-        $contents = $this->driver->listContents($directory ?? '', $recursive);
+        $contents = $this->driver->listContents($directory, $recursive);
 
         return $this->filterContentsByType($contents, 'dir');
     }
@@ -799,17 +779,6 @@ class FilesystemAdapter implements CloudFilesystemContract
     }
 
     /**
-     * Define a custom temporary URL builder callback.
-     *
-     * @param  \Closure  $callback
-     * @return void
-     */
-    public function buildTemporaryUrlsUsing(Closure $callback)
-    {
-        $this->temporaryUrlCallback = $callback;
-    }
-
-    /**
      * Pass dynamic methods call onto Flysystem.
      *
      * @param  string  $method
@@ -824,6 +793,6 @@ class FilesystemAdapter implements CloudFilesystemContract
             return $this->macroCall($method, $parameters);
         }
 
-        return $this->driver->{$method}(...$parameters);
+        return $this->driver->{$method}(...array_values($parameters));
     }
 }

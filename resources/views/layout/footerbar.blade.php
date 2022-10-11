@@ -1,14 +1,8 @@
-<footer class="footer">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-sm-6">
-                <script>document.write(new Date().getFullYear())</script> © EsSalud.
-            </div>
-            {{--<div class="col-sm-6">
-                <div class="text-sm-end d-none d-sm-block">
-                    Design & Develop by <a href="#!" class="text-decoration-underline">Themesbrand</a>
-                </div>
-            </div>--}}
+<!-- Footer -->
+<footer class="sticky-footer bg-white">
+    <div class="container my-auto">
+        <div class="copyright text-center my-auto">
+            <span>Copyright &copy; Your Website 2022</span>
         </div>
     </div>
 </footer>

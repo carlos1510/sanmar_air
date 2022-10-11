@@ -155,16 +155,6 @@ class TestResponse implements ArrayAccess
     }
 
     /**
-     * Assert that the response has a 422 status code.
-     *
-     * @return $this
-     */
-    public function assertUnprocessable()
-    {
-        return $this->assertStatus(422);
-    }
-
-    /**
      * Assert that the response has the given status code.
      *
      * @param  int  $status
@@ -267,33 +257,12 @@ EOF;
     public function assertRedirect($uri = null)
     {
         PHPUnit::assertTrue(
-            $this->isRedirect(),
-            $this->statusMessageWithDetails('201, 301, 302, 303, 307, 308', $this->getStatusCode()),
+            $this->isRedirect(), 'Response status code ['.$this->getStatusCode().'] is not a redirect status code.'
         );
 
         if (! is_null($uri)) {
             $this->assertLocation($uri);
         }
-
-        return $this;
-    }
-
-    /**
-     * Assert whether the response is redirecting to a URI that contains the given URI.
-     *
-     * @param  string  $uri
-     * @return $this
-     */
-    public function assertRedirectContains($uri)
-    {
-        PHPUnit::assertTrue(
-            $this->isRedirect(),
-            $this->statusMessageWithDetails('201, 301, 302, 303, 307, 308', $this->getStatusCode()),
-        );
-
-        PHPUnit::assertTrue(
-            Str::contains($this->headers->get('Location'), $uri), 'Redirect location ['.$this->headers->get('Location').'] does not contain ['.$uri.'].'
-        );
 
         return $this;
     }
@@ -312,8 +281,7 @@ EOF;
         }
 
         PHPUnit::assertTrue(
-            $this->isRedirect(),
-            $this->statusMessageWithDetails('201, 301, 302, 303, 307, 308', $this->getStatusCode()),
+            $this->isRedirect(), 'Response status code ['.$this->getStatusCode().'] is not a redirect status code.'
         );
 
         $request = Request::create($this->headers->get('Location'));
@@ -425,7 +393,7 @@ EOF;
                 PHPUnit::assertSame(
                     $filename,
                     isset(explode('=', $contentDisposition[1])[1])
-                        ? trim(explode('=', $contentDisposition[1])[1], " \"'")
+                        ? trim(explode('=', $contentDisposition[1])[1])
                         : '',
                     $message
                 );
@@ -555,7 +523,7 @@ EOF;
      * @param  string  $cookieName
      * @return \Symfony\Component\HttpFoundation\Cookie|null
      */
-    public function getCookie($cookieName)
+    protected function getCookie($cookieName)
     {
         foreach ($this->headers->getCookies() as $cookie) {
             if ($cookie->getName() === $cookieName) {
@@ -835,57 +803,30 @@ EOF;
                 : 'Response does not have JSON validation errors.';
 
         foreach ($errors as $key => $value) {
-            if (is_int($key)) {
-                $this->assertJsonValidationErrorFor($value, $responseKey);
+            PHPUnit::assertArrayHasKey(
+                (is_int($key)) ? $value : $key,
+                $jsonErrors,
+                "Failed to find a validation error in the response for key: '{$value}'".PHP_EOL.PHP_EOL.$errorMessage
+            );
 
-                continue;
-            }
-
-            $this->assertJsonValidationErrorFor($key, $responseKey);
-
-            foreach (Arr::wrap($value) as $expectedMessage) {
-                $errorMissing = true;
+            if (! is_int($key)) {
+                $hasError = false;
 
                 foreach (Arr::wrap($jsonErrors[$key]) as $jsonErrorMessage) {
-                    if (Str::contains($jsonErrorMessage, $expectedMessage)) {
-                        $errorMissing = false;
+                    if (Str::contains($jsonErrorMessage, $value)) {
+                        $hasError = true;
 
                         break;
                     }
                 }
-            }
 
-            if ($errorMissing) {
-                PHPUnit::fail(
-                    "Failed to find a validation error in the response for key and message: '$key' => '$expectedMessage'".PHP_EOL.PHP_EOL.$errorMessage
-                );
+                if (! $hasError) {
+                    PHPUnit::fail(
+                        "Failed to find a validation error in the response for key and message: '$key' => '$value'".PHP_EOL.PHP_EOL.$errorMessage
+                    );
+                }
             }
         }
-
-        return $this;
-    }
-
-    /**
-     * Assert the response has any JSON validation errors for the given key.
-     *
-     * @param  string  $key
-     * @param  string  $responseKey
-     * @return $this
-     */
-    public function assertJsonValidationErrorFor($key, $responseKey = 'errors')
-    {
-        $jsonErrors = Arr::get($this->json(), $responseKey) ?? [];
-
-        $errorMessage = $jsonErrors
-            ? 'Response has the following JSON validation errors:'.
-            PHP_EOL.PHP_EOL.json_encode($jsonErrors, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE).PHP_EOL
-            : 'Response does not have JSON validation errors.';
-
-        PHPUnit::assertArrayHasKey(
-            $key,
-            $jsonErrors,
-            "Failed to find a validation error in the response for key: '{$key}'".PHP_EOL.PHP_EOL.$errorMessage
-        );
 
         return $this;
     }
@@ -1084,7 +1025,7 @@ EOF;
     /**
      * Assert that the given keys do not have validation errors.
      *
-     * @param  string|array|null  $keys
+     * @param  array|null  $keys
      * @param  string  $errorBag
      * @param  string  $responseKey
      * @return $this
@@ -1127,12 +1068,12 @@ EOF;
     /**
      * Assert that the response has the given validation errors.
      *
-     * @param  string|array|null  $errors
+     * @param  array  $errors
      * @param  string  $errorBag
      * @param  string  $responseKey
      * @return $this
      */
-    public function assertInvalid($errors = null,
+    public function assertInvalid($errors,
                                   $errorBag = 'default',
                                   $responseKey = 'errors')
     {
@@ -1151,7 +1092,7 @@ EOF;
                         PHP_EOL.PHP_EOL.json_encode($sessionErrors, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE).PHP_EOL
                 : 'Response does not have validation errors in the session.';
 
-        foreach (Arr::wrap($errors) as $key => $value) {
+        foreach ($errors as $key => $value) {
             PHPUnit::assertArrayHasKey(
                 (is_int($key)) ? $value : $key,
                 $sessionErrors,
@@ -1389,43 +1330,6 @@ EOF;
     }
 
     /**
-     * Dump the content from the response and end the script.
-     *
-     * @return never
-     */
-    public function dd()
-    {
-        $this->dump();
-
-        exit(1);
-    }
-
-    /**
-     * Dump the headers from the response and end the script.
-     *
-     * @return never
-     */
-    public function ddHeaders()
-    {
-        $this->dumpHeaders();
-
-        exit(1);
-    }
-
-    /**
-     * Dump the session from the response and end the script.
-     *
-     * @param  string|array  $keys
-     * @return never
-     */
-    public function ddSession($keys = [])
-    {
-        $this->dumpSession($keys);
-
-        exit(1);
-    }
-
-    /**
      * Dump the content from the response.
      *
      * @return $this
@@ -1491,17 +1395,11 @@ EOF;
             PHPUnit::fail('The response is not a streamed response.');
         }
 
-        ob_start(function (string $buffer): string {
-            $this->streamedContent .= $buffer;
-
-            return '';
-        });
+        ob_start();
 
         $this->sendContent();
 
-        ob_end_clean();
-
-        return $this->streamedContent;
+        return $this->streamedContent = ob_get_clean();
     }
 
     /**

@@ -35,7 +35,7 @@ class ProcessUtils
      * @param string $caller The name of method call that validates the input
      * @param mixed  $input  The input to validate
      *
-     * @return mixed
+     * @return mixed The validated input
      *
      * @throws InvalidArgumentException In case the input is not valid
      */
@@ -48,7 +48,7 @@ class ProcessUtils
             if (\is_string($input)) {
                 return $input;
             }
-            if (\is_scalar($input)) {
+            if (is_scalar($input)) {
                 return (string) $input;
             }
             if ($input instanceof Process) {

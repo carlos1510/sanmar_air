@@ -33,6 +33,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 // Help opcache.preload discover always-needed symbols
+class_exists(LegacyEventDispatcherProxy::class);
 class_exists(ControllerArgumentsEvent::class);
 class_exists(ControllerEvent::class);
 class_exists(ExceptionEvent::class);
@@ -60,7 +61,11 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
         $this->dispatcher = $dispatcher;
         $this->resolver = $resolver;
         $this->requestStack = $requestStack ?? new RequestStack();
-        $this->argumentResolver = $argumentResolver ?? new ArgumentResolver();
+        $this->argumentResolver = $argumentResolver;
+
+        if (null === $this->argumentResolver) {
+            $this->argumentResolver = new ArgumentResolver();
+        }
     }
 
     /**
@@ -70,7 +75,6 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
     {
         $request->headers->set('X-Php-Ob-Level', (string) ob_get_level());
 
-        $this->requestStack->push($request);
         try {
             return $this->handleRaw($request, $type);
         } catch (\Exception $e) {
@@ -84,8 +88,6 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
             }
 
             return $this->handleThrowable($e, $request, $type);
-        } finally {
-            $this->requestStack->pop();
         }
     }
 
@@ -124,6 +126,8 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
      */
     private function handleRaw(Request $request, int $type = self::MAIN_REQUEST): Response
     {
+        $this->requestStack->push($request);
+
         // request
         $event = new RequestEvent($this, $request, $type);
         $this->dispatcher->dispatch($event, KernelEvents::REQUEST);
@@ -200,6 +204,7 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
     private function finishRequest(Request $request, int $type)
     {
         $this->dispatcher->dispatch(new FinishRequestEvent($this, $request, $type), KernelEvents::FINISH_REQUEST);
+        $this->requestStack->pop();
     }
 
     /**

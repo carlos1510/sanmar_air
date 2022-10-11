@@ -291,9 +291,7 @@ class ValidationRuleParser
             }
 
             if ($attributeRules instanceof ConditionalRules) {
-                return [$attribute => $attributeRules->passes($data)
-                                ? array_filter($attributeRules->rules())
-                                : array_filter($attributeRules->defaultRules()), ];
+                return [$attribute => $attributeRules->passes($data) ? $attributeRules->rules() : null];
             }
 
             return [$attribute => collect($attributeRules)->map(function ($rule) use ($data) {
@@ -301,8 +299,8 @@ class ValidationRuleParser
                     return [$rule];
                 }
 
-                return $rule->passes($data) ? $rule->rules() : $rule->defaultRules();
+                return $rule->passes($data) ? $rule->rules() : null;
             })->filter()->flatten(1)->values()->all()];
-        })->all();
+        })->filter()->all();
     }
 }

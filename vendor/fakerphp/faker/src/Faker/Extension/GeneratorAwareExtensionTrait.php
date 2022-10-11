@@ -19,7 +19,7 @@ trait GeneratorAwareExtensionTrait
     /**
      * @return static
      */
-    public function withGenerator(Generator $generator): Extension
+    public function withGenerator(Generator $generator): self
     {
         $instance = clone $this;
 

@@ -4,6 +4,7 @@ namespace Illuminate\Bus;
 
 use Closure;
 use Illuminate\Queue\CallQueuedClosure;
+use Illuminate\Queue\SerializableClosure;
 use Illuminate\Support\Arr;
 use RuntimeException;
 
@@ -244,7 +245,7 @@ trait Queueable
     public function invokeChainCatchCallbacks($e)
     {
         collect($this->chainCatchCallbacks)->each(function ($callback) use ($e) {
-            $callback($e);
+            $callback instanceof SerializableClosure ? $callback->__invoke($e) : call_user_func($callback, $e);
         });
     }
 }

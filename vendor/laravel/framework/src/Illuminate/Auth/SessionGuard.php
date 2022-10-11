@@ -20,7 +20,6 @@ use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use Illuminate\Support\Timebox;
 use Illuminate\Support\Traits\Macroable;
 use InvalidArgumentException;
 use RuntimeException;
@@ -55,13 +54,6 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
     protected $viaRemember = false;
 
     /**
-     * The number of minutes that the "remember me" cookie should be valid for.
-     *
-     * @var int
-     */
-    protected $rememberDuration = 2628000;
-
-    /**
      * The session used by the guard.
      *
      * @var \Illuminate\Contracts\Session\Session
@@ -90,13 +82,6 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
     protected $events;
 
     /**
-     * The timebox instance.
-     *
-     * @var \Illuminate\Support\Timebox
-     */
-    protected $timebox;
-
-    /**
      * Indicates if the logout method has been called.
      *
      * @var bool
@@ -117,20 +102,17 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
      * @param  \Illuminate\Contracts\Auth\UserProvider  $provider
      * @param  \Illuminate\Contracts\Session\Session  $session
      * @param  \Symfony\Component\HttpFoundation\Request|null  $request
-     * @param  \Illuminate\Support\Timebox|null  $timebox
      * @return void
      */
     public function __construct($name,
                                 UserProvider $provider,
                                 Session $session,
-                                Request $request = null,
-                                Timebox $timebox = null)
+                                Request $request = null)
     {
         $this->name = $name;
         $this->session = $session;
         $this->request = $request;
         $this->provider = $provider;
-        $this->timebox = $timebox ?: new Timebox;
     }
 
     /**
@@ -430,17 +412,13 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
      */
     protected function hasValidCredentials($user, $credentials)
     {
-        return $this->timebox->call(function ($timebox) use ($user, $credentials) {
-            $validated = ! is_null($user) && $this->provider->validateCredentials($user, $credentials);
+        $validated = ! is_null($user) && $this->provider->validateCredentials($user, $credentials);
 
-            if ($validated) {
-                $timebox->returnEarly();
+        if ($validated) {
+            $this->fireValidatedEvent($user);
+        }
 
-                $this->fireValidatedEvent($user);
-            }
-
-            return $validated;
-        }, 200 * 1000);
+        return $validated;
     }
 
     /**
@@ -554,7 +532,7 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
      */
     protected function createRecaller($value)
     {
-        return $this->getCookieJar()->make($this->getRecallerName(), $value, $this->getRememberDuration());
+        return $this->getCookieJar()->forever($this->getRecallerName(), $value);
     }
 
     /**
@@ -839,29 +817,6 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
     }
 
     /**
-     * Get the number of minutes the remember me cookie should be valid for.
-     *
-     * @return int
-     */
-    protected function getRememberDuration()
-    {
-        return $this->rememberDuration;
-    }
-
-    /**
-     * Set the number of minutes the remember me cookie should be valid for.
-     *
-     * @param  int  $minutes
-     * @return $this
-     */
-    public function setRememberDuration($minutes)
-    {
-        $this->rememberDuration = $minutes;
-
-        return $this;
-    }
-
-    /**
      * Get the cookie creator instance used by the guard.
      *
      * @return \Illuminate\Contracts\Cookie\QueueingFactory
@@ -967,15 +922,5 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
         $this->request = $request;
 
         return $this;
-    }
-
-    /**
-     * Get the timebox instance used by the guard.
-     *
-     * @return \Illuminate\Support\Timebox
-     */
-    public function getTimebox()
-    {
-        return $this->timebox;
     }
 }

@@ -33,7 +33,7 @@ class Application extends Container implements ApplicationContract, CachesConfig
      *
      * @var string
      */
-    const VERSION = '8.83.25';
+    const VERSION = '8.55.0';
 
     /**
      * The base path for the Laravel installation.
@@ -248,7 +248,7 @@ class Application extends Container implements ApplicationContract, CachesConfig
      */
     public function afterLoadingEnvironment(Closure $callback)
     {
-        $this->afterBootstrapping(
+        return $this->afterBootstrapping(
             LoadEnvironmentVariables::class, $callback
         );
     }
@@ -351,7 +351,7 @@ class Application extends Container implements ApplicationContract, CachesConfig
     /**
      * Get the base path of the Laravel installation.
      *
-     * @param  string  $path
+     * @param  string  $path Optionally, a path to append to the base path
      * @return string
      */
     public function basePath($path = '')
@@ -362,7 +362,7 @@ class Application extends Container implements ApplicationContract, CachesConfig
     /**
      * Get the path to the bootstrap directory.
      *
-     * @param  string  $path
+     * @param  string  $path Optionally, a path to append to the bootstrap path
      * @return string
      */
     public function bootstrapPath($path = '')
@@ -373,7 +373,7 @@ class Application extends Container implements ApplicationContract, CachesConfig
     /**
      * Get the path to the application configuration files.
      *
-     * @param  string  $path
+     * @param  string  $path Optionally, a path to append to the config path
      * @return string
      */
     public function configPath($path = '')
@@ -384,7 +384,7 @@ class Application extends Container implements ApplicationContract, CachesConfig
     /**
      * Get the path to the database directory.
      *
-     * @param  string  $path
+     * @param  string  $path Optionally, a path to append to the database path
      * @return string
      */
     public function databasePath($path = '')
@@ -628,17 +628,7 @@ class Application extends Container implements ApplicationContract, CachesConfig
      */
     public function runningUnitTests()
     {
-        return $this->bound('env') && $this['env'] === 'testing';
-    }
-
-    /**
-     * Determine if the application is running with debug mode enabled.
-     *
-     * @return bool
-     */
-    public function hasDebugModeEnabled()
-    {
-        return (bool) $this['config']->get('app.debug');
+        return $this['env'] === 'testing';
     }
 
     /**
@@ -949,7 +939,7 @@ class Application extends Container implements ApplicationContract, CachesConfig
         $this->bootedCallbacks[] = $callback;
 
         if ($this->isBooted()) {
-            $callback($this);
+            $this->fireAppCallbacks([$callback]);
         }
     }
 
@@ -959,21 +949,15 @@ class Application extends Container implements ApplicationContract, CachesConfig
      * @param  callable[]  $callbacks
      * @return void
      */
-    protected function fireAppCallbacks(array &$callbacks)
+    protected function fireAppCallbacks(array $callbacks)
     {
-        $index = 0;
-
-        while ($index < count($callbacks)) {
-            $callbacks[$index]($this);
-
-            $index++;
+        foreach ($callbacks as $callback) {
+            $callback($this);
         }
     }
 
     /**
      * {@inheritdoc}
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function handle(SymfonyRequest $request, int $type = self::MASTER_REQUEST, bool $catch = true)
     {
@@ -1118,7 +1102,7 @@ class Application extends Container implements ApplicationContract, CachesConfig
      * @param  int  $code
      * @param  string  $message
      * @param  array  $headers
-     * @return never
+     * @return void
      *
      * @throws \Symfony\Component\HttpKernel\Exception\HttpException
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
@@ -1152,12 +1136,8 @@ class Application extends Container implements ApplicationContract, CachesConfig
      */
     public function terminate()
     {
-        $index = 0;
-
-        while ($index < count($this->terminatingCallbacks)) {
-            $this->call($this->terminatingCallbacks[$index]);
-
-            $index++;
+        foreach ($this->terminatingCallbacks as $terminating) {
+            $this->call($terminating);
         }
     }
 

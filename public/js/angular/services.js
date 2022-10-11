@@ -36,33 +36,13 @@ app.factory('pacienteService', function($http){
 
 app.factory('empresaService', function($http){
     return {
-        listarProfesionalVacunaRed: function ($params) {
-            return $http.post("vacunacovid/listarProfesionalVacunaRed", $params)
+        registrarEmpresa: function ($params) {
+            return $http.post("empresa/registrarEmpresa", $params)
         },
-        guardarRecepcionVacuna: function ($params) {
-            return $http.post("vacunacovid/guardarRecepcionVacuna", $params)
+        listarEmpresa: function ($params) {
+            return $http.post("empresa/listarEmpresa", $params)
         },
-        listarRecepcionVacuna: function ($params) {
-            return $http.post("vacunacovid/listarRecepcionVacuna", $params)
-        },
-        guardarObservacionVacuna: function ($params) {
-            return $http.post("vacunacovid/guardarObservacionVacuna", $params)
-        },
-        listarObservacionVacuna: function ($params) {
-            return $http.post("vacunacovid/listarObservacionVacuna", $params)
-        },
-        getTipoVacunaByProfesionalFecha: function ($params) {
-            return $http.post("vacunacovid/getTipoVacunaByProfesionalFecha", $params)
-        },
-        guardarEstadoObservacionVacuna: function ($params) {
-            return $http.post("vacunacovid/guardarEstadoObservacionVacuna", $params)
-        },
-        produccionDigitadoresVacuna: function ($params) {
-            return $http.post("vacunacovid/produccionDigitadoresVacuna", $params)
-        },
-        reporteCoberturaVacuna: function ($params) {
-            return $http.post("vacunacovid/reporteCoberturaVacuna", $params)
-        }
+
     }
 });
 

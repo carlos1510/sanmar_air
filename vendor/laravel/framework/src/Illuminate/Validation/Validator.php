@@ -204,8 +204,6 @@ class Validator implements ValidatorContract
     protected $implicitRules = [
         'Accepted',
         'AcceptedIf',
-        'Declined',
-        'DeclinedIf',
         'Filled',
         'Present',
         'Required',
@@ -237,7 +235,6 @@ class Validator implements ValidatorContract
         'Lt',
         'Lte',
         'AcceptedIf',
-        'DeclinedIf',
         'RequiredIf',
         'RequiredUnless',
         'RequiredWith',
@@ -247,7 +244,6 @@ class Validator implements ValidatorContract
         'Prohibited',
         'ProhibitedIf',
         'ProhibitedUnless',
-        'Prohibits',
         'Same',
         'Unique',
     ];
@@ -257,7 +253,7 @@ class Validator implements ValidatorContract
      *
      * @var string[]
      */
-    protected $excludeRules = ['Exclude', 'ExcludeIf', 'ExcludeUnless', 'ExcludeWithout'];
+    protected $excludeRules = ['ExcludeIf', 'ExcludeUnless', 'ExcludeWithout'];
 
     /**
      * The size related validation rules.
@@ -469,6 +465,7 @@ class Validator implements ValidatorContract
      * Remove the given attribute.
      *
      * @param  string  $attribute
+     *
      * @return void
      */
     protected function removeAttribute($attribute)
@@ -513,14 +510,11 @@ class Validator implements ValidatorContract
     /**
      * Get a validated input container for the validated input.
      *
-     * @param  array|null  $keys
-     * @return \Illuminate\Support\ValidatedInput|array
+     * @return \Illuminate\Support\ValidatedInput
      */
-    public function safe(array $keys = null)
+    public function safe()
     {
-        return is_array($keys)
-                ? (new ValidatedInput($this->validated()))->only($keys)
-                : new ValidatedInput($this->validated());
+        return new ValidatedInput($this->validated());
     }
 
     /**
@@ -575,12 +569,9 @@ class Validator implements ValidatorContract
         // First we will get the correct keys for the given attribute in case the field is nested in
         // an array. Then we determine if the given rule accepts other field names as parameters.
         // If so, we will replace any asterisks found in the parameters with the correct keys.
-        if ($this->dependsOnOtherFields($rule)) {
-            $parameters = $this->replaceDotInParameters($parameters);
-
-            if ($keys = $this->getExplicitKeys($attribute)) {
-                $parameters = $this->replaceAsterisksInParameters($parameters, $keys);
-            }
+        if (($keys = $this->getExplicitKeys($attribute)) &&
+            $this->dependsOnOtherFields($rule)) {
+            $parameters = $this->replaceAsterisksInParameters($parameters, $keys);
         }
 
         $value = $this->getValue($attribute);
@@ -661,20 +652,6 @@ class Validator implements ValidatorContract
         }
 
         return $attribute;
-    }
-
-    /**
-     * Replace each field parameter which has an escaped dot with the dot placeholder.
-     *
-     * @param  array  $parameters
-     * @param  array  $keys
-     * @return array
-     */
-    protected function replaceDotInParameters(array $parameters)
-    {
-        return array_map(function ($field) {
-            return str_replace('\.', $this->dotPlaceholder, $field);
-        }, $parameters);
     }
 
     /**
@@ -867,8 +844,6 @@ class Validator implements ValidatorContract
             $this->passes();
         }
 
-        $attributeWithPlaceholders = $attribute;
-
         $attribute = str_replace(
             [$this->dotPlaceholder, '__asterisk__'],
             ['.', '*'],
@@ -880,7 +855,7 @@ class Validator implements ValidatorContract
         }
 
         $this->messages->add($attribute, $this->makeReplacements(
-            $this->getMessage($attributeWithPlaceholders, $rule), $attribute, $rule, $parameters
+            $this->getMessage($attribute, $rule), $attribute, $rule, $parameters
         ));
 
         $this->failedRules[$attribute][$rule] = $parameters;
@@ -1143,40 +1118,15 @@ class Validator implements ValidatorContract
      */
     public function sometimes($attribute, $rules, callable $callback)
     {
-        $payload = new Fluent($this->data);
+        $payload = new Fluent($this->getData());
 
-        foreach ((array) $attribute as $key) {
-            $response = (new ValidationRuleParser($this->data))->explode([$key => $rules]);
-
-            $this->implicitAttributes = array_merge($response->implicitAttributes, $this->implicitAttributes);
-
-            foreach ($response->rules as $ruleKey => $ruleValue) {
-                if ($callback($payload, $this->dataForSometimesIteration($ruleKey, ! Str::endsWith($key, '.*')))) {
-                    $this->addRules([$ruleKey => $ruleValue]);
-                }
+        if ($callback($payload)) {
+            foreach ((array) $attribute as $key) {
+                $this->addRules([$key => $rules]);
             }
         }
 
         return $this;
-    }
-
-    /**
-     * Get the data that should be injected into the iteration of a wildcard "sometimes" callback.
-     *
-     * @param  string  $attribute
-     * @return \Illuminate\Support\Fluent|array|mixed
-     */
-    private function dataForSometimesIteration(string $attribute, $removeLastSegmentOfAttribute)
-    {
-        $lastSegmentOfAttribute = strrchr($attribute, '.');
-
-        $attribute = $lastSegmentOfAttribute && $removeLastSegmentOfAttribute
-                    ? Str::replaceLast($lastSegmentOfAttribute, '', $attribute)
-                    : $attribute;
-
-        return is_array($data = data_get($this->data, $attribute))
-            ? new Fluent($data)
-            : $data;
     }
 
     /**

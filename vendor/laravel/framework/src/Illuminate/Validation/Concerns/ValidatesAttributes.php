@@ -65,45 +65,6 @@ trait ValidatesAttributes
     }
 
     /**
-     * Validate that an attribute was "declined".
-     *
-     * This validation rule implies the attribute is "required".
-     *
-     * @param  string  $attribute
-     * @param  mixed  $value
-     * @return bool
-     */
-    public function validateDeclined($attribute, $value)
-    {
-        $acceptable = ['no', 'off', '0', 0, false, 'false'];
-
-        return $this->validateRequired($attribute, $value) && in_array($value, $acceptable, true);
-    }
-
-    /**
-     * Validate that an attribute was "declined" when another attribute has a given value.
-     *
-     * @param  string  $attribute
-     * @param  mixed  $value
-     * @param  mixed  $parameters
-     * @return bool
-     */
-    public function validateDeclinedIf($attribute, $value, $parameters)
-    {
-        $acceptable = ['no', 'off', '0', 0, false, 'false'];
-
-        $this->requireParameterCount(2, $parameters, 'declined_if');
-
-        [$values, $other] = $this->parseDependentRuleParameters($parameters);
-
-        if (in_array($other, $values, is_bool($other) || is_null($other))) {
-            return $this->validateRequired($attribute, $value) && in_array($value, $acceptable, true);
-        }
-
-        return true;
-    }
-
-    /**
      * Validate that an attribute is an active URL.
      *
      * @param  string  $attribute
@@ -265,11 +226,7 @@ trait ValidatesAttributes
         $firstDate = $this->getDateTimeWithOptionalFormat($format, $first);
 
         if (! $secondDate = $this->getDateTimeWithOptionalFormat($format, $second)) {
-            if (is_null($second = $this->getValue($second))) {
-                return true;
-            }
-
-            $secondDate = $this->getDateTimeWithOptionalFormat($format, $second);
+            $secondDate = $this->getDateTimeWithOptionalFormat($format, $this->getValue($second));
         }
 
         return ($firstDate && $secondDate) && ($this->compare($firstDate, $secondDate, $operator));
@@ -300,7 +257,7 @@ trait ValidatesAttributes
     protected function getDateTime($value)
     {
         try {
-            return @Date::parse($value) ?: null;
+            return Date::parse($value);
         } catch (Exception $e) {
             //
         }
@@ -369,29 +326,6 @@ trait ValidatesAttributes
         }
 
         return empty(array_diff_key($value, array_fill_keys($parameters, '')));
-    }
-
-    /**
-     * Validate that an array has all of the given keys.
-     *
-     * @param  string  $attribute
-     * @param  mixed  $value
-     * @param  array  $parameters
-     * @return bool
-     */
-    public function validateRequiredArrayKeys($attribute, $value, $parameters)
-    {
-        if (! is_array($value)) {
-            return false;
-        }
-
-        foreach ($parameters as $param) {
-            if (! Arr::exists($value, $param)) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     /**
@@ -472,11 +406,7 @@ trait ValidatesAttributes
             return true;
         }
 
-        try {
-            if ((! is_string($value) && ! is_numeric($value)) || strtotime($value) === false) {
-                return false;
-            }
-        } catch (Exception $e) {
+        if ((! is_string($value) && ! is_numeric($value)) || strtotime($value) === false) {
             return false;
         }
 
@@ -501,15 +431,11 @@ trait ValidatesAttributes
             return false;
         }
 
-        foreach ($parameters as $format) {
-            $date = DateTime::createFromFormat('!'.$format, $value);
+        $format = $parameters[0];
 
-            if ($date && $date->format($format) == $value) {
-                return true;
-            }
-        }
+        $date = DateTime::createFromFormat('!'.$format, $value);
 
-        return false;
+        return $date && $date->format($format) == $value;
     }
 
     /**
@@ -1258,18 +1184,6 @@ trait ValidatesAttributes
     }
 
     /**
-     * Validate that an attribute is a valid MAC address.
-     *
-     * @param  string  $attribute
-     * @param  mixed  $value
-     * @return bool
-     */
-    public function validateMacAddress($attribute, $value)
-    {
-        return filter_var($value, FILTER_VALIDATE_MAC) !== false;
-    }
-
-    /**
      * Validate the attribute is a valid JSON string.
      *
      * @param  string  $attribute
@@ -1372,7 +1286,7 @@ trait ValidatesAttributes
         }
 
         $phpExtensions = [
-            'php', 'php3', 'php4', 'php5', 'phtml', 'phar',
+            'php', 'php3', 'php4', 'php5', 'phtml',
         ];
 
         return ($value instanceof UploadedFile)
@@ -1618,29 +1532,6 @@ trait ValidatesAttributes
         }
 
         return true;
-    }
-
-    /**
-     * Validate that other attributes do not exist when this attribute exists.
-     *
-     * @param  string  $attribute
-     * @param  mixed  $value
-     * @param  mixed  $parameters
-     * @return bool
-     */
-    public function validateProhibits($attribute, $value, $parameters)
-    {
-        return ! Arr::hasAny($this->data, $parameters);
-    }
-
-    /**
-     * Indicate that an attribute is excluded.
-     *
-     * @return bool
-     */
-    public function validateExclude()
-    {
-        return false;
     }
 
     /**
@@ -2057,7 +1948,7 @@ trait ValidatesAttributes
             return $value->getSize() / 1024;
         }
 
-        return mb_strlen($value ?? '');
+        return mb_strlen($value);
     }
 
     /**
@@ -2154,6 +2045,7 @@ trait ValidatesAttributes
      *
      * @param  string  $attribute
      * @param  string  $rule
+     *
      * @return void
      */
     protected function shouldBeNumeric($attribute, $rule)

@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Carbon\Traits;
 
 use Carbon\Carbon;
@@ -79,8 +78,8 @@ trait Creator
 
         // Work-around for PHP bug https://bugs.php.net/bug.php?id=67127
         if (!str_contains((string) .1, '.')) {
-            $locale = setlocale(LC_NUMERIC, '0'); // @codeCoverageIgnore
-            setlocale(LC_NUMERIC, 'C'); // @codeCoverageIgnore
+            $locale = setlocale(LC_NUMERIC, '0');
+            setlocale(LC_NUMERIC, 'C');
         }
 
         try {
@@ -92,10 +91,10 @@ trait Creator
         $this->constructedObjectId = spl_object_hash($this);
 
         if (isset($locale)) {
-            setlocale(LC_NUMERIC, $locale); // @codeCoverageIgnore
+            setlocale(LC_NUMERIC, $locale);
         }
 
-        self::setLastErrors(parent::getLastErrors());
+        static::setLastErrors(parent::getLastErrors());
     }
 
     /**
@@ -148,7 +147,7 @@ trait Creator
 
         $instance = new static($date->format('Y-m-d H:i:s.u'), $date->getTimezone());
 
-        if ($date instanceof CarbonInterface) {
+        if ($date instanceof CarbonInterface || $date instanceof Options) {
             $settings = $date->getSettings();
 
             if (!$date->hasLocalTranslator()) {
@@ -339,7 +338,7 @@ trait Creator
             return $now(static::now($tz));
         }
 
-        return $now->avoidMutation()->tz($tz);
+        return $now;
     }
 
     /**
@@ -368,7 +367,7 @@ trait Creator
      */
     public static function create($year = 0, $month = 1, $day = 1, $hour = 0, $minute = 0, $second = 0, $tz = null)
     {
-        if ((\is_string($year) && !is_numeric($year)) || $year instanceof DateTimeInterface) {
+        if (\is_string($year) && !is_numeric($year)) {
             return static::parse($year, $tz ?: (\is_string($month) || $month instanceof DateTimeZone ? $month : null));
         }
 
@@ -390,12 +389,12 @@ trait Creator
             return $defaults[$unit];
         };
 
-        $year = $year ?? $getDefault('year');
-        $month = $month ?? $getDefault('month');
-        $day = $day ?? $getDefault('day');
-        $hour = $hour ?? $getDefault('hour');
-        $minute = $minute ?? $getDefault('minute');
-        $second = (float) ($second ?? $getDefault('second'));
+        $year = $year === null ? $getDefault('year') : $year;
+        $month = $month === null ? $getDefault('month') : $month;
+        $day = $day === null ? $getDefault('day') : $day;
+        $hour = $hour === null ? $getDefault('hour') : $hour;
+        $minute = $minute === null ? $getDefault('minute') : $minute;
+        $second = (float) ($second === null ? $getDefault('second') : $second);
 
         self::assertBetween('month', $month, 0, 99);
         self::assertBetween('day', $day, 0, 99);
@@ -907,9 +906,9 @@ trait Creator
         if (\is_string($var)) {
             $var = trim($var);
 
-            if (!preg_match('/^P[\dT]/', $var) &&
-                !preg_match('/^R\d/', $var) &&
-                preg_match('/[a-z\d]/i', $var)
+            if (!preg_match('/^P[0-9T]/', $var) &&
+                !preg_match('/^R[0-9]/', $var) &&
+                preg_match('/[a-z0-9]/i', $var)
             ) {
                 $date = static::parse($var);
             }
@@ -921,26 +920,17 @@ trait Creator
     /**
      * Set last errors.
      *
-     * @param array|bool $lastErrors
+     * @param array $lastErrors
      *
      * @return void
      */
-    private static function setLastErrors($lastErrors)
+    private static function setLastErrors(array $lastErrors)
     {
-        if (\is_array($lastErrors) || $lastErrors === false) {
-            static::$lastErrors = \is_array($lastErrors) ? $lastErrors : [
-                'warning_count' => 0,
-                'warnings' => [],
-                'error_count' => 0,
-                'errors' => [],
-            ];
-        }
+        static::$lastErrors = $lastErrors;
     }
 
     /**
      * {@inheritdoc}
-     *
-     * @return array
      */
     #[ReturnTypeWillChange]
     public static function getLastErrors()

@@ -282,9 +282,7 @@ class Filesystem
 
         foreach ($paths as $path) {
             try {
-                if (@unlink($path)) {
-                    clearstatcache(false, $path);
-                } else {
+                if (! @unlink($path)) {
                     $success = false;
                 }
             } catch (ErrorException $e) {

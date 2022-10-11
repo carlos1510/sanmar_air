@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Carbon\Traits;
 
 use Carbon\Carbon;
@@ -112,8 +111,7 @@ trait Difference
 
     /**
      * Get the difference as a DateInterval instance.
-     * Return relative interval (negative if $absolute flag is not set to true and the given date is before
-     * current one).
+     * Return relative interval (negative if
      *
      * @param \Carbon\CarbonInterface|\DateTimeInterface|string|null $date
      * @param bool                                                   $absolute Get the absolute of the difference
@@ -125,10 +123,8 @@ trait Difference
     {
         $other = $this->resolveCarbon($date);
 
-        // Work-around for https://bugs.php.net/bug.php?id=81458
-        // It was initially introduced for https://bugs.php.net/bug.php?id=80998
-        // The very specific case of 80998 was fixed in PHP 8.1beta3, but it introduced 81458
-        // So we still need to keep this for now
+        // Can be removed if https://github.com/derickr/timelib/pull/110
+        // is merged
         // @codeCoverageIgnoreStart
         if (version_compare(PHP_VERSION, '8.1.0-dev', '>=') && $other->tz !== $this->tz) {
             $other = $other->avoidMutation()->tz($this->tz);
@@ -140,8 +136,7 @@ trait Difference
 
     /**
      * Get the difference as a CarbonInterval instance.
-     * Return relative interval (negative if $absolute flag is not set to true and the given date is before
-     * current one).
+     * Return absolute interval (always positive) unless you pass false to the second argument.
      *
      * @param \Carbon\CarbonInterface|\DateTimeInterface|string|null $date
      * @param bool                                                   $absolute Get the absolute of the difference
@@ -217,7 +212,7 @@ trait Difference
      */
     public function diffInDays($date = null, $absolute = true)
     {
-        return $this->getIntervalDayDiff($this->diff($this->resolveCarbon($date), $absolute));
+        return (int) $this->diff($this->resolveCarbon($date), $absolute)->format('%r%a');
     }
 
     /**
@@ -472,7 +467,7 @@ trait Difference
      */
     public function floatDiffInSeconds($date = null, $absolute = true)
     {
-        return (float) ($this->diffInMicroseconds($date, $absolute) / static::MICROSECONDS_PER_SECOND);
+        return $this->diffInMicroseconds($date, $absolute) / static::MICROSECONDS_PER_SECOND;
     }
 
     /**
@@ -518,7 +513,7 @@ trait Difference
             return $hoursDiff / static::HOURS_PER_DAY;
         }
 
-        $daysDiff = $this->getIntervalDayDiff($interval);
+        $daysDiff = (int) $interval->format('%r%a');
 
         return $daysDiff + fmod($hoursDiff, static::HOURS_PER_DAY) / static::HOURS_PER_DAY;
     }
@@ -786,10 +781,6 @@ trait Difference
      *                                                             - 'short' entry (see below)
      *                                                             - 'parts' entry (see below)
      *                                                             - 'options' entry (see below)
-     *                                                             - 'skip' entry, list of units to skip (array of strings or a single string,
-     *                                                             ` it can be the unit name (singular or plural) or its shortcut
-     *                                                             ` (y, m, w, d, h, min, s, ms, µs).
-     *                                                             - 'aUnit' entry, prefer "an hour" over "1 hour" if true
      *                                                             - 'join' entry determines how to join multiple parts of the string
      *                                                             `  - if $join is a string, it's used as a joiner glue
      *                                                             `  - if $join is a callable/closure, it get the list of string and should return a string
@@ -798,8 +789,6 @@ trait Difference
      *                                                             `  - if $join is true, it will be guessed from the locale ('list' translation file entry)
      *                                                             `  - if $join is missing, a space will be used as glue
      *                                                             - 'other' entry (see above)
-     *                                                             - 'minimumUnit' entry determines the smallest unit of time to display can be long or
-     *                                                             `  short form of the units, e.g. 'hour' or 'h' (default value: s)
      *                                                             if int passed, it add modifiers:
      *                                                             Possible values:
      *                                                             - CarbonInterface::DIFF_ABSOLUTE          no modifiers
@@ -826,7 +815,7 @@ trait Difference
             $syntax['syntax'] = $syntax['syntax'] ?? null;
             $intSyntax = &$syntax['syntax'];
         }
-        $intSyntax = (int) ($intSyntax ?? static::DIFF_RELATIVE_AUTO);
+        $intSyntax = (int) ($intSyntax === null ? static::DIFF_RELATIVE_AUTO : $intSyntax);
         $intSyntax = $intSyntax === static::DIFF_RELATIVE_AUTO && $other === null ? static::DIFF_RELATIVE_TO_NOW : $intSyntax;
 
         $parts = min(7, max(1, (int) $parts));
@@ -1148,22 +1137,5 @@ trait Difference
         }
 
         return $this->isoFormat((string) $format);
-    }
-
-    private function getIntervalDayDiff(DateInterval $interval): int
-    {
-        $daysDiff = (int) $interval->format('%a');
-        $sign = $interval->format('%r') === '-' ? -1 : 1;
-
-        if (\is_int($interval->days) &&
-            $interval->y === 0 &&
-            $interval->m === 0 &&
-            version_compare(PHP_VERSION, '8.1.0-dev', '<') &&
-            abs($interval->d - $daysDiff) === 1
-        ) {
-            $daysDiff = abs($interval->d); // @codeCoverageIgnore
-        }
-
-        return $daysDiff * $sign;
     }
 }

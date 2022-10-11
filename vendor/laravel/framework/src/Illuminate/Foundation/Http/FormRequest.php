@@ -3,7 +3,6 @@
 namespace Illuminate\Foundation\Http;
 
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Auth\Access\Response;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 use Illuminate\Contracts\Validation\ValidatesWhenResolved;
@@ -164,15 +163,11 @@ class FormRequest extends Request implements ValidatesWhenResolved
      * Determine if the request passes the authorization check.
      *
      * @return bool
-     *
-     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     protected function passesAuthorization()
     {
         if (method_exists($this, 'authorize')) {
-            $result = $this->container->call([$this, 'authorize']);
-
-            return $result instanceof Response ? $result->authorize() : $result;
+            return $this->container->call([$this, 'authorize']);
         }
 
         return true;
@@ -193,14 +188,11 @@ class FormRequest extends Request implements ValidatesWhenResolved
     /**
      * Get a validated input container for the validated input.
      *
-     * @param  array|null  $keys
-     * @return \Illuminate\Support\ValidatedInput|array
+     * @return \Illuminate\Support\ValidatedInput
      */
-    public function safe(array $keys = null)
+    public function safe()
     {
-        return is_array($keys)
-                    ? $this->validator->safe()->only($keys)
-                    : $this->validator->safe();
+        return $this->validator->safe();
     }
 
     /**

@@ -5,7 +5,6 @@ namespace Facade\Ignition\Logger;
 use Facade\FlareClient\Flare;
 use Facade\FlareClient\Report;
 use Facade\Ignition\Ignition;
-use Facade\Ignition\Support\SentReports;
 use Facade\Ignition\Tabs\Tab;
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Logger;
@@ -16,16 +15,11 @@ class FlareHandler extends AbstractProcessingHandler
     /** @var \Facade\FlareClient\Flare */
     protected $flare;
 
-    /** @var \Facade\Ignition\Support\SentReports */
-    protected $sentReports;
-
     protected $minimumReportLogLevel = Logger::ERROR;
 
-    public function __construct(Flare $flare, SentReports $sentReports, $level = Logger::DEBUG, $bubble = true)
+    public function __construct(Flare $flare, $level = Logger::DEBUG, $bubble = true)
     {
         $this->flare = $flare;
-
-        $this->sentReports = $sentReports;
 
         parent::__construct($level, $bubble);
     }
@@ -54,11 +48,7 @@ class FlareHandler extends AbstractProcessingHandler
                     $tab->beforeRenderingErrorPage($this->flare, $throwable);
                 });
 
-            $report = $this->flare->report($record['context']['exception']);
-
-            if ($report) {
-                $this->sentReports->add($report);
-            }
+            $this->flare->report($record['context']['exception']);
 
             return;
         }

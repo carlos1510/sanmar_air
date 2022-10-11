@@ -5,13 +5,12 @@ namespace Illuminate\Support;
 use ArrayIterator;
 use Closure;
 use DateTimeInterface;
-use Illuminate\Contracts\Support\CanBeEscapedWhenCastToString;
 use Illuminate\Support\Traits\EnumeratesValues;
 use Illuminate\Support\Traits\Macroable;
 use IteratorAggregate;
 use stdClass;
 
-class LazyCollection implements CanBeEscapedWhenCastToString, Enumerable
+class LazyCollection implements Enumerable
 {
     use EnumeratesValues, Macroable;
 
@@ -203,19 +202,6 @@ class LazyCollection implements CanBeEscapedWhenCastToString, Enumerable
         }
 
         return $this->contains($this->operatorForWhere(...func_get_args()));
-    }
-
-    /**
-     * Determine if an item is not contained in the enumerable.
-     *
-     * @param  mixed  $key
-     * @param  mixed  $operator
-     * @param  mixed  $value
-     * @return bool
-     */
-    public function doesntContain($key, $operator = null, $value = null)
-    {
-        return ! $this->contains(...func_get_args());
     }
 
     /**
@@ -527,25 +513,6 @@ class LazyCollection implements CanBeEscapedWhenCastToString, Enumerable
     }
 
     /**
-     * Determine if any of the keys exist in the collection.
-     *
-     * @param  mixed  $key
-     * @return bool
-     */
-    public function hasAny($key)
-    {
-        $keys = array_flip(is_array($key) ? $key : func_get_args());
-
-        foreach ($this as $key => $value) {
-            if (array_key_exists($key, $keys)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * Concatenate values of a given key as a string.
      *
      * @param  string  $value
@@ -796,8 +763,8 @@ class LazyCollection implements CanBeEscapedWhenCastToString, Enumerable
         return new static(function () use ($step, $offset) {
             $position = 0;
 
-            foreach ($this->slice($offset) as $item) {
-                if ($position % $step === 0) {
+            foreach ($this as $item) {
+                if ($position % $step === $offset) {
                     yield $item;
                 }
 
@@ -1090,8 +1057,8 @@ class LazyCollection implements CanBeEscapedWhenCastToString, Enumerable
      * @param  mixed  $value
      * @return mixed
      *
-     * @throws \Illuminate\Support\ItemNotFoundException
-     * @throws \Illuminate\Support\MultipleItemsFoundException
+     * @throws \Illuminate\Collections\ItemNotFoundException
+     * @throws \Illuminate\Collections\MultipleItemsFoundException
      */
     public function sole($key = null, $operator = null, $value = null)
     {
@@ -1105,30 +1072,6 @@ class LazyCollection implements CanBeEscapedWhenCastToString, Enumerable
             ->take(2)
             ->collect()
             ->sole();
-    }
-
-    /**
-     * Get the first item in the collection but throw an exception if no matching items exist.
-     *
-     * @param  mixed  $key
-     * @param  mixed  $operator
-     * @param  mixed  $value
-     * @return mixed
-     *
-     * @throws \Illuminate\Support\ItemNotFoundException
-     */
-    public function firstOrFail($key = null, $operator = null, $value = null)
-    {
-        $filter = func_num_args() > 1
-            ? $this->operatorForWhere(...func_get_args())
-            : $key;
-
-        return $this
-            ->when($filter)
-            ->filter($filter)
-            ->take(1)
-            ->collect()
-            ->firstOrFail();
     }
 
     /**
@@ -1289,17 +1232,6 @@ class LazyCollection implements CanBeEscapedWhenCastToString, Enumerable
     }
 
     /**
-     * Sort the collection keys using a callback.
-     *
-     * @param  callable  $callback
-     * @return static
-     */
-    public function sortKeysUsing(callable $callback)
-    {
-        return $this->passthru('sortKeysUsing', func_get_args());
-    }
-
-    /**
      * Take the first or last {$limit} items.
      *
      * @param  int  $limit
@@ -1392,40 +1324,6 @@ class LazyCollection implements CanBeEscapedWhenCastToString, Enumerable
                 $callback($value, $key);
 
                 yield $key => $value;
-            }
-        });
-    }
-
-    /**
-     * Convert a flatten "dot" notation array into an expanded array.
-     *
-     * @return static
-     */
-    public function undot()
-    {
-        return $this->passthru('undot', []);
-    }
-
-    /**
-     * Return only unique items from the collection array.
-     *
-     * @param  string|callable|null  $key
-     * @param  bool  $strict
-     * @return static
-     */
-    public function unique($key = null, $strict = false)
-    {
-        $callback = $this->valueRetriever($key);
-
-        return new static(function () use ($callback, $strict) {
-            $exists = [];
-
-            foreach ($this as $key => $item) {
-                if (! in_array($id = $callback($item, $key), $exists, $strict)) {
-                    yield $key => $item;
-
-                    $exists[] = $id;
-                }
             }
         });
     }

@@ -7,6 +7,7 @@ use Illuminate\Contracts\Redis\Connection as ConnectionContract;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Redis;
+use RedisCluster;
 use RedisException;
 
 /**
@@ -14,8 +15,6 @@ use RedisException;
  */
 class PhpRedisConnection extends Connection implements ConnectionContract
 {
-    use PacksPhpRedisValues;
-
     /**
      * The connection creation callback.
      *
@@ -221,7 +220,7 @@ class PhpRedisConnection extends Connection implements ConnectionContract
         $options = [];
 
         foreach (array_slice($dictionary, 0, 3) as $i => $value) {
-            if (in_array($value, ['nx', 'xx', 'ch', 'incr', 'gt', 'lt', 'NX', 'XX', 'CH', 'INCR', 'GT', 'LT'], true)) {
+            if (in_array($value, ['nx', 'xx', 'ch', 'incr', 'NX', 'XX', 'CH', 'INCR'], true)) {
                 $options[] = $value;
 
                 unset($dictionary[$i]);
@@ -494,17 +493,17 @@ class PhpRedisConnection extends Connection implements ConnectionContract
     /**
      * Flush the selected Redis database.
      *
-     * @return mixed
+     * @return void
      */
     public function flushdb()
     {
-        $arguments = func_get_args();
-
-        if (strtoupper((string) ($arguments[0] ?? null)) === 'ASYNC') {
-            return $this->command('flushdb', [true]);
+        if (! $this->client instanceof RedisCluster) {
+            return $this->command('flushdb');
         }
 
-        return $this->command('flushdb');
+        foreach ($this->client->_masters() as $master) {
+            $this->client->flushDb($master);
+        }
     }
 
     /**

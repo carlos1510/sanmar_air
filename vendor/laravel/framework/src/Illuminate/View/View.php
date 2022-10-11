@@ -81,7 +81,7 @@ class View implements ArrayAccess, Htmlable, ViewContract
      * Get the string contents of the view.
      *
      * @param  callable|null  $callback
-     * @return string
+     * @return array|string
      *
      * @throws \Throwable
      */

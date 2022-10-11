@@ -624,7 +624,7 @@ class Mock implements MockInterface
     public function __isset($name)
     {
         if (false === stripos($name, '_mockery_') && get_parent_class($this) && method_exists(get_parent_class($this), '__isset')) {
-            return call_user_func(get_parent_class($this) . '::__isset', $name);
+            return call_user_func('parent::__isset', $name);
         }
 
         return false;
@@ -647,9 +647,9 @@ class Mock implements MockInterface
     public function mockery_callSubjectMethod($name, array $args)
     {
         if (!method_exists($this, $name) && get_parent_class($this) && method_exists(get_parent_class($this), '__call')) {
-            return call_user_func(get_parent_class($this) . '::__call', $name, $args);
+            return call_user_func('parent::__call', $name, $args);
         }
-        return call_user_func_array(get_parent_class($this) . '::' . $name, $args);
+        return call_user_func_array('parent::' . $name, $args);
     }
 
     /**
@@ -717,11 +717,12 @@ class Mock implements MockInterface
     {
         $rm = $this->mockery_getMethod($name);
 
-        if ($rm === null) {
+        // Default return value for methods with nullable type is null
+        if ($rm === null || $rm->getReturnType() === null || $rm->getReturnType()->allowsNull()) {
             return null;
         }
 
-        $returnType = Reflector::getSimplestReturnType($rm);
+        $returnType = Reflector::getReturnType($rm, true);
 
         switch ($returnType) {
             case null:     return null;
@@ -746,9 +747,6 @@ class Mock implements MockInterface
 
             case 'void':
                 return null;
-
-            case 'static':
-                return $this;
 
             case 'object':
                 $mock = \Mockery::mock();
@@ -819,7 +817,7 @@ class Mock implements MockInterface
             throw new BadMethodCallException(
                 'Static method ' . $associatedRealObject->mockery_getName() . '::' . $method
                 . '() does not exist on this mock object',
-                0,
+                null,
                 $e
             );
         }
@@ -879,7 +877,7 @@ class Mock implements MockInterface
                 // noop - there is no hasPrototype method
             }
 
-            return call_user_func_array(get_parent_class($this) . '::' . $method, $args);
+            return call_user_func_array("parent::$method", $args);
         }
 
         $handler = $this->_mockery_findExpectedMethodHandler($method);
@@ -898,18 +896,18 @@ class Mock implements MockInterface
             (method_exists($this->_mockery_partial, $method) || method_exists($this->_mockery_partial, '__call'))
         ) {
             return call_user_func_array(array($this->_mockery_partial, $method), $args);
-        } elseif ($this->_mockery_deferMissing && is_callable(get_parent_class($this) . '::' . $method)
+        } elseif ($this->_mockery_deferMissing && is_callable("parent::$method")
             && (!$this->hasMethodOverloadingInParentClass() || (get_parent_class($this) && method_exists(get_parent_class($this), $method)))) {
-            return call_user_func_array(get_parent_class($this) . '::' . $method, $args);
+            return call_user_func_array("parent::$method", $args);
         } elseif ($this->_mockery_deferMissing && get_parent_class($this) && method_exists(get_parent_class($this), '__call')) {
-            return call_user_func(get_parent_class($this) . '::__call', $method, $args);
+            return call_user_func('parent::__call', $method, $args);
         } elseif ($method == '__toString') {
             // __toString is special because we force its addition to the class API regardless of the
             // original implementation.  Thus, we should always return a string rather than honor
             // _mockery_ignoreMissing and break the API with an error.
             return sprintf("%s#%s", __CLASS__, spl_object_hash($this));
         } elseif ($this->_mockery_ignoreMissing) {
-            if (\Mockery::getConfiguration()->mockingNonExistentMethodsAllowed() || (!is_null($this->_mockery_partial) && method_exists($this->_mockery_partial, $method)) || is_callable(get_parent_class($this) . '::' . $method)) {
+            if (\Mockery::getConfiguration()->mockingNonExistentMethodsAllowed() || (!is_null($this->_mockery_partial) && method_exists($this->_mockery_partial, $method)) || is_callable("parent::$method")) {
                 if ($this->_mockery_defaultReturnValue instanceof \Mockery\Undefined) {
                     return call_user_func_array(array($this->_mockery_defaultReturnValue, $method), $args);
                 } elseif (null === $this->_mockery_defaultReturnValue) {
@@ -957,7 +955,7 @@ class Mock implements MockInterface
     private function hasMethodOverloadingInParentClass()
     {
         // if there's __call any name would be callable
-        return is_callable(get_parent_class($this) . '::aFunctionNameThatNoOneWouldEverUseInRealLife12345');
+        return is_callable('parent::aFunctionNameThatNoOneWouldEverUseInRealLife12345');
     }
 
     /**

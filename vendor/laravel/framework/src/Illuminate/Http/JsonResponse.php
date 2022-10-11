@@ -34,8 +34,6 @@ class JsonResponse extends BaseJsonResponse
 
     /**
      * {@inheritdoc}
-     *
-     * @return static
      */
     public static function fromJsonString(?string $data = null, int $status = 200, array $headers = [])
     {
@@ -67,15 +65,10 @@ class JsonResponse extends BaseJsonResponse
 
     /**
      * {@inheritdoc}
-     *
-     * @return static
      */
     public function setData($data = [])
     {
         $this->original = $data;
-
-        // Ensure json_last_error() is cleared...
-        json_decode('[]');
 
         if ($data instanceof Jsonable) {
             $this->data = $data->toJson($this->encodingOptions);
@@ -116,8 +109,6 @@ class JsonResponse extends BaseJsonResponse
 
     /**
      * {@inheritdoc}
-     *
-     * @return static
      */
     public function setEncodingOptions($options)
     {

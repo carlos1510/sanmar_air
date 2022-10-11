@@ -42,9 +42,9 @@ abstract class Helper implements HelperInterface
     /**
      * Returns the length of a string, using mb_strwidth if it is available.
      *
-     * @deprecated since Symfony 5.3
+     * @deprecated since 5.3
      *
-     * @return int
+     * @return int The length of the string
      */
     public static function strlen(?string $string)
     {
@@ -94,7 +94,7 @@ abstract class Helper implements HelperInterface
     /**
      * Returns the subset of a string, using mb_substr if it is available.
      *
-     * @return string
+     * @return string The string subset
      */
     public static function substr(?string $string, int $from, int $length = null)
     {
@@ -154,7 +154,7 @@ abstract class Helper implements HelperInterface
     }
 
     /**
-     * @deprecated since Symfony 5.3
+     * @deprecated since 5.3
      */
     public static function strlenWithoutDecoration(OutputFormatterInterface $formatter, ?string $string)
     {
@@ -170,7 +170,7 @@ abstract class Helper implements HelperInterface
         // remove <...> formatting
         $string = $formatter->format($string ?? '');
         // remove already formatted characters
-        $string = preg_replace("/\033\[[^m]*m/", '', $string ?? '');
+        $string = preg_replace("/\033\[[^m]*m/", '', $string);
         $formatter->setDecorated($isDecorated);
 
         return $string;

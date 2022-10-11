@@ -42,6 +42,18 @@ return [
             'visibility' => 'public',
         ],
 
+        'archivo' => [
+            'driver' => 'local',
+            'root' => public_path().'/file',
+            'visibility' => 'public',
+        ],
+
+        'archivo2' => [
+            'driver' => 'local',
+            'root' => public_path().'/file/observacion_vacuna',
+            'visibility' => 'public',
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

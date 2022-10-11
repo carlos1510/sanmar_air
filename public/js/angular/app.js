@@ -3,8 +3,7 @@
  */
 
 'use strict';
-//var app=angular.module('app', ['datatables','Alertify']);
-var app=angular.module('app', ['Alertify']);
+var app=angular.module('app', []);
 
 /*app.directive('typeahead', ['$compile', '$timeout', function($compile, $timeout)   {
     return {
@@ -118,9 +117,7 @@ app.filter('startFrom', function()
     };
 });
 
-app.run(function($rootScope,$sce,$filter,$timeout, Alertify ) {
-
-    $rootScope.numero_generado = 0;
+app.run(function($rootScope,$sce,$filter,$timeout ) {
     $rootScope.allowHtml=function(text){
         if(text!=null){
             text=text.replace(/\n/g,"<br />");
@@ -128,29 +125,8 @@ app.run(function($rootScope,$sce,$filter,$timeout, Alertify ) {
         }
         return null;
     }
-    function getRandomInt(min, max) {
-        min = Math.ceil(min);
-        max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
 
-    $rootScope.generarNumeroRandom = function () {
-        var min = Math.ceil(1);
-        var max = Math.floor(4);
-        $rootScope.numero_generado = Math.floor(Math.random() * (max - min + 1)) + min;
-        //console.log($rootScope.numero_generado);
-    }
-
-    /*$rootScope.seleccionarColorPersona = function () {
-        $rootScope.numero_generado = $rootScope.generarNumeroRandom();
-        if ($rootScope.numero_generado == 1){
-
-        }
-    }*/
-    $rootScope.generarNumeroRandom();
-    //console.log($rootScope.generarNumeroRandom());
-
-    $rootScope.datatableLanguageConfig={
+   /* $rootScope.datatableLanguageConfig={
         "sEmptyTable": "No hay Datos Disponibles",
         "sInfo": "Mostrando _START_ hasta _END_ de _TOTAL_ Filas",
         "sInfoEmpty": "Viendo 0 hasta 0 de 0 filas",
@@ -172,32 +148,9 @@ app.run(function($rootScope,$sce,$filter,$timeout, Alertify ) {
             "sSortAscending": ": activado para ordenar columna ascendente",
             "sSortDescending": ": activado para ordenar columna descendente"
         }
-    };
+    };*/
 
-    /*$rootScope.$on('event:dataTableLoaded', function(event, loadedDT) {
-        // loadedDT === {"id": "foobar"}
-        console.log(loadedDT);
-        $('#listaNominalid tfoot th').each( function () {
-            var title = $(this).text();
-            $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
-        } );
 
-        // DataTable
-        var table = $('#listaNominalid').DataTable();
-
-        // Apply the search
-        table.columns().every( function () {
-            var that = this;
-
-            $( 'input', this.footer() ).on( 'keyup change', function () {
-                if ( that.search() !== this.value ) {
-                    that
-                        .search( this.value )
-                        .draw();
-                }
-            } );
-        } );
-    });*/
 
     // filtrado de datos
     $rootScope.page={

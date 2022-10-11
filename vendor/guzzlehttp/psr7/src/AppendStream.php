@@ -191,6 +191,7 @@ final class AppendStream implements StreamInterface
         $progressToNext = false;
 
         while ($remaining > 0) {
+
             // Progress to the next stream if needed.
             if ($progressToNext || $this->streams[$this->current]->eof()) {
                 $progressToNext = false;
@@ -236,11 +237,6 @@ final class AppendStream implements StreamInterface
         throw new \RuntimeException('Cannot write to an AppendStream');
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @return mixed
-     */
     public function getMetadata($key = null)
     {
         return $key ? null : [];

@@ -2,7 +2,8 @@
 
 namespace Faker;
 
-use Faker\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * @property string $citySuffix
@@ -77,13 +78,13 @@ use Faker\Container\ContainerInterface;
  *
  * @method mixed randomElement($array = ['a', 'b', 'c'])
  *
- * @property int|string|null $randomKey
+ * @property int $randomKey
  *
- * @method int|string|null randomKey($array = [])
+ * @method int randomKey($array = [])
  *
- * @property array|string $shuffle
+ * @property array $shuffle
  *
- * @method array|string shuffle($arg = '')
+ * @method array shuffle($arg = '')
  *
  * @property array $shuffleArray
  *
@@ -120,6 +121,18 @@ use Faker\Container\ContainerInterface;
  * @property string $toUpper
  *
  * @method string toUpper($string = '')
+ *
+ * @property mixed $optional
+ *
+ * @method mixed optional($weight = null, $default = null)
+ *
+ * @property UniqueGenerator $unique
+ *
+ * @method UniqueGenerator unique($reset = false, $maxRetries = 10000)
+ *
+ * @property ValidGenerator $valid
+ *
+ * @method ValidGenerator valid($validator = null, $maxRetries = 10000)
  *
  * @property int $biasedNumberBetween
  *
@@ -255,7 +268,7 @@ use Faker\Container\ContainerInterface;
  *
  * @property string $timezone
  *
- * @method string timezone($countryCode = null)
+ * @method string timezone()
  *
  * @property void $setDefaultTimezone
  *
@@ -353,25 +366,25 @@ use Faker\Container\ContainerInterface;
  *
  * @method string word()
  *
- * @property array|string $words
+ * @property array $words
  *
- * @method array|string words($nb = 3, $asText = false)
+ * @method array words($nb = 3, $asText = false)
  *
  * @property string $sentence
  *
  * @method string sentence($nbWords = 6, $variableNbWords = true)
  *
- * @property array|string $sentences
+ * @property array $sentences
  *
- * @method array|string sentences($nb = 3, $asText = false)
+ * @method array sentences($nb = 3, $asText = false)
  *
  * @property string $paragraph
  *
  * @method string paragraph($nbSentences = 3, $variableNbSentences = true)
  *
- * @property array|string $paragraphs
+ * @property array $paragraphs
  *
- * @method array|string paragraphs($nb = 3, $asText = false)
+ * @method array paragraphs($nb = 3, $asText = false)
  *
  * @property string $text
  *
@@ -513,10 +526,6 @@ use Faker\Container\ContainerInterface;
  *
  * @method string chrome()
  *
- * @property string $msedge
- *
- * @method string msedge()
- *
  * @property string $firefox
  *
  * @method string firefox()
@@ -541,10 +550,6 @@ use Faker\Container\ContainerInterface;
  *
  * @method string macPlatformToken()
  *
- * @property string $iosMobileToken
- *
- * @method string iosMobileToken()
- *
  * @property string $linuxPlatformToken
  *
  * @method string linuxPlatformToken()
@@ -560,14 +565,9 @@ class Generator
 
     private $container;
 
-    /**
-     * @var UniqueGenerator
-     */
-    private $uniqueGenerator;
-
     public function __construct(ContainerInterface $container = null)
     {
-        $this->container = $container ?: Container\ContainerBuilder::getDefault();
+        $this->container = $container ?: Extension\ContainerBuilder::getDefault();
     }
 
     /**
@@ -575,6 +575,7 @@ class Generator
      *
      * @param class-string<T> $id
      *
+     * @throws ContainerExceptionInterface
      * @throws Extension\ExtensionNotFound
      *
      * @return T
@@ -600,86 +601,11 @@ class Generator
     public function addProvider($provider)
     {
         array_unshift($this->providers, $provider);
-
-        $this->formatters = [];
     }
 
     public function getProviders()
     {
         return $this->providers;
-    }
-
-    /**
-     * With the unique generator you are guaranteed to never get the same two
-     * values.
-     *
-     * <code>
-     * // will never return twice the same value
-     * $faker->unique()->randomElement(array(1, 2, 3));
-     * </code>
-     *
-     * @param bool $reset      If set to true, resets the list of existing values
-     * @param int  $maxRetries Maximum number of retries to find a unique value,
-     *                         After which an OverflowException is thrown.
-     *
-     * @throws \OverflowException When no unique value can be found by iterating $maxRetries times
-     *
-     * @return self A proxy class returning only non-existing values
-     */
-    public function unique($reset = false, $maxRetries = 10000)
-    {
-        if ($reset || $this->uniqueGenerator === null) {
-            $this->uniqueGenerator = new UniqueGenerator($this, $maxRetries);
-        }
-
-        return $this->uniqueGenerator;
-    }
-
-    /**
-     * Get a value only some percentage of the time.
-     *
-     * @param float $weight A probability between 0 and 1, 0 means that we always get the default value.
-     *
-     * @return self
-     */
-    public function optional(float $weight = 0.5, $default = null)
-    {
-        if ($weight > 1) {
-            trigger_deprecation('fakerphp/faker', '1.16', 'First argument ($weight) to method "optional()" must be between 0 and 1. You passed %f, we assume you meant %f.', $weight, $weight / 100);
-            $weight = $weight / 100;
-        }
-
-        return new ChanceGenerator($this, $weight, $default);
-    }
-
-    /**
-     * To make sure the value meet some criteria, pass a callable that verifies the
-     * output. If the validator fails, the generator will try again.
-     *
-     * The value validity is determined by a function passed as first argument.
-     *
-     * <code>
-     * $values = array();
-     * $evenValidator = function ($digit) {
-     *   return $digit % 2 === 0;
-     * };
-     * for ($i=0; $i < 10; $i++) {
-     *   $values []= $faker->valid($evenValidator)->randomDigit;
-     * }
-     * print_r($values); // [0, 4, 8, 4, 2, 6, 0, 8, 8, 6]
-     * </code>
-     *
-     * @param ?\Closure $validator  A function returning true for valid values
-     * @param int       $maxRetries Maximum number of retries to find a valid value,
-     *                              After which an OverflowException is thrown.
-     *
-     * @throws \OverflowException When no valid value can be found by iterating $maxRetries times
-     *
-     * @return self A proxy class returning only valid values
-     */
-    public function valid(?\Closure $validator = null, int $maxRetries = 10000)
-    {
-        return new ValidGenerator($this, $validator, $maxRetries);
     }
 
     public function seed($seed = null)
@@ -691,44 +617,31 @@ class Generator
         }
     }
 
-    public function format($format, $arguments = [])
+    public function format($formatter, $arguments = [])
     {
-        return call_user_func_array($this->getFormatter($format), $arguments);
+        return call_user_func_array($this->getFormatter($formatter), $arguments);
     }
 
     /**
-     * @param string $format
+     * @param string $formatter
      *
      * @return callable
      */
-    public function getFormatter($format)
+    public function getFormatter($formatter)
     {
-        if (isset($this->formatters[$format])) {
-            return $this->formatters[$format];
-        }
-
-        if (method_exists($this, $format)) {
-            $this->formatters[$format] = [$this, $format];
-
-            return $this->formatters[$format];
-        }
-
-        // "Faker\Core\Barcode->ean13"
-        if (preg_match('|^([a-zA-Z0-9\\\]+)->([a-zA-Z0-9]+)$|', $format, $matches)) {
-            $this->formatters[$format] = [$this->ext($matches[1]), $matches[2]];
-
-            return $this->formatters[$format];
+        if (isset($this->formatters[$formatter])) {
+            return $this->formatters[$formatter];
         }
 
         foreach ($this->providers as $provider) {
-            if (method_exists($provider, $format)) {
-                $this->formatters[$format] = [$provider, $format];
+            if (method_exists($provider, $formatter)) {
+                $this->formatters[$formatter] = [$provider, $formatter];
 
-                return $this->formatters[$format];
+                return $this->formatters[$formatter];
             }
         }
 
-        throw new \InvalidArgumentException(sprintf('Unknown format "%s"', $format));
+        throw new \InvalidArgumentException(sprintf('Unknown formatter "%s"', $formatter));
     }
 
     /**
@@ -740,11 +653,7 @@ class Generator
      */
     public function parse($string)
     {
-        $callback = function ($matches) {
-            return $this->format($matches[1]);
-        };
-
-        return preg_replace_callback('/{{\s?(\w+|[\w\\\]+->\w+?)\s?}}/u', $callback, $string);
+        return preg_replace_callback('/\{\{\s?(\w+)\s?\}\}/u', [$this, 'callFormatWithMatches'], $string);
     }
 
     /**
@@ -915,28 +824,8 @@ class Generator
         );
     }
 
-    /**
-     * Get a version number in semantic versioning syntax 2.0.0. (https://semver.org/spec/v2.0.0.html)
-     *
-     * @param bool $preRelease Pre release parts may be randomly included
-     * @param bool $build      Build parts may be randomly included
-     *
-     * @example 1.0.0
-     * @example 1.0.0-alpha.1
-     * @example 1.0.0-alpha.1+b71f04d
-     */
-    public function semver(bool $preRelease = false, bool $build = false): string
-    {
-        return $this->ext(Extension\VersionExtension::class)->semver($preRelease, $build);
-    }
-
-    /**
-     * @deprecated
-     */
     protected function callFormatWithMatches($matches)
     {
-        trigger_deprecation('fakerphp/faker', '1.14', 'Protected method "callFormatWithMatches()" is deprecated and will be removed.');
-
         return $this->format($matches[1]);
     }
 

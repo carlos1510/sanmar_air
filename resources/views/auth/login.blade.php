@@ -45,10 +45,12 @@
                                     <h5 class="mb-0">Bienvenido!</h5>
                                     <p class="text-muted mt-2">Inicie Sesión.</p>
                                 </div>
-                                <form class="mt-4 pt-2" action="https://themesbrand.com/minia/layouts/index.html">
+                                <form class="mt-4 pt-2" method="POST" action="{{ url('usuario/login') }}">
+                                    @csrf
                                     <div class="mb-3">
                                         <label class="form-label">Usuario</label>
-                                        <input type="text" class="form-control" id="username" placeholder="Ingrese usuario">
+                                        <input type="text" class="form-control" id="username" name="usuario" placeholder="Ingrese usuario" value="{{ old('usuario') }}">
+                                        {!! $errors->first('usuario', '<center><strong class="help-block has-error">:message</strong></center>') !!}
                                     </div>
                                     <div class="mb-3">
                                         <div class="d-flex align-items-start">
@@ -59,9 +61,10 @@
                                         </div>
 
                                         <div class="input-group auth-pass-inputgroup">
-                                            <input type="password" class="form-control" placeholder="Ingrese contraseña" aria-label="Password" aria-describedby="password-addon">
+                                            <input type="password" class="form-control" placeholder="Ingrese contraseña" aria-label="Password" name="password" aria-describedby="password-addon">
                                             <button class="btn btn-light shadow-none ms-0" type="button" id="password-addon"><i class="mdi mdi-eye-outline"></i></button>
                                         </div>
+                                        {!! $errors->first('clave', '<strong class="help-block has-error">:message</strong>') !!}
                                     </div>
 
                                     <div class="mb-3">

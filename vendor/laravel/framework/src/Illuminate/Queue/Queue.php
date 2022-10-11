@@ -102,7 +102,7 @@ abstract class Queue
             $job = CallQueuedClosure::create($job);
         }
 
-        $payload = json_encode($this->createPayloadArray($job, $queue, $data), \JSON_UNESCAPED_UNICODE);
+        $payload = json_encode($this->createPayloadArray($job, $queue, $data));
 
         if (JSON_ERROR_NONE !== json_last_error()) {
             throw new InvalidPayloadException(
@@ -189,11 +189,7 @@ abstract class Queue
             return;
         }
 
-        if (is_null($backoff = $job->backoff ?? $job->backoff())) {
-            return;
-        }
-
-        return collect(Arr::wrap($backoff))
+        return collect(Arr::wrap($job->backoff ?? $job->backoff()))
             ->map(function ($backoff) {
                 return $backoff instanceof DateTimeInterface
                                 ? $this->secondsUntil($backoff) : $backoff;

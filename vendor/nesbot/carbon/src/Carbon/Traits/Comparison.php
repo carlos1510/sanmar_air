@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Carbon\Traits;
 
 use BadMethodCallException;
@@ -75,10 +74,7 @@ trait Comparison
      */
     public function equalTo($date): bool
     {
-        $this->discourageNull($date);
-        $this->discourageBoolean($date);
-
-        return $this == $this->resolveCarbon($date);
+        return $this == $date;
     }
 
     /**
@@ -158,10 +154,7 @@ trait Comparison
      */
     public function greaterThan($date): bool
     {
-        $this->discourageNull($date);
-        $this->discourageBoolean($date);
-
-        return $this > $this->resolveCarbon($date);
+        return $this > $date;
     }
 
     /**
@@ -222,10 +215,7 @@ trait Comparison
      */
     public function greaterThanOrEqualTo($date): bool
     {
-        $this->discourageNull($date);
-        $this->discourageBoolean($date);
-
-        return $this >= $this->resolveCarbon($date);
+        return $this >= $date;
     }
 
     /**
@@ -265,10 +255,7 @@ trait Comparison
      */
     public function lessThan($date): bool
     {
-        $this->discourageNull($date);
-        $this->discourageBoolean($date);
-
-        return $this < $this->resolveCarbon($date);
+        return $this < $date;
     }
 
     /**
@@ -329,10 +316,7 @@ trait Comparison
      */
     public function lessThanOrEqualTo($date): bool
     {
-        $this->discourageNull($date);
-        $this->discourageBoolean($date);
-
-        return $this <= $this->resolveCarbon($date);
+        return $this <= $date;
     }
 
     /**
@@ -366,10 +350,10 @@ trait Comparison
         }
 
         if ($equal) {
-            return $this >= $date1 && $this <= $date2;
+            return $this->greaterThanOrEqualTo($date1) && $this->lessThanOrEqualTo($date2);
         }
 
-        return $this > $date1 && $this < $date2;
+        return $this->greaterThan($date1) && $this->lessThan($date2);
     }
 
     /**
@@ -463,7 +447,7 @@ trait Comparison
      */
     public function isWeekend()
     {
-        return \in_array($this->dayOfWeek, static::$weekendDays, true);
+        return \in_array($this->dayOfWeek, static::$weekendDays);
     }
 
     /**
@@ -636,19 +620,19 @@ trait Comparison
             'microsecond' => 'Y-m-d H:i:s.u',
         ];
 
-        if (isset($units[$unit])) {
-            return $this->isSameAs($units[$unit], $date);
+        if (!isset($units[$unit])) {
+            if (isset($this->$unit)) {
+                return $this->resolveCarbon($date)->$unit === $this->$unit;
+            }
+
+            if ($this->localStrictModeEnabled ?? static::isStrictModeEnabled()) {
+                throw new BadComparisonUnitException($unit);
+            }
+
+            return false;
         }
 
-        if (isset($this->$unit)) {
-            return $this->resolveCarbon($date)->$unit === $this->$unit;
-        }
-
-        if ($this->localStrictModeEnabled ?? static::isStrictModeEnabled()) {
-            throw new BadComparisonUnitException($unit);
-        }
-
-        return false;
+        return $this->isSameAs($units[$unit], $date);
     }
 
     /**
@@ -1081,19 +1065,5 @@ trait Comparison
     public function isEndOfTime(): bool
     {
         return $this->endOfTime ?? false;
-    }
-
-    private function discourageNull($value): void
-    {
-        if ($value === null) {
-            @trigger_error("Since 2.61.0, it's deprecated to compare a date to null, meaning of such comparison is ambiguous and will no longer be possible in 3.0.0, you should explicitly pass 'now' or make an other check to eliminate null values.", \E_USER_DEPRECATED);
-        }
-    }
-
-    private function discourageBoolean($value): void
-    {
-        if (\is_bool($value)) {
-            @trigger_error("Since 2.61.0, it's deprecated to compare a date to true or false, meaning of such comparison is ambiguous and will no longer be possible in 3.0.0, you should explicitly pass 'now' or make an other check to eliminate boolean values.", \E_USER_DEPRECATED);
-        }
     }
 }

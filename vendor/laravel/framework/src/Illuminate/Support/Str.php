@@ -100,19 +100,6 @@ class Str
     }
 
     /**
-     * Transliterate a string to its closest ASCII representation.
-     *
-     * @param  string  $string
-     * @param  string|null  $unknown
-     * @param  bool|null  $strict
-     * @return string
-     */
-    public static function transliterate($string, $unknown = '?', $strict = false)
-    {
-        return ASCII::to_transliterate($string, $unknown, $strict);
-    }
-
-    /**
      * Get the portion of a string before the first occurrence of a given value.
      *
      * @param  string  $subject
@@ -266,15 +253,11 @@ class Str
     {
         $patterns = Arr::wrap($pattern);
 
-        $value = (string) $value;
-
         if (empty($patterns)) {
             return false;
         }
 
         foreach ($patterns as $pattern) {
-            $pattern = (string) $pattern;
-
             // If the given value is an exact match we can of course return true right
             // from the beginning. Otherwise, we will translate asterisks and do an
             // actual pattern match against the two strings to see if they match.
@@ -412,46 +395,6 @@ class Str
     }
 
     /**
-     * Masks a portion of a string with a repeated character.
-     *
-     * @param  string  $string
-     * @param  string  $character
-     * @param  int  $index
-     * @param  int|null  $length
-     * @param  string  $encoding
-     * @return string
-     */
-    public static function mask($string, $character, $index, $length = null, $encoding = 'UTF-8')
-    {
-        if ($character === '') {
-            return $string;
-        }
-
-        if (is_null($length) && PHP_MAJOR_VERSION < 8) {
-            $length = mb_strlen($string, $encoding);
-        }
-
-        $segment = mb_substr($string, $index, $length, $encoding);
-
-        if ($segment === '') {
-            return $string;
-        }
-
-        $strlen = mb_strlen($string, $encoding);
-        $startIndex = $index;
-
-        if ($index < 0) {
-            $startIndex = $index < -$strlen ? 0 : $strlen + $index;
-        }
-
-        $start = mb_substr($string, 0, $startIndex, $encoding);
-        $segmentLen = mb_strlen($segment, $encoding);
-        $end = mb_substr($string, $startIndex + $segmentLen);
-
-        return $start.str_repeat(mb_substr($character, 0, 1, $encoding), $segmentLen).$end;
-    }
-
-    /**
      * Get the string matching the given pattern.
      *
      * @param  string  $pattern
@@ -497,7 +440,7 @@ class Str
      */
     public static function padBoth($value, $length, $pad = ' ')
     {
-        return str_pad($value, strlen($value) - mb_strlen($value) + $length, $pad, STR_PAD_BOTH);
+        return str_pad($value, $length, $pad, STR_PAD_BOTH);
     }
 
     /**
@@ -510,7 +453,7 @@ class Str
      */
     public static function padLeft($value, $length, $pad = ' ')
     {
-        return str_pad($value, strlen($value) - mb_strlen($value) + $length, $pad, STR_PAD_LEFT);
+        return str_pad($value, $length, $pad, STR_PAD_LEFT);
     }
 
     /**
@@ -523,7 +466,7 @@ class Str
      */
     public static function padRight($value, $length, $pad = ' ')
     {
-        return str_pad($value, strlen($value) - mb_strlen($value) + $length, $pad, STR_PAD_RIGHT);
+        return str_pad($value, $length, $pad, STR_PAD_RIGHT);
     }
 
     /**
@@ -542,7 +485,7 @@ class Str
      * Get the plural form of an English word.
      *
      * @param  string  $value
-     * @param  int|array|\Countable  $count
+     * @param  int  $count
      * @return string
      */
     public static function plural($value, $count = 2)
@@ -554,7 +497,7 @@ class Str
      * Pluralize the last word of an English, studly caps case string.
      *
      * @param  string  $value
-     * @param  int|array|\Countable  $count
+     * @param  int  $count
      * @return string
      */
     public static function pluralStudly($value, $count = 2)
@@ -697,17 +640,6 @@ class Str
     }
 
     /**
-     * Reverse the given string.
-     *
-     * @param  string  $value
-     * @return string
-     */
-    public static function reverse(string $value)
-    {
-        return implode(array_reverse(mb_str_split($value)));
-    }
-
-    /**
      * Begin a string with a single instance of a given value.
      *
      * @param  string  $value
@@ -741,25 +673,6 @@ class Str
     public static function title($value)
     {
         return mb_convert_case($value, MB_CASE_TITLE, 'UTF-8');
-    }
-
-    /**
-     * Convert the given string to title case for each word.
-     *
-     * @param  string  $value
-     * @return string
-     */
-    public static function headline($value)
-    {
-        $parts = explode(' ', $value);
-
-        $parts = count($parts) > 1
-            ? $parts = array_map([static::class, 'title'], $parts)
-            : $parts = array_map([static::class, 'title'], static::ucsplit(implode('_', $parts)));
-
-        $collapsed = static::replace(['-', '_', ' '], '_', implode('_', $parts));
-
-        return implode(' ', array_filter(explode('_', $collapsed)));
     }
 
     /**
@@ -858,13 +771,9 @@ class Str
             return static::$studlyCache[$key];
         }
 
-        $words = explode(' ', static::replace(['-', '_'], ' ', $value));
+        $value = ucwords(str_replace(['-', '_'], ' ', $value));
 
-        $studlyWords = array_map(function ($word) {
-            return static::ucfirst($word);
-        }, $words);
-
-        return static::$studlyCache[$key] = implode($studlyWords);
+        return static::$studlyCache[$key] = str_replace(' ', '', $value);
     }
 
     /**
@@ -899,36 +808,6 @@ class Str
     }
 
     /**
-     * Replace text within a portion of a string.
-     *
-     * @param  string|array  $string
-     * @param  string|array  $replace
-     * @param  array|int  $offset
-     * @param  array|int|null  $length
-     * @return string|array
-     */
-    public static function substrReplace($string, $replace, $offset = 0, $length = null)
-    {
-        if ($length === null) {
-            $length = strlen($string);
-        }
-
-        return substr_replace($string, $replace, $offset, $length);
-    }
-
-    /**
-     * Swap multiple keywords in a string with other keywords.
-     *
-     * @param  array  $map
-     * @param  string  $subject
-     * @return string
-     */
-    public static function swap(array $map, $subject)
-    {
-        return strtr($subject, $map);
-    }
-
-    /**
      * Make a string's first character uppercase.
      *
      * @param  string  $string
@@ -937,17 +816,6 @@ class Str
     public static function ucfirst($string)
     {
         return static::upper(static::substr($string, 0, 1)).static::substr($string, 1);
-    }
-
-    /**
-     * Split a string into pieces by uppercase characters.
-     *
-     * @param  string  $string
-     * @return array
-     */
-    public static function ucsplit($string)
-    {
-        return preg_split('/(?=\p{Lu})/u', $string, -1, PREG_SPLIT_NO_EMPTY);
     }
 
     /**
@@ -1017,17 +885,5 @@ class Str
     public static function createUuidsNormally()
     {
         static::$uuidFactory = null;
-    }
-
-    /**
-     * Remove all strings from the casing caches.
-     *
-     * @return void
-     */
-    public static function flushCache()
-    {
-        static::$snakeCache = [];
-        static::$camelCache = [];
-        static::$studlyCache = [];
     }
 }

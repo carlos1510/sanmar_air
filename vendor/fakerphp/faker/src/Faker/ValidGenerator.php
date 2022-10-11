@@ -2,13 +2,9 @@
 
 namespace Faker;
 
-use Faker\Extension\Extension;
-
 /**
  * Proxy for other generators, to return only valid values. Works with
  * Faker\Generator\Base->valid()
- *
- * @mixin Generator
  */
 class ValidGenerator
 {
@@ -17,11 +13,10 @@ class ValidGenerator
     protected $maxRetries;
 
     /**
-     * @param Extension|Generator $generator
-     * @param callable|null       $validator
-     * @param int                 $maxRetries
+     * @param callable|null $validator
+     * @param int           $maxRetries
      */
-    public function __construct($generator, $validator = null, $maxRetries = 10000)
+    public function __construct(Generator $generator, $validator = null, $maxRetries = 10000)
     {
         if (null === $validator) {
             $validator = static function () {
@@ -33,11 +28,6 @@ class ValidGenerator
         $this->generator = $generator;
         $this->validator = $validator;
         $this->maxRetries = $maxRetries;
-    }
-
-    public function ext(string $id)
-    {
-        return new self($this->generator->ext($id), $this->validator, $this->maxRetries);
     }
 
     /**

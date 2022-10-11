@@ -24,6 +24,8 @@ Route::get('/seguimiento', 'App\Http\Controllers\HomeController@viewTracing');
 Route::get('/reporte_seguimiento', 'App\Http\Controllers\HomeController@viewReportTracing');
 
 // Rutas Usuarios
+Route::post('usuario/login', 'App\Http\Controllers\UserController@login');
+Route::get('usuario/logout', 'App\Http\Controllers\UserController@logout');
 Route::post('usuario/registrarUsuario', 'App\Http\Controllers\UserController@registrarUsuario');
 Route::post('usuario/eliminarUsuario', 'App\Http\Controllers\UserController@eliminarUsuario');
 Route::post('usuario/listarUsuarios', 'App\Http\Controllers\UserController@listarUsuarios');
