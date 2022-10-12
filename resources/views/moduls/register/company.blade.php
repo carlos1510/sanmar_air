@@ -124,8 +124,10 @@
                                 <td>@{{ item.direccion }}</td>
                                 <td>@{{ item.correo }}</td>
                                 <td>
-                                    <button class="btn btn-success btn-sm" title="Editar"><i class="fas fa-edit"></i></button>
-                                    <button class="btn btn-danger btn-sm" title="Eliminar"><i class="fas fa-times"></i></button>
+                                    <div class="text-center align-items-center justify-content-center">
+                                        <button class="btn btn-success btn-sm"  ng-click="prepararEditar(item)"  title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-danger btn-sm" title="Eliminar" ng-click="eliminarEmpresa(item)"><i class="fas fa-times"></i></button>
+                                    </div>
                                 </td>
                             </tr>
                             </tbody>
@@ -142,4 +144,9 @@
 @section('javascripts')
     @parent
     <script src="js/angular/controller/register/companyController.js"></script>
+    <script>
+        $(function () {
+
+        })
+    </script>
 @endsection

@@ -64,6 +64,52 @@ app.controller('companyController', function ($scope, $timeout, empresaService){
         }
     }
 
+    $scope.eliminarEmpresa = function (item) {
+        swal({
+            title: 'Desea Eliminar?',
+            text: "Se eliminará la empresa " + item.razon_social,
+            icon : "warning",
+            type: 'warning',
+            buttons:{
+                confirm: {
+                    text : 'Eliminar',
+                    className : 'btn btn-warning'
+                },cancel: {
+                    visible: true,
+                    text : 'Cancelar',
+                    className: 'btn btn-danger'
+                }
+            }
+        }).then(function(willDelete) {
+            if (willDelete) {
+                //registramos los datos
+                empresaService.eliminarEmpresa({id: item.idempresa}).success(function (data) {
+                    if (data.confirm == true){
+                        $scope.listar();
+                        swal("Exito!", "" + data.message, {
+                            icon : "success",
+                            buttons: {
+                                confirm: {
+                                    className : 'btn btn-success'
+                                }
+                            },
+                        });
+                    }
+                })
+            } else {
+                //
+            }
+        });
+    }
+
+    $scope.prepararEditar = function (item) {
+        $scope.registro = {};
+        $scope.registro = item;
+        $timeout(function () {
+            $scope.estado_registro = 1;
+        }, 0);
+    }
+
     $scope.listar = function () {
         empresaService.listarEmpresa($scope.filtro).success(function (data) {
             $scope.lista = data;

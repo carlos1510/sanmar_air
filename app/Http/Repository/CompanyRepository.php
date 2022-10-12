@@ -22,7 +22,8 @@ class CompanyRepository
                     'razon_social' => isset($params->razon_social)?$params->razon_social:null,
                     'telefono' => isset($params->telefono)?$params->telefono:null,
                     'direccion' => isset($params->direccion)?$params->direccion:null,
-                    'correo' => isset($params->correo)?$params->correo:null
+                    'correo' => isset($params->correo)?$params->correo:null,
+                    'id' => $params->idempresa
                 ));
             }else{
                 //registrar

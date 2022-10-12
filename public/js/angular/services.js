@@ -42,6 +42,9 @@ app.factory('empresaService', function($http){
         listarEmpresa: function ($params) {
             return $http.post("empresa/listarEmpresa", $params)
         },
+        eliminarEmpresa: function ($params) {
+            return $http.post("empresa/eliminarEmpresa", $params)
+        },
 
     }
 });
