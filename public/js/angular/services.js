@@ -19,8 +19,8 @@ app.factory('homeService', function($http){
 
 app.factory('pacienteService', function($http){
     return {
-        getPersonaByDNI: function ($params) {
-            return $http.post("persona/getPersonaByDNI", $params)
+        buscarPersonaDocumento: function ($params) {
+            return $http.post("paciente/buscarPersonaDocumento", $params)
         },
         guardarUpdatePersona: function ($params) {
             return $http.post("persona/guardarUpdatePersona", $params)

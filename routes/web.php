@@ -40,6 +40,7 @@ Route::post('empresa/listarEmpresa', 'App\Http\Controllers\CompanyController@lis
 Route::post('paciente/registrarPaciente', 'App\Http\Controllers\PatientController@registrarPaciente');
 Route::post('paciente/eliminarPaciente', 'App\Http\Controllers\PatientController@eliminarPaciente');
 Route::post('paciente/listarPaciente', 'App\Http\Controllers\PatientController@listarPaciente');
+Route::post('paciente/buscarPersonaDocumento', 'App\Http\Controllers\PatientController@buscarPersonaDocumento');
 
 // Rutas Reportes
 Route::post('reporte/reporteSeguimiento', 'App\Http\Controllers\ReportTracingController@reporteSeguimiento');

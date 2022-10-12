@@ -90,7 +90,12 @@
                                 <div class="col-md-3">
                                     <div class="mb-3 position-relative">
                                         <label class="form-label" for="validationTooltip04">Fecha Nacimiento</label>
-                                        <input type="text" class="form-control" id="validationTooltip04" ng-model="registro.fecha_nacimiento" >
+                                        <div class="input-group date">
+                                            <div class="input-group-prepend">
+                                                <span  class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                            </div>
+                                            <input class="form-control " type="text" id="fecha_nacimientotxt" maxlength="10" autocomplete="off" placeholder="dd/mm/yyyy" ng-model="registro.fecha_nacimiento">
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-md-2">
@@ -195,5 +200,17 @@
     @parent
     <script src="{{ asset('js/angular/controller/register/patientController.js') }}"></script>
 
-    <script></script>
+    <script>
+        $(function (){
+            $('#fecha_nacimientotxt').datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                calendarWeeks: true,
+                autoclose: true,
+                format: 'dd/mm/yyyy',
+                endDate: new Date()
+            });
+        });
+    </script>
 @endsection

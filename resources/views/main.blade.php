@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="{{ asset('template/assets/css/azzara.min.css') }}">
     <link href="{{ asset('css/alertify.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/plugins/select2/select2.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/plugins/datapicker/datepicker3.css') }}" rel="stylesheet">
+    <link href="{{ asset('plugins/datapicker/datepicker3.css') }}" rel="stylesheet">
 
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <link rel="stylesheet" href="{{ asset('template/assets/css/demo.css') }}">
@@ -323,7 +323,7 @@
                         <li class="nav-item" >
                             <a href="{{ url('usuario') }}">
                                 <i class="fas fa-users"></i>
-                                <p>Padron Nominal</p>
+                                <p>Usuarios</p>
                                 <!--<span class="badge badge-count">5</span>-->
                             </a>
                         </li>
@@ -424,7 +424,7 @@
 
     <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
 
-    <script src="{{ asset('js/bootstrap-datepicker.js') }}"></script>
+    <script src="{{ asset('plugins/datapicker/bootstrap-datepicker.js') }}"></script>
 
     <script src="{{ asset('js/jquery.blockUI.js') }}"></script>
 

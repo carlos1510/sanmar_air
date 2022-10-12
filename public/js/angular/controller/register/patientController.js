@@ -23,7 +23,12 @@ app.controller('patientController', function ($scope, $timeout, pacienteService)
     $scope.buscarPersonaDocumento = function () {
         if ($("#idtipodocumentocmb").val() != ""){
             if ($("#numerodocumentotxt").val() != ""){
-
+                pacienteService.buscarPersonaDocumento({idtipo_documento: $("#idtipodocumentocmb").val(), 'numero_documento': $("#numerodocumentotxt").val()}).success(function (data) {
+                    $scope.registro.numero_documento = data.data.numero_documento;
+                    $scope.registro.apellido_paterno = data.data.apellido_paterno;
+                    $scope.registro.apellido_materno = data.data.apellido_materno;
+                    $scope.registro.nombres = data.data.nombres;
+                })
             }
         }
     }

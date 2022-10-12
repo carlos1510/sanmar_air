@@ -13,6 +13,11 @@ class PatientServices
         $this->repository = new PatientRepository();
     }
 
+    public function buscarPersonaDocumento($params){
+        $params = (object)$params;
+        return $this->repository->buscarPersonaDocumento($params);
+    }
+
     public function registrarPaciente($params){
         $params = (object)$params;
         return $this->repository->registrarPaciente($params);

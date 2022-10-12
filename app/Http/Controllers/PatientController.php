@@ -17,6 +17,13 @@ class PatientController extends Controller
         $this->service = new PatientServices();
     }
 
+    public function buscarPersonaDocumento(Request $request){
+        $request->isXmlHttpRequest();
+        $content = $request->getContent();
+        $params = json_decode($content);
+        return new JsonResponse($this->service->buscarPersonaDocumento($params));
+    }
+
     public function registrarPaciente(Request $request){
         $request->isXmlHttpRequest();
         $content = $request->getContent();
