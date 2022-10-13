@@ -16,7 +16,7 @@
     @yield('javascripts')
 </head>
 
-<body id="page-top" ng-app="app" @yield('bodycontroller')>
+<body id="page-top" ng-app="app" @yield('bodycontroller') data-background-color="bg3">
 @yield('body')
 </body>
 </html>

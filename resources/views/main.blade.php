@@ -2,7 +2,7 @@
 @section('title') @endsection
 
 @section('stylesheets')
-    <link rel="shortcut icon" href="assets/images/favicon.ico" >
+    <link rel="shortcut icon" href="assets/images/icono_fenix.png" >
 
     <!-- Fonts and icons -->
     <script src="{{ asset('template/assets/js/plugin/webfont/webfont.min.js') }}"></script>
@@ -36,13 +36,13 @@
         <!--
             Tip 1: You can change the background color of the main header using: data-background-color="blue | purple | light-blue | green | orange | red"
         -->
-        <div class="main-header" data-background-color="purple">
+        <div class="main-header" data-background-color="light-blue">
             <!-- Logo Header -->
             <div class="logo-header">
 
-                <a href="index.html" class="logo">
+                <a href="{{ url('home') }}" class="logo text-white">
                     <!--<img src="template/assets/img/logoazzara.svg" alt="navbar brand" class="navbar-brand">-->
-                    RG
+                    FENIX
                 </a>
                 <button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon">
@@ -68,81 +68,11 @@
                             </a>
                         </li>
                         <li class="nav-item dropdown hidden-caret">
-                            <a class="nav-link dropdown-toggle" href="#" id="messageDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fa fa-envelope"></i>
-                            </a>
-                            <ul class="dropdown-menu messages-notif-box animated fadeIn" aria-labelledby="messageDropdown">
-                                <li>
-                                    <div class="dropdown-title d-flex justify-content-between align-items-center">
-                                        Messages
-                                        <a href="#" class="small">Mark all as read</a>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="message-notif-scroll scrollbar-outer">
-                                        <div class="notif-center">
-                                            <a href="#">
-                                                <div class="notif-img">
-                                                    <img src="template/assets/img/jm_denis.jpg" alt="Img Profile">
-                                                </div>
-                                                <div class="notif-content">
-                                                    <span class="subject">Jimmy Denis</span>
-                                                    <span class="block">
-														How are you ?
-													</span>
-                                                    <span class="time">5 minutes ago</span>
-                                                </div>
-                                            </a>
-                                            <a href="#">
-                                                <div class="notif-img">
-                                                    <img src="template/assets/img/chadengle.jpg" alt="Img Profile">
-                                                </div>
-                                                <div class="notif-content">
-                                                    <span class="subject">Chad</span>
-                                                    <span class="block">
-														Ok, Thanks !
-													</span>
-                                                    <span class="time">12 minutes ago</span>
-                                                </div>
-                                            </a>
-                                            <a href="#">
-                                                <div class="notif-img">
-                                                    <img src="template/assets/img/mlane.jpg" alt="Img Profile">
-                                                </div>
-                                                <div class="notif-content">
-                                                    <span class="subject">Jhon Doe</span>
-                                                    <span class="block">
-														Ready for the meeting today...
-													</span>
-                                                    <span class="time">12 minutes ago</span>
-                                                </div>
-                                            </a>
-                                            <a href="#">
-                                                <div class="notif-img">
-                                                    <img src="template/assets/img/talha.jpg" alt="Img Profile">
-                                                </div>
-                                                <div class="notif-content">
-                                                    <span class="subject">Talha</span>
-                                                    <span class="block">
-														Hi, Apa Kabar ?
-													</span>
-                                                    <span class="time">17 minutes ago</span>
-                                                </div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <a class="see-all" href="javascript:void(0);">See all messages<i class="fa fa-angle-right"></i> </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item dropdown hidden-caret">
                             <a class="nav-link dropdown-toggle" href="#" id="notifDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fa fa-bell"></i>
                                 <span class="notification">4</span>
                             </a>
-                            <ul class="dropdown-menu notif-box animated fadeIn" aria-labelledby="notifDropdown">
+                            {{--<ul class="dropdown-menu notif-box animated fadeIn" aria-labelledby="notifDropdown">
                                 <li>
                                     <div class="dropdown-title">You have 4 new notification</div>
                                 </li>
@@ -193,7 +123,7 @@
                                 <li>
                                     <a class="see-all" href="javascript:void(0);">See all notifications<i class="fa fa-angle-right"></i> </a>
                                 </li>
-                            </ul>
+                            </ul>--}}
                         </li>
                         <li class="nav-item dropdown hidden-caret">
                             <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">
@@ -350,7 +280,7 @@
         </div>
 
         <!-- Custom template | don't include it in your project! -->
-        <div class="custom-template">
+        {{--<div class="custom-template">
             <div class="title">Settings</div>
             <div class="custom-content">
                 <div class="switcher">
@@ -378,7 +308,7 @@
             <div class="custom-toggle">
                 <i class="flaticon-settings"></i>
             </div>
-        </div>
+        </div>--}}
         <!-- End Custom template -->
     </div>
 

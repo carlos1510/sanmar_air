@@ -47,9 +47,7 @@
                                 <div class="col-md-3">
                                     <div class="mb-3 ">
                                         <label for="choices-single-default" class="form-label ">Tipo Documento</label>
-                                        <select class="form-control" data-trigger name="choices-single-default"
-                                                id="idtipodocumentocmb"
-                                                placeholder="Seleccione" ng-model="registro.idtipo_documento">
+                                        <select class="form-control" data-trigger id="idtipodocumentocmb" placeholder="Seleccione" ng-change="tipo_busqueda_persona()" ng-model="registro.idtipo_documento">
                                             <option value="">---</option>
                                             <option value="1">DNI</option>
                                             <option value="2">CARNET DE EXTRANJERIA</option>
@@ -101,12 +99,10 @@
                                 <div class="col-md-2">
                                     <div class="mb-3 ">
                                         <label for="choices-single-default" class="form-label ">Sexo</label>
-                                        <select class="form-control" data-trigger name="choices-single-default"
-                                                id="sexocmb"
-                                                placeholder="Seleccione" ng-model="registro.sexo">
+                                        <select class="form-control" data-trigger id="sexocmb" placeholder="Seleccione" ng-model="registro.sexo">
                                             <option value="">---</option>
-                                            <option value="Masculino">Masculino</option>
-                                            <option value="Femenino">Femenino</option>
+                                            <option value="MASCULINO">Masculino</option>
+                                            <option value="FEMENINO">Femenino</option>
                                         </select>
                                     </div>
                                 </div>
@@ -119,7 +115,35 @@
                                 <div class="col-md-2">
                                     <div class="mb-3 ">
                                         <label for="choices-single-default" class="form-label ">Historia Clinica</label>
-                                        <input type="text" class="form-control" id="validationTooltip04" ng-model="registro.hc" >
+                                        <input type="text" class="form-control" id="validationTooltip04" ng-model="registro.historia_clinica" >
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3 position-relative">
+                                        <label class="form-label" >Dirección: </label>
+                                        <input type="text" class="form-control" id="validationTooltip02"  ng-model="registro.direccion" >
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-3 position-relative">
+                                        <label for="choices-single-default" class="form-label ">Condicion del Asegurado</label>
+                                        <select class="form-control" data-trigger id="idcondicion_aseguradocmb" placeholder="Seleccione" ng-model="registro.idcondicion_asegurado">
+                                            <option value="">---</option>
+                                            <option value="1">SEGURO REGULAR D.LEG 1057 (CAS)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-3 position-relative">
+                                        <label class="form-label" >Fecha de Vigencia: </label>
+                                        <div class="input-group date">
+                                            <div class="input-group-prepend">
+                                                <span  class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                            </div>
+                                            <input class="form-control " type="text" id="fecha_vigenciatxt" maxlength="10" autocomplete="off" placeholder="dd/mm/yyyy" ng-model="registro.fecha_vigencia">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -167,21 +191,29 @@
                                     <th>Sexo</th>
                                     <th>Telefono</th>
                                     <th>Fecha Nac.</th>
+                                    <th>Direccion</th>
+                                    <th>Condicion del Asegurado</th>
+                                    <th>Fecha Vigencia</th>
                                     <th>Acción</th>
                                 </thead>
                                 <tbody>
                                     <tr ng-repeat="item in lista">
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>@{{ ($index + 1) }}</td>
+                                        <td>@{{ item.nom_tipo_documento }}</td>
+                                        <td>@{{ item.numero_documento }}</td>
+                                        <td>@{{ item.apellido_paterno }} @{{ item.apellido_materno }} @{{ item.nombres }}</td>
+                                        <td>@{{ item.hc }}</td>
+                                        <td>@{{ item.sexo }}</td>
+                                        <td>@{{ item.telefono }}</td>
+                                        <td>@{{ item.fecha_nacimiento }}</td>
+                                        <td>@{{ item.direccion }}</td>
+                                        <td>@{{ item.nom_condicion_asegurado }}</td>
+                                        <td>@{{ item.fecha_vigencia }}</td>
                                         <td>
-                                            <button class="btn btn-success btn-sm" title="Editar"><i class="fas fa-edit"></i></button>
-                                            <button class="btn btn-danger btn-sm" title="Eliminar"><i class="fas fa-times"></i></button>
+                                            <div class="text-center align-items-center justify-content-center">
+                                                <button class="btn btn-success btn-sm" title="Editar" ng-click="prepararEditar(item)"><i class="fas fa-edit"></i></button>
+                                                <button class="btn btn-danger btn-sm" title="Eliminar" ng-click="eliminarPaciente(item)"><i class="fas fa-times"></i></button>
+                                            </div>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -202,6 +234,7 @@
 
     <script>
         $(function (){
+            $(".numero").numeric({decimal: false, negative: false});
             $('#fecha_nacimientotxt').datepicker({
                 todayBtn: "linked",
                 keyboardNavigation: false,
@@ -210,6 +243,14 @@
                 autoclose: true,
                 format: 'dd/mm/yyyy',
                 endDate: new Date()
+            });
+            $('#fecha_vigenciatxt').datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                calendarWeeks: true,
+                autoclose: true,
+                format: 'dd/mm/yyyy'
             });
         });
     </script>

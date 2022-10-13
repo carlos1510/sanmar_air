@@ -22,14 +22,14 @@ app.factory('pacienteService', function($http){
         buscarPersonaDocumento: function ($params) {
             return $http.post("paciente/buscarPersonaDocumento", $params)
         },
-        guardarUpdatePersona: function ($params) {
-            return $http.post("persona/guardarUpdatePersona", $params)
+        registrarPaciente: function ($params) {
+            return $http.post("paciente/registrarPaciente", $params)
         },
-        getAtencionesHisByDocumento: function ($params) {
-            return $http.post("persona/getAtencionesHisByDocumento", $params)
+        eliminarPaciente: function ($params) {
+            return $http.post("paciente/eliminarPaciente", $params)
         },
-        getPadronNominalByTipoBusqueda: function ($params) {
-            return $http.post("persona/getPadronNominalByTipoBusqueda", $params)
+        listarPaciente: function ($params) {
+            return $http.post("paciente/listarPaciente", $params)
         },
     }
 });

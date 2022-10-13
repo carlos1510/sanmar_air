@@ -41,7 +41,7 @@
                             <div class="col-md-3">
                                 <div class="mb-3 position-relative">
                                     <label class="form-label" for="validationTooltip01">RUC.:</label>
-                                    <input type="text" class="form-control" id="ructxt" placeholder="" ng-model="registro.ruc" required>
+                                    <input type="text" class="form-control numero" id="ructxt" placeholder="" maxlength="11" ng-model="registro.ruc" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -53,7 +53,7 @@
                             <div class="col-md-3">
                                 <div class="mb-3 position-relative">
                                     <label class="form-label" for="validationTooltipUsername">TELEFONO:</label>
-                                    <input type="text" class="form-control" ng-model="registro.telefono" >
+                                    <input type="text" class="form-control numero" maxlength="9" ng-model="registro.telefono" >
                                 </div>
                             </div>
                         </div>
@@ -146,7 +146,7 @@
     <script src="js/angular/controller/register/companyController.js"></script>
     <script>
         $(function () {
-
+            $(".numero").numeric({decimal: false, negative: false});
         })
     </script>
 @endsection
