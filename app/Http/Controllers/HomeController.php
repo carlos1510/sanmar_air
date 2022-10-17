@@ -65,7 +65,7 @@ class HomeController extends Controller
      * @param Request $request
      * @return void
      */
-    public function viewPatient(Request $request)
+    public function viewFligth(Request $request)
     {
         /*$id = Session::get('idusuario');
         if(isset($id)){
@@ -74,7 +74,7 @@ class HomeController extends Controller
         }else{
             return redirect('/');
         }*/
-        return view('moduls.register.patient');
+        return view('moduls.fligth.fligth');
     }
 
     /**
@@ -112,11 +112,11 @@ class HomeController extends Controller
     }
 
     /**
-     * Vista Seguimiento
+     * Vista Administrar vuelos
      * @param Request $request
      * @return void
      */
-    public function viewTracing(Request $request)
+    public function viewManageFligth(Request $request)
     {
         /*$id = Session::get('idusuario');
         if(isset($id)){
@@ -125,15 +125,15 @@ class HomeController extends Controller
         }else{
             return redirect('/');
         }*/
-        return view('moduls.tracing.tracing');
+        return view('moduls.fligth.manageFligth');
     }
 
     /**
-     * Vista Reporte Seguimiento
+     * Vista Administrar vuelos
      * @param Request $request
      * @return void
      */
-    public function viewReportTracing(Request $request)
+    public function viewReserved(Request $request)
     {
         /*$id = Session::get('idusuario');
         if(isset($id)){
@@ -142,6 +142,23 @@ class HomeController extends Controller
         }else{
             return redirect('/');
         }*/
-        return view('moduls.report.reportTracing');
+        return view('moduls.fligth.reserved');
+    }
+
+    /**
+     * Vista Reporte Proforma
+     * @param Request $request
+     * @return void
+     */
+    public function viewReportProforma(Request $request)
+    {
+        /*$id = Session::get('idusuario');
+        if(isset($id)){
+            Session::put('menu_primario', 'configuracion');
+            return view('configuracion/importar');
+        }else{
+            return redirect('/');
+        }*/
+        return view('moduls.report.proforma');
     }
 }

@@ -17,11 +17,12 @@ use App\Http\Controllers\HomeController;
 
 Route::get('/', 'App\Http\Controllers\HomeController@viewLogin');
 Route::get('/home', 'App\Http\Controllers\HomeController@viewHome');
-Route::get('/paciente', 'App\Http\Controllers\HomeController@viewPatient');
+Route::get('/vuelos', 'App\Http\Controllers\HomeController@viewFligth');
 Route::get('/empresa', 'App\Http\Controllers\HomeController@viewCompany');
 Route::get('/usuario', 'App\Http\Controllers\HomeController@viewUser');
-Route::get('/seguimiento', 'App\Http\Controllers\HomeController@viewTracing');
-Route::get('/reporte_seguimiento', 'App\Http\Controllers\HomeController@viewReportTracing');
+Route::get('/administrar_vuelo', 'App\Http\Controllers\HomeController@viewManageFligth');
+Route::get('/reservados', 'App\Http\Controllers\HomeController@viewReserved');
+Route::get('/proforma', 'App\Http\Controllers\HomeController@viewReportProforma');
 
 // Rutas Usuarios
 Route::post('usuario/login', 'App\Http\Controllers\UserController@login');
@@ -45,8 +46,4 @@ Route::post('paciente/buscarPersonaDocumento', 'App\Http\Controllers\PatientCont
 // Rutas Reportes
 Route::post('reporte/reporteSeguimiento', 'App\Http\Controllers\ReportTracingController@reporteSeguimiento');
 
-//Rutas Seguimiento
-Route::post('seguimiento/registrarSeguimiento', 'App\Http\Controllers\TracingController@registrarSeguimiento');
-Route::post('seguimiento/eliminarSeguimiento', 'App\Http\Controllers\TracingController@eliminarSeguimiento');
-Route::post('seguimiento/listarSeguimiento', 'App\Http\Controllers\TracingController@listarSeguimiento');
-Route::post('seguimiento/anularSeguimiento', 'App\Http\Controllers\TracingController@anularSeguimiento');
+

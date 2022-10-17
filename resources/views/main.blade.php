@@ -2,9 +2,7 @@
 @section('title') @endsection
 
 @section('stylesheets')
-    <link rel="shortcut icon" href="assets/images/icono_fenix.png" >
-
-    <!-- Fonts and icons -->
+        <!-- Fonts and icons -->
     <script src="{{ asset('template/assets/js/plugin/webfont/webfont.min.js') }}"></script>
     <script>
         WebFont.load({
@@ -19,12 +17,8 @@
     <!-- CSS Files -->
     <link rel="stylesheet" href="{{ asset('template/assets/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('template/assets/css/azzara.min.css') }}">
-    <link href="{{ asset('css/alertify.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/plugins/select2/select2.min.css') }}" rel="stylesheet">
     <link href="{{ asset('plugins/datapicker/datepicker3.css') }}" rel="stylesheet">
-
-    <!-- CSS Just for demo purpose, don't include it in your project -->
-    <link rel="stylesheet" href="{{ asset('template/assets/css/demo.css') }}">
 
 
 
@@ -218,9 +212,33 @@
                             <h4 class="text-section">Opciones</h4>
                         </li>
                         <li class="nav-item" >
-                            <a href="{{ url('paciente') }}">
-                                <i class="fas fa-user"></i>
-                                <p>Paciente</p>
+                            <a href="{{ url('vuelos') }}">
+                                <i class="fas fa-plane"></i>
+                                <p>VUELOS</p>
+                                <!--<span class="badge badge-count">5</span>-->
+                            </a>
+                        </li>
+
+                        <li class="nav-item" >
+                            <a href="{{ url('reservados') }}">
+                                <i class="fas fa-plane-departure"></i>
+                                <p>RESERVADOS</p>
+                                <!--<span class="badge badge-count">5</span>-->
+                            </a>
+                        </li>
+
+                        <li class="nav-item" >
+                            <a href="{{ url('administrar_vuelo') }}">
+                                <i class="fas fa-route"></i>
+                                <p>ADMINISTRAR VUELOS</p>
+                                <!--<span class="badge badge-count">5</span>-->
+                            </a>
+                        </li>
+
+                        <li class="nav-item" >
+                            <a href="{{ url('proforma') }}">
+                                <i class="fas fa-file-pdf"></i>
+                                <p>PROFORMA</p>
                                 <!--<span class="badge badge-count">5</span>-->
                             </a>
                         </li>
@@ -230,25 +248,6 @@
                                 <p>Empresa</p>
                                 <!--<span class="badge badge-count">5</span>-->
                             </a>
-                        </li>
-                        <li class="nav-item" >
-                            <a href="{{ url('seguimiento') }}">
-                                <i class="fas fa-fighter-jet"></i>
-                                <p>Seguimientos</p>
-                                <!--<span class="badge badge-count">5</span>-->
-                            </a>
-                        </li>
-                        <li class="nav-item" >
-                            <a data-toggle="collapse" href="#charts" class="collapsed" aria-expanded="false" >
-                                <i class="fas fa-chart-pie"></i>
-                                <p>Reportes</p>
-                                <span class="caret"></span>
-                            </a>
-                            <div class="collapse" id="charts">
-                                <ul class="nav nav-collapse">
-                                    <li><a href="{{ url('reporte_seguimiento') }}"><span class="sub-item">Reporte Seguimiento</span></a></li>
-                                </ul>
-                            </div>
                         </li>
                         <li class="nav-item" >
                             <a href="{{ url('usuario') }}">
@@ -278,38 +277,6 @@
             </div>
 
         </div>
-
-        <!-- Custom template | don't include it in your project! -->
-        {{--<div class="custom-template">
-            <div class="title">Settings</div>
-            <div class="custom-content">
-                <div class="switcher">
-                    <div class="switch-block">
-                        <h4>Topbar</h4>
-                        <div class="btnSwitch">
-                            <button type="button" class="changeMainHeaderColor" data-color="blue"></button>
-                            <button type="button" class="selected changeMainHeaderColor" data-color="purple"></button>
-                            <button type="button" class="changeMainHeaderColor" data-color="light-blue"></button>
-                            <button type="button" class="changeMainHeaderColor" data-color="green"></button>
-                            <button type="button" class="changeMainHeaderColor" data-color="orange"></button>
-                            <button type="button" class="changeMainHeaderColor" data-color="red"></button>
-                        </div>
-                    </div>
-                    <div class="switch-block">
-                        <h4>Background</h4>
-                        <div class="btnSwitch">
-                            <button type="button" class="changeBackgroundColor" data-color="bg2"></button>
-                            <button type="button" class="changeBackgroundColor selected" data-color="bg1"></button>
-                            <button type="button" class="changeBackgroundColor" data-color="bg3"></button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="custom-toggle">
-                <i class="flaticon-settings"></i>
-            </div>
-        </div>--}}
-        <!-- End Custom template -->
     </div>
 
 @endsection
@@ -322,29 +289,13 @@
 
     <!-- jQuery UI -->
     <script src="{{ asset('template/assets/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js') }}"></script>
-    <script src="{{ asset('template/assets/js/plugin/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js') }}"></script>
+    {{--<script src="{{ asset('template/assets/js/plugin/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js') }}"></script>--}}
 
     <!-- jQuery Scrollbar -->
     <script src="{{ asset('template/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js') }}"></script>
 
-    <!-- Moment JS -->
-    <script src="{{ asset('template/assets/js/plugin/moment/moment.min.js') }}"></script>
-
-    <!-- Chart JS -->
-    <script src="{{ asset('template/assets/js/plugin/chart.js/chart.min.js') }}"></script>
-
     <!-- jQuery Sparkline -->
     <script src="{{ asset('template/assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js') }}"></script>
-
-    <!-- Chart Circle -->
-    <script src="{{ asset('template/assets/js/plugin/chart-circle/circles.min.js') }}"></script>
-
-    <!-- Bootstrap Notify -->
-    <script src="{{ asset('template/assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js') }}"></script>
-
-    <!-- Bootstrap Toggle -->
-    <script src="{{ asset('template/assets/js/plugin/bootstrap-toggle/bootstrap-toggle.min.js') }}"></script>
-
 
     <!-- Sweet Alert -->
     <script src="{{ asset('template/assets/js/plugin/sweetalert/sweetalert.min.js') }}"></script>
@@ -364,26 +315,15 @@
     <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
     <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
 
-    <!-- <script src="js/bootstrap-datepicker.js"></script>-->
-
-    <!-- Sweet alert -->
-    <!-- <script src="js/plugins/sweetalert/sweetalert.min.js"></script> -->
-
-    <!-- Full Calendar -->
-    <!--<script src="js/plugins/fullcalendar/fullcalendar.min.js"></script>-->
-    <!--<script src="js/FullCalendar_v1.6.4.js"></script>-->
-
     <!-- Librerias AngularJS -->
     <script src="{{ asset('js/angular/angular.min.js') }}"></script>
     <script src="{{ asset('js/angular/app.js') }}"></script>
     <script src="{{ asset('js/angular/services.js') }}"></script>
     <script src="{{ asset('js/angular/angular-datatables.min.js') }}"></script>
-    <script src="{{ asset('js/angular/ng-alertify.js') }}"></script>
+    {{--<script src="{{ asset('js/angular/ng-alertify.js') }}"></script>--}}
     <script src="{{ asset('js/accesorios.js') }}"></script>
     <script src="{{ asset('js/numeric.js') }}"></script>
-    <!--<script type="text/javascript" src="js/cssrefresh.js"></script>-->
-    <!-- Dual Listbox -->
-    <!--<script src="js/plugins/dualListbox/jquery.bootstrap-duallistbox.js"></script>-->
+
     <script>
         $(function () {
             //Notify

@@ -9,6 +9,7 @@
     <meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
+    <link rel="shortcut icon" href="assets/images/icono_fenix.png" >
     <title>@yield('title')</title>
 
     @yield('stylesheets')
