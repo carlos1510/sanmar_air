@@ -8,12 +8,23 @@ app.controller('fligthController', function ($scope, $timeout, empresaService){
 
     $scope.estado_registro = 0;
     $scope.registro = {};
+    $scope.registro.detalle_acompanante = [];
 
     $scope.filtro = {};
     $scope.lista = [];
 
     $scope.nuevoRegistro = function () {
         $scope.registro = {};
+        $scope.registro.detalle_acompanante = [];
+        $scope.registro.tipo_servicio = 'VUELOS';
+        $scope.registro.vuelos = 'IDA Y VUELTA';
+
+        $timeout(function () {
+            $("#idtipodocumentocmb").val(1).change();
+            $("#sexocmb").val('').change();
+            $("#origen_destinocmb").val('').change();
+            $("#tipopasajerocmb").val('').change();
+        }, 0);
 
         $scope.estado_registro = 1;
 
@@ -22,12 +33,21 @@ app.controller('fligthController', function ($scope, $timeout, empresaService){
     $scope.salir = function () {
         $scope.estado_registro = 0;
         $scope.registro = {};
+        $scope.registro.detalle_acompanante = [];
+    }
+
+    $scope.addAcompanante = function () {
+        $scope.registro.detalle_acompanante.push({numero_documento: null, apellido_paterno: null, apellido_materno: null, nombres: null, edad: null, tipo_pasajero: ''});
+    }
+
+    $scope.removeAcompanante = function (index) {
+        $scope.registro.detalle_acompanante.splice(index, 1);
     }
 
     $scope.guardar = function () {
-        var valid = validar_campo(['#ructxt','#razonsocialtxt']);
+        var valid = validar_campo(['#idtipodocumentocmb','#numerodocumentotxt','#apellido_paternotxt','#apellido_maternotxt','#nombrestxt','#edadtxt','#telefonotxt','#origen_destinocmb','#fecha_citatxt','#tipopasajerocmb']);
         if (valid){
-            empresaService.registrarEmpresa($scope.registro).success(function (data) {
+            /*empresaService.registrarEmpresa($scope.registro).success(function (data) {
                 if (data.confirm == true){
                     swal("Exito!", "Se registro correctamente la información!", {
                         icon : "success",
@@ -51,7 +71,7 @@ app.controller('fligthController', function ($scope, $timeout, empresaService){
                         },
                     });
                 }
-            })
+            })*/
         }else {
             swal("Error!", "Campos obligatorios!", {
                 icon : "danger",
@@ -64,10 +84,10 @@ app.controller('fligthController', function ($scope, $timeout, empresaService){
         }
     }
 
-    $scope.eliminarEmpresa = function (item) {
+    $scope.eliminarViaje = function (item) {
         swal({
             title: 'Desea Eliminar?',
-            text: "Se eliminará la empresa " + item.razon_social,
+            text: "Se eliminará el Vuelo del Paciente " + item.nombres,
             icon : "warning",
             type: 'warning',
             buttons:{
@@ -83,7 +103,7 @@ app.controller('fligthController', function ($scope, $timeout, empresaService){
         }).then(function(willDelete) {
             if (willDelete) {
                 //registramos los datos
-                empresaService.eliminarEmpresa({id: item.idempresa}).success(function (data) {
+                /*empresaService.eliminarEmpresa({id: item.idempresa}).success(function (data) {
                     if (data.confirm == true){
                         $scope.listar();
                         swal("Exito!", "" + data.message, {
@@ -95,7 +115,7 @@ app.controller('fligthController', function ($scope, $timeout, empresaService){
                             },
                         });
                     }
-                })
+                })*/
             } else {
                 //
             }
@@ -111,9 +131,9 @@ app.controller('fligthController', function ($scope, $timeout, empresaService){
     }
 
     $scope.listar = function () {
-        empresaService.listarEmpresa($scope.filtro).success(function (data) {
+        /*empresaService.listarEmpresa($scope.filtro).success(function (data) {
             $scope.lista = data;
-        });
+        });*/
     }
 
     $scope.listar();

@@ -16,7 +16,7 @@ class TracingRepository
         try {
             if (isset($params->idseguimiento)){
                 //editar
-                $sql = "";
+                $sql = "SELECT id, origen, destino, CONCAT_WS(' - ',origen,destino) AS nom_ruta FROM ruta_viaje_precio WHERE estado=1";
                 DB::update($sql, array());
             }else{
                 //registrar
