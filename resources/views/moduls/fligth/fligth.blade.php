@@ -36,138 +36,217 @@
                 </div>
                 <div class="card-body">
                     <form class="needs-validation" novalidate>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="mb-3 ">
-                                    <label for="choices-single-default" class="form-label ">Tipo Documento</label>
-                                    <select class="form-control" data-trigger id="idtipodocumentocmb" placeholder="Seleccione" ng-change="tipo_busqueda_persona()" ng-model="registro.idtipo_documento">
-                                        <option value="">---</option>
-                                        <option value="1">DNI</option>
-                                        <option value="2">CARNET DE EXTRANJERIA</option>
-                                        <option value="3">PASAPORTE</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mb-3 position-relative">
-                                    <label class="form-label" for="validationTooltipUsername">Numero Documento</label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" id="numerodocumentotxt" placeholder="" ng-model="registro.numero_documento" required>
-                                        <a href="javascript:void(0)" class="btn btn-primary" ng-click="buscarPersonaDocumento()"><i class="fas fa-search"></i></a>
+                        <div class="mb-2 pl-3 pt-3 pr-3 pb-3 border-3 border-primary border-top border-bottom border-left border-right" style="border-radius: 5px !important;">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="mb-3 ">
+                                        <label for="choices-single-default" class="form-label ">Tipo Documento</label>
+                                        <select class="form-control" data-trigger id="idtipodocumentocmb" placeholder="Seleccione" ng-change="tipo_busqueda_persona()" ng-model="registro.idtipo_documento">
+                                            <option value="">---</option>
+                                            <option value="1">DNI</option>
+                                            <option value="2">CARNET DE EXTRANJERIA</option>
+                                            <option value="3">PASAPORTE</option>
+                                        </select>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mb-3 position-relative">
-                                    <label class="form-label" for="validationTooltip01">Apellido Paterno</label>
-                                    <input type="text" class="form-control" id="validationTooltip01" ng-model="registro.apellido_paterno" required>
+                                <div class="col-md-3">
+                                    <div class="mb-3 position-relative">
+                                        <label class="form-label" for="validationTooltipUsername">Numero Documento</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="numerodocumentotxt" placeholder="" ng-model="registro.numero_documento" required>
+                                            <a href="javascript:void(0)" class="btn btn-primary" ng-click="buscarPersonaDocumento()"><i class="fas fa-search"></i></a>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mb-3 position-relative">
-                                    <label class="form-label" for="validationTooltip02">Apellido Materno</label>
-                                    <input type="text" class="form-control" id="validationTooltip02"  ng-model="registro.apellido_materno" required>
+                                <div class="col-md-3">
+                                    <div class="mb-3 position-relative">
+                                        <label class="form-label" for="validationTooltip01">Apellido Paterno</label>
+                                        <input type="text" class="form-control" id="validationTooltip01" ng-model="registro.apellido_paterno" required>
+                                    </div>
                                 </div>
-                            </div>
+                                <div class="col-md-3">
+                                    <div class="mb-3 position-relative">
+                                        <label class="form-label" for="validationTooltip02">Apellido Materno</label>
+                                        <input type="text" class="form-control" id="validationTooltip02"  ng-model="registro.apellido_materno" required>
+                                    </div>
+                                </div>
 
-                        </div>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="mb-3 position-relative">
-                                    <label class="form-label" for="validationTooltip03">Nombres</label>
-                                    <input type="text" class="form-control" id="validationTooltip03" ng-model="registro.nombres" required>
-                                </div>
                             </div>
-                            <div class="col-md-3">
-                                <div class="mb-3 position-relative">
-                                    <label class="form-label" for="validationTooltip04">Fecha Nacimiento</label>
-                                    <div class="input-group date">
-                                        <div class="input-group-prepend">
-                                            <span  class="input-group-text"><i class="fa fa-calendar"></i></span>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="mb-3 position-relative">
+                                        <label class="form-label" for="validationTooltip03">Nombres</label>
+                                        <input type="text" class="form-control" id="validationTooltip03" ng-model="registro.nombres" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-3 position-relative">
+                                        <label class="form-label" for="validationTooltip04">Fecha Nacimiento</label>
+                                        <div class="input-group date">
+                                            <div class="input-group-prepend">
+                                                <span  class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                            </div>
+                                            <input class="form-control " type="text" id="fecha_nacimientotxt" maxlength="10" autocomplete="off" placeholder="dd/mm/yyyy" ng-model="registro.fecha_nacimiento">
                                         </div>
-                                        <input class="form-control " type="text" id="fecha_nacimientotxt" maxlength="10" autocomplete="off" placeholder="dd/mm/yyyy" ng-model="registro.fecha_nacimiento">
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="mb-3 position-relative">
+                                        <label>Edad</label>
+                                        <input type="text" class="form-control numero" ng-click="registro.edad" maxlength="2" />
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-3 ">
+                                        <label for="choices-single-default" class="form-label ">Telefono</label>
+                                        <input type="text" class="form-control" id="validationTooltip04" maxlength="9" ng-model="registro.telefono" >
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3">
-                                <div class="mb-3 position-relative">
-                                    <label>Edad</label>
-                                    <input type="text" class="form-control numero" ng-click="registro.edad" maxlength="2" />
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mb-3 ">
-                                    <label for="choices-single-default" class="form-label ">Telefono</label>
-                                    <input type="text" class="form-control" id="validationTooltip04" maxlength="9" ng-model="registro.telefono" >
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="mb-3 ">
-                                    <label for="choices-single-default" class="form-label ">Sexo</label>
-                                    <select class="form-control" data-trigger id="sexocmb" placeholder="Seleccione" ng-model="registro.sexo">
-                                        <option value="">---</option>
-                                        <option value="MASCULINO">Masculino</option>
-                                        <option value="FEMENINO">Femenino</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <hr/>
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="form-check">
-                                    <label>Vuelos</label>
-                                    <br>
-                                    <label class="form-radio-label">
-                                        <input class="form-radio-input" type="radio" checked="" value="" name="optionsRadios">
-                                        <span class="form-radio-sign">Ida y Vuelta</span>
-                                    </label>
-                                    <label class="form-radio-label ml-3">
-                                        <input class="form-radio-input" type="radio" value="" name="optionsRadios">
-                                        <span class="form-radio-sign">Sólo Ida</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-4">
-                                <div class="mb-3 ">
-                                    <label for="choices-single-default" class="form-label ">Origen - Destino</label>
-                                    <select class="form-control" data-trigger id="sexocmb" placeholder="Seleccione" ng-model="registro.sexo">
-                                        <option value="">---</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-lg-3">
-                                <div class="mb-3 position-relative">
-                                    <label class="form-label" for="validationTooltip04">Fecha Cita</label>
-                                    <div class="input-group date">
-                                        <div class="input-group-prepend">
-                                            <span  class="input-group-text"><i class="fa fa-calendar"></i></span>
-                                        </div>
-                                        <input class="form-control " type="text" id="fecha_citatxt" maxlength="10" autocomplete="off" placeholder="dd/mm/yyyy" ng-model="registro.fecha_nacimiento">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="mb-3 ">
+                                        <label for="choices-single-default" class="form-label ">Sexo</label>
+                                        <select class="form-control" data-trigger id="sexocmb" placeholder="Seleccione" ng-model="registro.sexo">
+                                            <option value="">---</option>
+                                            <option value="MASCULINO">Masculino</option>
+                                            <option value="FEMENINO">Femenino</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-3">
-                                <div class="mb-3 ">
-                                    <label for="choices-single-default" class="form-label ">Tipo de Pasajero</label>
-                                    <select class="form-control" data-trigger id="sexocmb" placeholder="Seleccione" ng-model="registro.sexo">
-                                        <option value="">---</option>
-                                    </select>
+                        </div>
+
+                        <div class="mb-2 pl-3 pt-3 pr-3 pb-3 border-3 border-primary border-top border-bottom border-left border-right" style="border-radius: 5px !important;">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-check">
+                                        <label>Servicios</label>
+                                        <br>
+                                        <label class="form-radio-label">
+                                            <input class="form-radio-input" type="radio" checked="" value="" name="optionsRadios">
+                                            <span class="form-radio-sign">Vuelos</span>
+                                        </label>
+                                        <label class="form-radio-label ml-3">
+                                            <input class="form-radio-input" type="radio" value="" name="optionsRadios">
+                                            <span class="form-radio-sign">Vuelos Charter</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-check">
+                                        <label>Vuelos</label>
+                                        <br>
+                                        <label class="form-radio-label">
+                                            <input class="form-radio-input" type="radio" checked="" value="" name="optionsRadios">
+                                            <span class="form-radio-sign">Ida y Vuelta</span>
+                                        </label>
+                                        <label class="form-radio-label ml-3">
+                                            <input class="form-radio-input" type="radio" value="" name="optionsRadios">
+                                            <span class="form-radio-sign">Sólo Ida</span>
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-2">
-                                <div class="mb-3 ">
-                                    <label for="choices-single-default" class="form-label ">Pasajeros</label>
-                                    <input type="text" class="form-control numero" id="validationTooltip04" maxlength="1" ng-model="registro.telefono" >
+                            <div class="row">
+                                <div class="col-lg-3">
+                                    <div class="mb-3 ">
+                                        <label for="choices-single-default" class="form-label ">Origen - Destino</label>
+                                        <select class="form-control" data-trigger id="sexocmb" placeholder="Seleccione" ng-model="registro.sexo">
+                                            <option value="">---</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="mb-3 position-relative">
+                                        <label class="form-label" for="validationTooltip04">Fecha Cita</label>
+                                        <div class="input-group date">
+                                            <div class="input-group-prepend">
+                                                <span  class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                            </div>
+                                            <input class="form-control " type="text" id="fecha_citatxt" maxlength="10" autocomplete="off" placeholder="dd/mm/yyyy" ng-model="registro.fecha_nacimiento">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="mb-3 position-relative">
+                                        <label class="form-label" for="validationTooltip04">Fecha Salida</label>
+                                        <div class="input-group date">
+                                            <div class="input-group-prepend">
+                                                <span  class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                            </div>
+                                            <input class="form-control " type="text" id="fecha_citatxt" maxlength="10" autocomplete="off" placeholder="dd/mm/yyyy" ng-model="registro.fecha_nacimiento">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-3 ">
+                                        <label for="choices-single-default" class="form-label ">Tipo de Pasajero</label>
+                                        <select class="form-control" data-trigger id="sexocmb" placeholder="Seleccione" ng-model="registro.sexo">
+                                            <option value="">---</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <hr/>
-                        <div class="row">
+                        <div class="mb-2 pl-3 pt-3 pr-3 pb-3 border-3 border-primary border-top border-bottom border-left border-right" style="border-radius: 5px !important;">
+                            <h4>Datos Acompañante(s)
+                                <button class="btn btn-icon btn-primary btn-round btn-sm" title="Agregar Acompañante">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </h4>
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <div class="form-group">
+                                        <label>DNI:</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="numerodocumentotxt" placeholder="" ng-model="registro.numero_documento" required>
+                                            <a href="javascript:void(0)" class="btn btn-primary" ng-click="buscarPersonaDocumento()"><i class="fas fa-search"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="form-group">
+                                        <label class="form-label" for="validationTooltip01">Apellido Paterno</label>
+                                        <input type="text" class="form-control" id="validationTooltip01" ng-model="registro.apellido_paterno" >
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="form-group">
+                                        <label class="form-label" for="validationTooltip01">Apellido Materno</label>
+                                        <input type="text" class="form-control" id="validationTooltip01" ng-model="registro.apellido_paterno" >
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="form-group">
+                                        <label class="form-label" for="validationTooltip01">Nombres</label>
+                                        <input type="text" class="form-control" id="validationTooltip01" ng-model="registro.apellido_paterno" >
+                                    </div>
+                                </div>
+                                <div class="col-lg-1">
+                                    <div class="form-group">
+                                        <label class="form-label" for="validationTooltip01">Edad</label>
+                                        <input type="text" class="form-control" id="validationTooltip01" ng-model="registro.apellido_paterno" >
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="form-group">
+                                        <label for="choices-single-default" class="form-label ">Tipo de Pasajero</label>
+                                        <select class="form-control" data-trigger id="sexocmb" placeholder="Seleccione" ng-model="registro.sexo">
+                                            <option value="">---</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-1">
+                                    <div class="text-center align-items-center justify-content-center" style="padding-top: 35px !important;">
+                                        <button class="btn btn-icon btn-danger btn-round btn-sm" title="Quitar Acompañante">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{--<div class="row">
                             <label>Adjuntar Documentos</label> <button type="button" class="ml-2 btn btn-default btn-sm"><i class="flaticon-tool"></i> Agregar</button>
                             <div class="col-lg-12">
                                 <div class="table-responsive">
@@ -195,7 +274,7 @@
                                     </table>
                                 </div>
                             </div>
-                        </div>
+                        </div>--}}
                     </form>
                 </div>
                 <div class="card-footer">

@@ -35,10 +35,27 @@
                 <div class="card-header">
                     <div class="card-head-row">
                         <h4 class="card-title">Reporte de Proformas - Pasajes</h4>
+                        <div class="card-tools">
+                            <ul id="pills-tab" class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" role="tablist">
+                                <li class="nav-item submenu">
+                                    <button type="submit" class="btn btn-primary btn-round text-white"  ><i class="fas fa-file-pdf"></i> Declaración Jurada</button>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="row">
+                        <div class="col-lg-2">
+                            <div class="form-group">
+                                <label for="">Servicio</label>
+                                <select class="form-control" placeholder="Seleccione">
+                                    <option value="">TODOS</option>
+                                    <option value="VUELOS">VUELOS</option>
+                                    <option value="CHARTER">CHARTER</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="col-lg-4">
                             <div class="form-group">
                                 <label for="">Ruta Origen - Destino</label>
@@ -67,6 +84,15 @@
                                     </div>
                                     <input class="form-control " type="text" id="fecha_nacimientotxt" maxlength="10" autocomplete="off" placeholder="dd/mm/yyyy" ng-model="registro.fecha_nacimiento">
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="text-center align-items-center justify-content-center">
+                                <button type="button" class="btn btn-default"><i class="fas fa-search"></i> Buscar</button>
+                                <button type="button" class="btn btn-danger "><i class="fas fa-file-pdf"></i> Descargar</button>
                             </div>
                         </div>
                     </div>
