@@ -34,6 +34,15 @@ app.factory('pacienteService', function($http){
     }
 });
 
+app.factory('vuelosService', function($http){
+    return {
+        getRutasVuelos: function ($params) {
+            return $http.post("vuelos/getRutasVuelos", $params)
+        },
+
+    }
+});
+
 app.factory('empresaService', function($http){
     return {
         registrarEmpresa: function ($params) {

@@ -156,7 +156,7 @@
                                         <label for="choices-single-default" class="form-label ">Origen - Destino <span class="text-danger">(*)</span></label>
                                         <select class="form-control" data-trigger id="origen_destinocmb" placeholder="Seleccione" ng-model="registro.idruta_viaje_precio">
                                             <option value="">---</option>
-
+                                            <option ng-repeat="item in rutas" value="@{{ item.id }}">@{{ item.nom_ruta }}</option>
                                         </select>
                                     </div>
                                 </div>

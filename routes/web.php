@@ -37,6 +37,9 @@ Route::post('empresa/registrarEmpresa', 'App\Http\Controllers\CompanyController@
 Route::post('empresa/eliminarEmpresa', 'App\Http\Controllers\CompanyController@eliminarEmpresa');
 Route::post('empresa/listarEmpresa', 'App\Http\Controllers\CompanyController@listarEmpresa');
 
+// Rutas Vuelos
+Route::post('vuelos/getRutasVuelos', 'App\Http\Controllers\FligthController@getRutasVuelos');
+
 // Rutas Paciente
 Route::post('paciente/registrarPaciente', 'App\Http\Controllers\PatientController@registrarPaciente');
 Route::post('paciente/eliminarPaciente', 'App\Http\Controllers\PatientController@eliminarPaciente');

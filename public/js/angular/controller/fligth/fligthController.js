@@ -2,16 +2,21 @@
  * Created by carlo on 1/09/2018.
  */
 
-app.controller('fligthController', function ($scope, $timeout, empresaService){
+app.controller('fligthController', function ($scope, $timeout, vuelosService, pacienteService){
     $scope.dtInstance = {};
     $scope.elementos = {lista:[]};
 
     $scope.estado_registro = 0;
     $scope.registro = {};
     $scope.registro.detalle_acompanante = [];
+    $scope.rutas = [];
 
     $scope.filtro = {};
     $scope.lista = [];
+
+    vuelosService.getRutasVuelos({}).success(function (data) {
+        $scope.rutas = data;
+    })
 
     $scope.nuevoRegistro = function () {
         $scope.registro = {};
@@ -37,7 +42,7 @@ app.controller('fligthController', function ($scope, $timeout, empresaService){
     }
 
     $scope.addAcompanante = function () {
-        $scope.registro.detalle_acompanante.push({numero_documento: null, apellido_paterno: null, apellido_materno: null, nombres: null, edad: null, tipo_pasajero: ''});
+        $scope.registro.detalle_acompanante.push({idpersona: null,numero_documento: null, apellido_paterno: null, apellido_materno: null, nombres: null, edad: null, tipo_pasajero: ''});
     }
 
     $scope.removeAcompanante = function (index) {
@@ -47,31 +52,53 @@ app.controller('fligthController', function ($scope, $timeout, empresaService){
     $scope.guardar = function () {
         var valid = validar_campo(['#idtipodocumentocmb','#numerodocumentotxt','#apellido_paternotxt','#apellido_maternotxt','#nombrestxt','#edadtxt','#telefonotxt','#origen_destinocmb','#fecha_citatxt','#tipopasajerocmb']);
         if (valid){
-            /*empresaService.registrarEmpresa($scope.registro).success(function (data) {
-                if (data.confirm == true){
-                    swal("Exito!", "Se registro correctamente la información!", {
-                        icon : "success",
-                        buttons: {
-                            confirm: {
-                                className : 'btn btn-success'
-                            }
-                        },
-                    });
-                    $timeout(function () {
-                        $scope.estado_registro = 0;
-                        $scope.listar();
-                    }, 0);
-                }else {
-                    swal("Error!", "No se pudo completar el registro!", {
-                        icon : "warning",
-                        buttons: {
-                            confirm: {
-                                className : 'btn btn-warning'
-                            }
-                        },
-                    });
+            //var cantidad_item = ;
+            var valid_item = true;
+            if ($scope.registro.detalle_acompanante.length > 0){
+                for (var i = 0; i < $scope.registro.detalle_acompanante.length; i++){
+                    if ($scope.registro.detalle_acompanante[i].nombres == ""){
+                        valid_item = false;
+                        break;
+                    }
                 }
-            })*/
+            }
+
+            if (valid_item){
+                vuelosService.guardarPasajePaciente($scope.registro).success(function (data) {
+                    if (data.confirm == true){
+                        swal("Exito!", "Se registro correctamente la información!", {
+                            icon : "success",
+                            buttons: {
+                                confirm: {
+                                    className : 'btn btn-success'
+                                }
+                            },
+                        });
+                        $timeout(function () {
+                            $scope.estado_registro = 0;
+                            $scope.listar();
+                        }, 0);
+                    }else {
+                        swal("Error!", "No se pudo completar el registro!", {
+                            icon : "warning",
+                            buttons: {
+                                confirm: {
+                                    className : 'btn btn-warning'
+                                }
+                            },
+                        });
+                    }
+                });
+            }else {
+                swal("Error!", "Campos obligatorios!", {
+                    icon : "danger",
+                    buttons: {
+                        confirm: {
+                            className : 'btn btn-danger'
+                        }
+                    },
+                });
+            }
         }else {
             swal("Error!", "Campos obligatorios!", {
                 icon : "danger",
