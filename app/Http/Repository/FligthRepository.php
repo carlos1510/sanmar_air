@@ -265,4 +265,15 @@ class FligthRepository
             return $data;
         }
     }
+
+    public function listarPasajesPaciente($params){
+        $sql = "SELECT pp.id AS idpasaje_paciente, pp.idpersona, pp.vuelos, pp.idruta_viaje_precio, DATE_FORMAT(pp.fecha_cita,'%d/%m/%Y') AS fecha_cita, DATE_FORMAT(IFNULL(pp.fecha_viaje,pp.fecha_salida),'%d/%m/%Y') AS fecha_salida,
+            DATE_FORMAT(pp.fecha_viaje,'%d/%m/%Y') AS fecha_viaje, DATE_FORMAT(pp.fecha_retorno,'%d/%m/%Y') AS fecha_retorno, pp.tipo_pasajero, pp.edad, pp.observacion, pp.tipo_paciente, pp.idpasaje_paciente_ac,
+            p.idtipo_documento, p.numero_documento, p.apellido_paterno, p.apellido_materno, p.nombres, p.sexo, DATE_FORMAT(p.fecha_nacimiento,'%d/%m/%Y') AS fecha_nacimiento, p.telefono,
+            p.correo, p.direccion, IF(pp.estado=1, 'PENDIENTE', IF(pp.estado=2,'APROVADO',IF(pp.estado=3, 'OBSERVADO', 'ELIMINADO'))) AS nom_estado, pp.estado, pp.tipo_servicio, CONCAT_WS(' - ',rvp.origen,rvp.destino) AS nomb_origen_destino
+             FROM pasaje_paciente pp INNER JOIN persona p ON pp.idpersona=p.id
+             INNER JOIN ruta_viaje_precio rvp ON pp.idruta_viaje_precio=rvp.id
+            WHERE pp.estado=1";
+        return DB::select($sql);
+    }
 }

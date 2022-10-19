@@ -16,4 +16,14 @@ class FligthServices
     public function getRutasVuelos(){
         return $this->repository->getRutasVuelos();
     }
+
+    public function guardarPasajePaciente($params){
+        $params = (object)$params;
+        return $this->repository->guardarPasajePaciente($params);
+    }
+
+    public function listarPasajesPaciente($params){
+        $params = (object)$params;
+        return $this->repository->listarPasajesPaciente($params);
+    }
 }

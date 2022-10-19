@@ -39,6 +39,12 @@ app.factory('vuelosService', function($http){
         getRutasVuelos: function ($params) {
             return $http.post("vuelos/getRutasVuelos", $params)
         },
+        guardarPasajePaciente: function ($params) {
+            return $http.post("vuelos/guardarPasajePaciente", $params)
+        },
+        listarPasajesPaciente: function ($params) {
+            return $http.post("vuelos/listarPasajesPaciente", $params)
+        },
 
     }
 });

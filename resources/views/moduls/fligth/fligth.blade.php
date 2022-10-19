@@ -94,7 +94,7 @@
                                 <div class="col-lg-3">
                                     <div class="mb-3 position-relative">
                                         <label>Edad <span class="text-danger">(*)</span></label>
-                                        <input type="text" class="form-control numero" id="edadtxt" ng-click="registro.edad" maxlength="2" />
+                                        <input type="text" class="form-control numero" id="edadtxt" ng-model="registro.edad" maxlength="2" />
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -207,8 +207,8 @@
                                     <div class="form-group">
                                         <label>DNI:</label>
                                         <div class="input-group">
-                                            <input type="text" class="form-control" placeholder="" ng-model="item.numero_documento" required>
-                                            <a href="javascript:void(0)" class="btn btn-primary" ng-click="buscarPersonaDocumento(item.numero_documento)"><i class="fas fa-search"></i></a>
+                                            <input type="text" class="form-control" placeholder="" id="numero_documentotxt_@{{ $index }}" ng-model="item.numero_documento" required>
+                                            <a href="javascript:void(0)" class="btn btn-primary" ng-click="buscarPersonaDocumentoAcomp($index, item)"><i class="fas fa-search"></i></a>
                                         </div>
                                     </div>
                                 </div>
@@ -378,30 +378,29 @@
                             <th>ORIGEN - DESTINO</th>
                             <th>FECHA DE CITA</th>
                             <th>FECHA VIAJE/SALIDA</th>
-                            <th>ACOMPAÑANTE</th>
+                            <th>PAC/ACOM</th>
                             <th>Acción</th>
                             </thead>
                             <tbody>
                             <tr ng-repeat="item in lista">
                                 <td></td>
-                                <td></td>
                                 <td>@{{ ($index + 1) }}</td>
-                                <td>@{{ item.ruc }}</td>
-                                <td>@{{ item.razon_social }}</td>
+                                <td><span class="pl-3 " ng-class="{'text-primary': item.estado==1, 'text-success': item.estado==2, 'text-warning': item.estado==3}">@{{ item.nom_estado }}</span></td>
+                                <td>@{{ item.numero_documento }}</td>
+                                <td>@{{ item.apellido_paterno }} @{{ item.apellido_materno }} @{{ item.nombres }}</td>
                                 <td>@{{ item.telefono }}</td>
-                                <td>@{{ item.telefono }}</td>
-                                <td>@{{ item.telefono }}</td>
-                                <td>@{{ item.direccion }}</td>
-                                <td>@{{ item.correo }}</td>
-                                <td>@{{ item.correo }}</td>
-                                <td>@{{ item.correo }}</td>
-                                <td>@{{ item.correo }}</td>
-                                <td>@{{ item.correo }}</td>
-                                <td>@{{ item.correo }}</td>
+                                <td>@{{ item.edad }}</td>
+                                <td>@{{ item.tipo_servicio }}</td>
+                                <td>@{{ item.vuelos }}</td>
+                                <td>@{{ item.tipo_pasajero }}</td>
+                                <td>@{{ item.nomb_origen_destino }}</td>
+                                <td>@{{ item.fecha_cita }}</td>
+                                <td>@{{ item.fecha_salida }}</td>
+                                <td>@{{ item.tipo_paciente }}</td>
                                 <td>
-                                    <div class="text-center align-items-center justify-content-center">
+                                    {{--<div class="text-center align-items-center justify-content-center">
                                         <button class="btn btn-success btn-sm"  ng-click="prepararEditar(item)"  title="Editar"><i class="fas fa-edit"></i></button>
-                                    </div>
+                                    </div>--}}
                                 </td>
                             </tr>
                             </tbody>
