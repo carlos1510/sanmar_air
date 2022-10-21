@@ -48,8 +48,8 @@
                             </div>
                             <div class="col col-stats">
                                 <div class="numbers">
-                                    <p class="card-category">RESERVADOS</p>
-                                    <h4 class="card-title">Ver Pasajes Reservados</h4>
+                                    <p class="card-category">VUELOS SOLICITADOS</p>
+                                    <h4 class="card-title">Ver Pasajes Solicitados</h4>
                                 </div>
                             </div>
                         </div>

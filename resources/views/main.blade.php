@@ -222,7 +222,7 @@
                         <li class="nav-item" >
                             <a href="{{ url('reservados') }}">
                                 <i class="fas fa-plane-departure"></i>
-                                <p>RESERVADOS</p>
+                                <p>VUELOS SOLICITADOS</p>
                                 <!--<span class="badge badge-count">5</span>-->
                             </a>
                         </li>
