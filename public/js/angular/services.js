@@ -66,29 +66,11 @@ app.factory('empresaService', function($http){
 
 app.factory('usuarioService', function($http){
     return {
-        getLista: function ($params) {
-            return $http.post("profesional/getLista", $params)
+        listarUsuarios: function ($params) {
+            return $http.post("usuario/listarUsuarios", $params)
         },
-        guardarUpdate: function ($params) {
-            return $http.post("profesional/guardarUpdate", $params)
-        },
-        getPerfilbyID: function ($params) {
-            return $http.post("profesional/getPerfilbyID", $params)
-        },
-        updatePerfil: function ($params) {
-            return $http.post("profesional/updatePerfil", $params)
-        },
-        listarProfesionalByDependencia: function ($params) {
-            return $http.post("profesional/listarProfesionalByDependencia", $params)
-        },
-        guardarTramaA: function ($params) {
-            return $http.post("profesional/guardarTramaA", $params)
-        },
-        guardarTurno: function ($params) {
-            return $http.post("profesional/guardarTurno", $params)
-        },
-        guardarTurnoHora: function ($params) {
-            return $http.post("profesional/guardarTurnoHora", $params)
+        registrarUsuario: function ($params) {
+            return $http.post("usuario/registrarUsuario", $params)
         },
     }
 });

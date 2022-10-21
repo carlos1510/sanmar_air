@@ -78,6 +78,7 @@ app.controller('fligthController', function ($scope, $timeout, vuelosService, pa
                     $scope.registro.apellido_paterno = data.data.apellido_paterno;
                     $scope.registro.apellido_materno = data.data.apellido_materno;
                     $scope.registro.nombres = data.data.nombres;
+                    $scope.registro.idpersona = data.data.idpersona;
                 })
             }
         }
@@ -91,6 +92,7 @@ app.controller('fligthController', function ($scope, $timeout, vuelosService, pa
                 item.apellido_paterno = data.data.apellido_paterno;
                 item.apellido_materno = data.data.apellido_materno;
                 item.nombres = data.data.nombres;
+                item.idpersona = data.data.idpersona;
             })
         }
     }

@@ -44,7 +44,7 @@ class PatientRepository
                     ];
                     $res = $client->request('GET', '/v1/dni', $parameters);
                     $resultado = json_decode($res->getBody()->getContents(), true);
-                    $dato = array('numero_documento' => isset($resultado['numeroDocumento'])?$resultado['numeroDocumento']:$params->numero_documento,'apellido_paterno' => isset($resultado['apellidoPaterno'])?$resultado['apellidoPaterno']:null,'apellido_materno' => isset($resultado['apellidoMaterno'])?$resultado['apellidoMaterno']:null,'nombres' => isset($resultado['nombres'])?$resultado['nombres']:null,'nombre' => isset($resultado['nombre'])?$resultado['nombre']:null);
+                    $dato = array('idpersona' => null,'numero_documento' => isset($resultado['numeroDocumento'])?$resultado['numeroDocumento']:$params->numero_documento,'apellido_paterno' => isset($resultado['apellidoPaterno'])?$resultado['apellidoPaterno']:null,'apellido_materno' => isset($resultado['apellidoMaterno'])?$resultado['apellidoMaterno']:null,'nombres' => isset($resultado['nombres'])?$resultado['nombres']:null,'nombre' => isset($resultado['nombre'])?$resultado['nombre']:null);
                     $data['data'] = (object)$dato;
                     /*if($resultado['apellidoPaterno'] == ""){
                         $token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.MTcwMw.JbaYXbRprI5dwWDOFK8vXV1DtBK3v1jZDJSAJq5p6xs';
@@ -66,6 +66,8 @@ class PatientRepository
             return $data;
         }
     }
+
+
 
     public function registrarPaciente($params){
         try {

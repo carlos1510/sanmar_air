@@ -435,8 +435,7 @@
                 forceParse: false,
                 calendarWeeks: true,
                 autoclose: true,
-                format: 'dd/mm/yyyy',
-                endDate: new Date()
+                format: 'dd/mm/yyyy'
             });
 
             $('#fecha_salidatxt').datepicker({
@@ -445,8 +444,7 @@
                 forceParse: false,
                 calendarWeeks: true,
                 autoclose: true,
-                format: 'dd/mm/yyyy',
-                endDate: new Date()
+                format: 'dd/mm/yyyy'
             });
             $('#fecha_iniciotxt').datepicker({
                 todayBtn: "linked",
