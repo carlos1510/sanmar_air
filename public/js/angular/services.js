@@ -72,6 +72,9 @@ app.factory('usuarioService', function($http){
         registrarUsuario: function ($params) {
             return $http.post("usuario/registrarUsuario", $params)
         },
+        eliminarUsuario: function ($params) {
+            return $http.post("usuario/eliminarUsuario", $params)
+        },
     }
 });
 

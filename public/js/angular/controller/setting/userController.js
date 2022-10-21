@@ -155,6 +155,43 @@ app.controller('userController', function ($scope, $timeout, usuarioService, pac
         })
     }
 
+    $scope.eliminarUsuario = function (item) {
+        swal({
+            title: 'Desea Eliminar?',
+            text: "Se eliminará el usuario " + item.nombres,
+            icon : "warning",
+            type: 'warning',
+            buttons:{
+                confirm: {
+                    text : 'Eliminar',
+                    className : 'btn btn-warning'
+                },cancel: {
+                    visible: true,
+                    text : 'Cancelar',
+                    className: 'btn btn-danger'
+                }
+            }
+        }).then(function(willDelete) {
+            if (willDelete) {
+                usuarioService.eliminarUsuario({idusuario: item.idusuario}).success(function (data) {
+                    if (data.confirm == true){
+                        $scope.listar();
+                        swal("Exito!", "Eliminado Exitosamente", {
+                            icon : "success",
+                            buttons: {
+                                confirm: {
+                                    className : 'btn btn-success'
+                                }
+                            },
+                        });
+                    }
+                })
+            } else {
+                //
+            }
+        });
+    }
+
     $scope.listar();
 
 });

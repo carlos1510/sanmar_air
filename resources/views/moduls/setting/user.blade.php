@@ -226,7 +226,7 @@
 
                                     <td>
                                         <button class="btn btn-success btn-sm" ng-click="prepararEditar(item)" title="Editar"><i class="fas fa-edit"></i></button>
-                                        {{--<button class="btn btn-danger btn-sm" title="Eliminar"><i class="fas fa-times"></i></button>--}}
+                                        <button class="btn btn-danger btn-sm" ng-click="eliminarUsuario(item)" title="Eliminar"><i class="fas fa-times"></i></button>
                                     </td>
                                 </tr>
                                 </tbody>

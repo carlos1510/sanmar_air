@@ -97,8 +97,8 @@ class UserRepository
 
     public function eliminarUsuario($params){
         try {
-            $sql = "";
-            DB::update($sql, array());
+            $sql = "UPDATE usuario SET estado=0, acceso=0 where id=:id";
+            DB::update($sql, array('id' => $params->idusuario));
             $data['confirm'] = true;
             return $data;
         }catch (Exception $ex){
