@@ -41,6 +41,9 @@ Route::post('empresa/listarEmpresa', 'App\Http\Controllers\CompanyController@lis
 Route::post('vuelos/getRutasVuelos', 'App\Http\Controllers\FligthController@getRutasVuelos');
 Route::post('vuelos/guardarPasajePaciente', 'App\Http\Controllers\FligthController@guardarPasajePaciente');
 Route::post('vuelos/listarPasajesPaciente', 'App\Http\Controllers\FligthController@listarPasajesPaciente');
+Route::post('vuelos/listarPasajesReservadosEmpresa', 'App\Http\Controllers\FligthController@listarPasajesReservadosEmpresa');
+Route::post('vuelos/guardarConfirmarReservaPasaje', 'App\Http\Controllers\FligthController@guardarConfirmarReservaPasaje');
+Route::post('vuelos/obtenerListaAcompanantes', 'App\Http\Controllers\FligthController@obtenerListaAcompanantes');
 
 // Rutas Paciente
 Route::post('paciente/registrarPaciente', 'App\Http\Controllers\PatientController@registrarPaciente');

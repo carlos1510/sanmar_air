@@ -276,4 +276,56 @@ class FligthRepository
             WHERE pp.estado=1";
         return DB::select($sql);
     }
+
+    public function listarPasajesReservadosEmpresa($params){
+        $sql = "SELECT pp.id AS idpasaje_paciente, pp.idpersona, pp.vuelos, pp.idruta_viaje_precio, DATE_FORMAT(pp.fecha_cita,'%d/%m/%Y') AS fecha_cita, DATE_FORMAT(IFNULL(pp.fecha_viaje,pp.fecha_salida),'%d/%m/%Y') AS fecha_salida,
+            DATE_FORMAT(pp.fecha_viaje,'%d/%m/%Y') AS fecha_viaje, DATE_FORMAT(pp.fecha_retorno,'%d/%m/%Y') AS fecha_retorno, pp.tipo_pasajero, pp.edad, pp.observacion, pp.tipo_paciente, pp.idpasaje_paciente_ac,
+            p.idtipo_documento, p.numero_documento, p.apellido_paterno, p.apellido_materno, p.nombres, p.sexo, DATE_FORMAT(p.fecha_nacimiento,'%d/%m/%Y') AS fecha_nacimiento, p.telefono,pp.monto_empresa,
+            p.correo, p.direccion, IF(pp.estado=1, 'PENDIENTE', IF(pp.estado=2,'APROVADO',IF(pp.estado=3, 'OBSERVADO', 'ELIMINADO'))) AS nom_estado, pp.estado, pp.tipo_servicio, CONCAT_WS(' - ',rvp.origen,rvp.destino) AS nomb_origen_destino
+             FROM pasaje_paciente pp INNER JOIN persona p ON pp.idpersona=p.id
+             INNER JOIN ruta_viaje_precio rvp ON pp.idruta_viaje_precio=rvp.id
+            WHERE pp.estado=1 AND pp.idempresa=1 AND pp.tipo IN (1,2)";
+        return DB::select($sql);
+    }
+
+    public function guardarConfirmarReservaPasaje($params){
+        try {
+            $sql = "UPDATE pasaje_paciente SET fecha_viaje=:fecha_viaje, fecha_retorno=:fecha_retorno, observacion=:observacion, monto_empresa=:monto_empresa, fecha_modificacion=:fecha_modificacion, idusuario_modificacion=:idusuario_modificacion, estado=:estado WHERE id=:id;";
+            DB::update($sql, array(
+                'fecha_viaje' => isset($params->fecha_viaje)?($params->fecha_viaje!=""?Util::convertirStringFecha($params->fecha_viaje, false):null):null,
+                'fecha_retorno' => isset($params->fecha_retorno)?($params->fecha_retorno!=""?Util::convertirStringFecha($params->fecha_retorno, false):null):null,
+                'observacion' => isset($params->observacion)?$params->observacion:null,
+                'monto_empresa' => isset($params->monto_empresa)?$params->monto_empresa:null,
+                'fecha_modificacion' => date('Y-m-d H:i:s'),
+                'idusuario_modificacion' => Session::get('idusuario'),
+                'estado' => isset($params->estado)?$params->estado:1,
+                'id' => $params->idpasaje_paciente
+            ));
+            foreach ($params->detalle_acompanante as $item){
+                $sql_acomp = "UPDATE pasaje_paciente SET fecha_viaje=:fecha_viaje, fecha_retorno=:fecha_retorno, observacion=:observacion, monto_empresa=:monto_empresa, fecha_modificacion=:fecha_modificacion, idusuario_modificacion=:idusuario_modificacion, estado=:estado WHERE id=:id;";
+                DB::update($sql_acomp, array(
+                    'fecha_viaje' => isset($params->fecha_viaje)?($params->fecha_viaje!=""?Util::convertirStringFecha($params->fecha_viaje, false):null):null,
+                    'fecha_retorno' => isset($params->fecha_retorno)?($params->fecha_retorno!=""?Util::convertirStringFecha($params->fecha_retorno, false):null):null,
+                    'observacion' => isset($params->observacion)?$params->observacion:null,
+                    'monto_empresa' => isset($params->monto_empresa)?$params->monto_empresa:null,
+                    'fecha_modificacion' => date('Y-m-d H:i:s'),
+                    'idusuario_modificacion' => Session::get('idusuario'),
+                    'estado' => isset($params->estado)?$params->estado:1,
+                    'id' => $item->idpasaje_paciente_acom
+                ));
+            }
+            $data['confirm'] = true;
+            return $data;
+        }catch (Exception $ex){
+            $data['confirm'] = false;
+            return $data;
+        }
+    }
+
+    public function obtenerListaAcompanantes($params){
+        $sql = "SELECT pp.id AS idpasaje_paciente_acom, pp.idpersona, per.numero_documento, CONCAT_WS(' ',per.apellido_paterno, per.apellido_materno, per.nombres) AS nombres_persona,
+            pp.edad, pp.tipo_pasajero, per.telefono FROM pasaje_paciente pp INNER JOIN persona per ON pp.idpersona=per.id
+            WHERE pp.idpasaje_paciente_ac=$params->idpasaje_paciente AND pp.estado!=0";
+        return DB::select($sql);
+    }
 }

@@ -45,6 +45,15 @@ app.factory('vuelosService', function($http){
         listarPasajesPaciente: function ($params) {
             return $http.post("vuelos/listarPasajesPaciente", $params)
         },
+        listarPasajesReservadosEmpresa: function ($params) {
+            return $http.post("vuelos/listarPasajesReservadosEmpresa", $params)
+        },
+        guardarConfirmarReservaPasaje: function ($params) {
+            return $http.post("vuelos/guardarConfirmarReservaPasaje", $params)
+        },
+        obtenerListaAcompanantes: function ($params) {
+            return $http.post("vuelos/obtenerListaAcompanantes", $params)
+        },
 
     }
 });

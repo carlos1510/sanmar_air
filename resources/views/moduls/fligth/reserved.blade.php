@@ -32,52 +32,131 @@
         <div class="col-xl-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">Registrar Empresa</h4>
+                    <h4 class="card-title">Confirmar Reserva de Pasaje</h4>
                 </div>
                 <div class="card-body">
-                    <form class="needs-validation" novalidate>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="mb-3 position-relative">
-                                    <label class="form-label" for="validationTooltip01">RUC.:</label>
-                                    <input type="text" class="form-control numero" id="ructxt" placeholder="" maxlength="11" ng-model="registro.ruc" required>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3 position-relative">
-                                    <label class="form-label" for="validationTooltip02">RAZON SOCIAL:</label>
-                                    <input type="text" class="form-control" id="razonsocialtxt" ng-model="registro.razon_social" required>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mb-3 position-relative">
-                                    <label class="form-label" for="validationTooltipUsername">TELEFONO:</label>
-                                    <input type="text" class="form-control numero" maxlength="9" ng-model="registro.telefono" >
+                    <div class="card card-profile card-secondary">
+                        <div class="card-header" >
+                            <h1 class="text-white text-center">DATOS DEL PASAJERO</h1>
+                            <div class="profile-picture">
+                                <div class="avatar avatar-xl">
+                                    <img class="avatar-img rounded-circle" alt="..." src="img/@{{ registro.sexo }}.jpg">
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3 position-relative">
-                                    <label class="form-label" for="validationTooltip03">DIRECCION</label>
-                                    <input type="text" class="form-control" ng-model="registro.direccion" >
+                        <div class="card-body">
+                            <div class="user-profile text-center">
+                                <div class="name">Nro. Documento: @{{ registro.numero_documento }}</div>
+                                <div class="name">Nombres: @{{ registro.nombres }} @{{ registro.apellido_parterno }} @{{ registro.apellido_materno }}</div>
+                                <div class="job">Género: @{{ registro.sexo }}</div>
+                                <div class="job">Telefono: @{{ registro.telefono }} | Edad: @{{ registro.edad }}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="view-profile">
+                                        <span class="btn btn-secondary btn-block" >DATOS DEL PASAJE</span>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="mb-3 position-relative">
-                                    <label class="form-label" for="validationTooltip04">CORREO ELECTRONICO</label>
-                                    <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                            <span id="basic-addon1" class="input-group-text">@</span>
-                                        </div>
-                                        <input class="form-control" type="text" ng-model="registro.correo">
+                            <div class="row">
+                                <div class="col-lg-3">
+                                    <div class="form-group form-group-default">
+                                        <label>Tipo de Servicio</label>
+                                        <input class="form-control" type="text" ng-model="registro.tipo_servicio" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="form-group form-group-default">
+                                        <label>Origen - Destino</label>
+                                        <input class="form-control" type="text" ng-model="registro.nomb_origen_destino" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="form-group form-group-default">
+                                        <label>Tipo de Pasajero</label>
+                                        <input class="form-control" type="text" ng-model="registro.tipo_pasajero" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="form-group form-group-default">
+                                        <label>Fecha de Cita</label>
+                                        <input class="form-control" type="text" ng-model="registro.fecha_cita" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="form-group form-group-default">
+                                        <label>Estado</label>
+                                        <select id="estadocmb" class="form-control" ng-model="registro.estado">
+                                            <option value="2">Aceptado</option>
+                                            <option value="3">Observado</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group form-group-default">
+                                        <label>Fecha de Viaje</label>
+                                        <input id="fecha_viajetxt" class="form-control" autocomplete="off" type="text" placeholder="Fecha de Viaje" ng-model="registro.fecha_viaje" >
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group form-group-default">
+                                        <label>Monto</label>
+                                        <input class="form-control" type="text" id="montotxt" ng-model="registro.monto_empresa" placeholder="0.00" >
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="form-group form-group-default">
+                                        <label>Observación</label>
+                                        <textarea class="form-control" rows="3" placeholder="Observacion" ng-model="registro.observacion"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" ng-show="registro.detalle_acompanante.length == 0">
+                                <div class="col-lg-12" >
+                                    <div class="view-profile">
+                                        <span class="btn btn-secondary btn-block" >No Cuenta con Acompañante(s)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" ng-show="registro.detalle_acompanante.length > 0">
+                                <div class="col-lg-12">
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="5" class="text-center">DATOS DEL ACOMPAÑANTE</th>
+                                                </tr>
+                                                <tr>
+                                                    <th>DNI</th>
+                                                    <th>NOMBRES</th>
+                                                    <th>EDAD</th>
+                                                    <th>TIPO PASAJERO</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="item in registro.detalle_acompanante">
+                                                    <td>@{{ item.numero_documento }}</td>
+                                                    <td>@{{ item.nombres_persona }}</td>
+                                                    <td>@{{ item.edad }}</td>
+                                                    <td>@{{ item.tipo_pasajero }}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <button class="btn btn-primary" type="button" ng-click="guardar()"><i class="fas fa-save"></i> GUARDAR</button>
-                        <button class="btn btn-danger" type="button" ng-click="salir()"><i class="fas fa-times"></i> SALIR</button>
-                    </form>
+                        <div class="card-footer">
+                            <div class="text-center align-items-center justify-content-center">
+                                <button class="btn btn-primary btn-sm" ng-click="guardar()" title="Guardar"><i class="fas fa-save"></i> Confirmar</button>
+                                <button class="btn btn-danger btn-sm" ng-click="salir()" title="Salir"><i class="fas fa-times"></i> Salir</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <!-- end card -->
@@ -135,7 +214,7 @@
                         </div>
                         <div class="col-lg-2">
                             <div style="padding-top: 35px !important;">
-                                <button type="button" class="btn btn-block btn-default"><i class="fas fa-search"></i> Buscar</button>
+                                <button type="button" class="btn btn-block btn-default" ng-click="listar()"><i class="fas fa-search"></i> Buscar</button>
                             </div>
                         </div>
                     </div>
@@ -151,24 +230,30 @@
                             <th>TELEFONO</th>
                             <th>EDAD</th>
                             <th>TIPO DE PASAJERO</th>
+                            <th>PAC/ACOMP.</th>
                             <th>ORIGEN - DESTINO</th>
                             <th>FECHA DE CITA</th>
+                            <th>FECHA DE VIAJE</th>
+                            <th>Monto</th>
                             <th>Acción</th>
                             </thead>
                             <tbody>
                             <tr ng-repeat="item in lista">
                                 <td></td>
                                 <td>@{{ ($index + 1) }}</td>
-                                <td>@{{ item.ruc }}</td>
-                                <td>@{{ item.razon_social }}</td>
+                                <td>@{{ item.numero_documento }}</td>
+                                <td>@{{ item.apellido_paterno }} @{{ item.apellido_materno }} @{{ item.nombres }}</td>
                                 <td>@{{ item.telefono }}</td>
-                                <td>@{{ item.direccion }}</td>
-                                <td>@{{ item.correo }}</td>
-                                <td>@{{ item.correo }}</td>
-                                <td>@{{ item.correo }}</td>
+                                <td>@{{ item.edad }}</td>
+                                <td>@{{ item.tipo_pasajero }}</td>
+                                <td>@{{ item.tipo_paciente }}</td>
+                                <td>@{{ item.nomb_origen_destino }}</td>
+                                <td>@{{ item.fecha_cita }}</td>
+                                <td>@{{ item.fecha_viaje }}</td>
+                                <td>@{{ item.monto_empresa }}</td>
                                 <td>
                                     <div class="text-center align-items-center justify-content-center">
-                                        <button class="btn btn-success btn-sm"  ng-click="prepararEditar(item)"  title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button ng-show="item.tipo_paciente=='PACIENTE'" class="btn btn-success btn-sm"  ng-click="prepararEditar(item)"  title="Reservar"><i class="fas fa-check"></i></button>
                                     </div>
                                 </td>
                             </tr>
@@ -188,6 +273,14 @@
     <script>
         $(function () {
             $(".numero").numeric({decimal: false, negative: false});
+            $('#fecha_viajetxt').datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                calendarWeeks: true,
+                autoclose: true,
+                format: 'dd/mm/yyyy'
+            });
         })
     </script>
 @endsection

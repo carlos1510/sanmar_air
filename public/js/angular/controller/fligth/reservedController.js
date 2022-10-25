@@ -2,7 +2,7 @@
  * Created by carlo on 1/09/2018.
  */
 
-app.controller('reservedController', function ($scope, $timeout, empresaService){
+app.controller('reservedController', function ($scope, $timeout, vuelosService){
     $scope.dtInstance = {};
     $scope.elementos = {lista:[]};
 
@@ -25,9 +25,13 @@ app.controller('reservedController', function ($scope, $timeout, empresaService)
     }
 
     $scope.guardar = function () {
-        var valid = validar_campo(['#ructxt','#razonsocialtxt']);
+        var valid = true;
+        if ($("#estadocmb").val() == 2){
+            valid = validar_campo(['#fecha_viajetxt','#montotxt']);
+        }
+
         if (valid){
-            empresaService.registrarEmpresa($scope.registro).success(function (data) {
+            vuelosService.guardarConfirmarReservaPasaje($scope.registro).success(function (data) {
                 if (data.confirm == true){
                     swal("Exito!", "Se registro correctamente la información!", {
                         icon : "success",
@@ -64,54 +68,22 @@ app.controller('reservedController', function ($scope, $timeout, empresaService)
         }
     }
 
-    $scope.eliminarEmpresa = function (item) {
-        swal({
-            title: 'Desea Eliminar?',
-            text: "Se eliminará la empresa " + item.razon_social,
-            icon : "warning",
-            type: 'warning',
-            buttons:{
-                confirm: {
-                    text : 'Eliminar',
-                    className : 'btn btn-warning'
-                },cancel: {
-                    visible: true,
-                    text : 'Cancelar',
-                    className: 'btn btn-danger'
-                }
-            }
-        }).then(function(willDelete) {
-            if (willDelete) {
-                //registramos los datos
-                empresaService.eliminarEmpresa({id: item.idempresa}).success(function (data) {
-                    if (data.confirm == true){
-                        $scope.listar();
-                        swal("Exito!", "" + data.message, {
-                            icon : "success",
-                            buttons: {
-                                confirm: {
-                                    className : 'btn btn-success'
-                                }
-                            },
-                        });
-                    }
-                })
-            } else {
-                //
-            }
-        });
-    }
 
     $scope.prepararEditar = function (item) {
         $scope.registro = {};
         $scope.registro = item;
+        $scope.registro.detalle_acompanante = [];
+        vuelosService.obtenerListaAcompanantes({idpasaje_paciente: item.idpasaje_paciente}).success(function (data) {
+            $scope.registro.detalle_acompanante = data;
+        })
         $timeout(function () {
+            $("#estadocmb").val(item.estado==1?2:item.estado).change();
             $scope.estado_registro = 1;
-        }, 0);
+        }, 100);
     }
 
     $scope.listar = function () {
-        empresaService.listarEmpresa($scope.filtro).success(function (data) {
+        vuelosService.listarPasajesReservadosEmpresa($scope.filtro).success(function (data) {
             $scope.lista = data;
         });
     }

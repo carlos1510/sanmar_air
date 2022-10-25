@@ -36,4 +36,25 @@ class FligthController extends Controller
         $params = json_decode($content);
         return new JsonResponse($this->service->listarPasajesPaciente($params));
     }
+
+    public function listarPasajesReservadosEmpresa(Request $request){
+        $request->isXmlHttpRequest();
+        $content = $request->getContent();
+        $params = json_decode($content);
+        return new JsonResponse($this->service->listarPasajesReservadosEmpresa($params));
+    }
+
+    public function guardarConfirmarReservaPasaje(Request $request){
+        $request->isXmlHttpRequest();
+        $content = $request->getContent();
+        $params = json_decode($content);
+        return new JsonResponse($this->service->guardarConfirmarReservaPasaje($params));
+    }
+
+    public function obtenerListaAcompanantes(Request $request){
+        $request->isXmlHttpRequest();
+        $content = $request->getContent();
+        $params = json_decode($content);
+        return new JsonResponse($this->service->obtenerListaAcompanantes($params));
+    }
 }

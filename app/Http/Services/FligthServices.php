@@ -26,4 +26,19 @@ class FligthServices
         $params = (object)$params;
         return $this->repository->listarPasajesPaciente($params);
     }
+
+    public function listarPasajesReservadosEmpresa($params){
+        $params = (object)$params;
+        return $this->repository->listarPasajesReservadosEmpresa($params);
+    }
+
+    public function guardarConfirmarReservaPasaje($params){
+        $params = (object)$params;
+        return $this->repository->guardarConfirmarReservaPasaje($params);
+    }
+
+    public function obtenerListaAcompanantes($params){
+        $params = (object)$params;
+        return $this->repository->obtenerListaAcompanantes($params);
+    }
 }
