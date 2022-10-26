@@ -54,6 +54,9 @@ app.factory('vuelosService', function($http){
         obtenerListaAcompanantes: function ($params) {
             return $http.post("vuelos/obtenerListaAcompanantes", $params)
         },
+        listarPasajesReservados: function ($params) {
+            return $http.post("vuelos/listarPasajesReservados", $params)
+        },
 
     }
 });

@@ -176,11 +176,11 @@
                         <div class="col-lg-2">
                             <div class="form-group">
                                 <label>Estado:</label>
-                                <select class="form-control" placeholder="Seleccione">
+                                <select class="form-control" id="estado_busquedacmb" placeholder="Seleccione" ng-model="filtro.estado">
                                     <option value="">TODOS</option>
-                                    <option value="PENDIENTE">PENDIENTE</option>
-                                    <option value="ACEPTADO">ACEPTADO</option>
-                                    <option value="NO ACEPTADO">NO ACEPTADO</option>
+                                    <option value="1">PENDIENTE</option>
+                                    <option value="2">ACEPTADO</option>
+                                    <option value="3">OBSERVADO</option>
                                 </select>
                             </div>
                         </div>
@@ -191,7 +191,7 @@
                                     <div class="input-group-prepend">
                                         <span  class="input-group-text"><i class="fa fa-calendar"></i></span>
                                     </div>
-                                    <input class="form-control " type="text" id="fecha_nacimientotxt" maxlength="10" autocomplete="off" placeholder="dd/mm/yyyy" ng-model="registro.fecha_nacimiento">
+                                    <input class="form-control " type="text" id="fecha_iniciotxt" maxlength="10" autocomplete="off" placeholder="dd/mm/yyyy" ng-model="filtro.fecha_inicio">
                                 </div>
                             </div>
                         </div>
@@ -202,14 +202,14 @@
                                     <div class="input-group-prepend">
                                         <span  class="input-group-text"><i class="fa fa-calendar"></i></span>
                                     </div>
-                                    <input class="form-control " type="text" id="fecha_nacimientotxt" maxlength="10" autocomplete="off" placeholder="dd/mm/yyyy" ng-model="registro.fecha_nacimiento">
+                                    <input class="form-control " type="text" id="fecha_finaltxt" maxlength="10" autocomplete="off" placeholder="dd/mm/yyyy" ng-model="filtro.fecha_final">
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-2">
                             <div class="form-group">
                                 <label>DNI:</label>
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control numero" ng-model="filtro.numero_documento" maxlength="8">
                             </div>
                         </div>
                         <div class="col-lg-2">
@@ -223,8 +223,8 @@
                     <div class="table-responsive">
                         <table class="table table-bordered">
                             <thead>
-                            <th></th>
                             <th>#</th>
+                            <th></th>
                             <th>DNI.</th>
                             <th>PASAJERO.</th>
                             <th>TELEFONO</th>
@@ -239,8 +239,8 @@
                             </thead>
                             <tbody>
                             <tr ng-repeat="item in lista">
-                                <td></td>
                                 <td>@{{ ($index + 1) }}</td>
+                                <td class="text-center"><i ng-class="{'flaticon-success text-success text-xl-center': item.estado==2, 'flaticon-exclamation text-warning': item.estado==3, 'flaticon-round text-primary': item.estado==1}"></td>
                                 <td>@{{ item.numero_documento }}</td>
                                 <td>@{{ item.apellido_paterno }} @{{ item.apellido_materno }} @{{ item.nombres }}</td>
                                 <td>@{{ item.telefono }}</td>
@@ -274,6 +274,24 @@
         $(function () {
             $(".numero").numeric({decimal: false, negative: false});
             $('#fecha_viajetxt').datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                calendarWeeks: true,
+                autoclose: true,
+                format: 'dd/mm/yyyy'
+            });
+
+            $('#fecha_iniciotxt').datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                calendarWeeks: true,
+                autoclose: true,
+                format: 'dd/mm/yyyy'
+            });
+
+            $('#fecha_finaltxt').datepicker({
                 todayBtn: "linked",
                 keyboardNavigation: false,
                 forceParse: false,

@@ -41,4 +41,9 @@ class FligthServices
         $params = (object)$params;
         return $this->repository->obtenerListaAcompanantes($params);
     }
+
+    public function listarPasajesReservados($params){
+        $params = (object)$params;
+        return $this->repository->listarPasajesReservados($params);
+    }
 }
