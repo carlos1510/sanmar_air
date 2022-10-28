@@ -96,12 +96,12 @@
                                     <label>Servicios</label>
                                     <br>
                                     <label class="form-radio-label">
-                                        <input class="form-radio-input" type="radio" value="VUELOS" name="servicioRadios" ng-model="registro.tipo_servicio">
-                                        <span class="form-radio-sign">Vuelos</span>
+                                        <input class="form-radio-input" type="radio" value="PASAJE AEREO" name="servicioRadios" ng-model="registro.tipo_servicio">
+                                        <span class="form-radio-sign">PASAJE AEREO</span>
                                     </label>
                                     <label class="form-radio-label ml-3">
-                                        <input class="form-radio-input" type="radio" value="VUELOS CHARTER" name="servicioRadios" ng-model="registro.tipo_servicio">
-                                        <span class="form-radio-sign">Vuelos Charter</span>
+                                        <input class="form-radio-input" type="radio" value="VUELO CHARTER" name="servicioRadios" ng-model="registro.tipo_servicio">
+                                        <span class="form-radio-sign">VUELO CHARTER</span>
                                     </label>
                                 </div>
                             </div>
@@ -124,7 +124,7 @@
                             <div class="col-lg-3">
                                 <div class="mb-3 ">
                                     <label for="choices-single-default" class="form-label ">Origen - Destino <span class="text-danger">(*)</span></label>
-                                    <select class="form-control" data-trigger id="origen_destinocmb" placeholder="Seleccione" ng-model="registro.idruta_viaje_precio">
+                                    <select class="form-control" data-trigger id="origen_destinocmb" placeholder="Seleccione" ng-model="registro.idruta_viaje_precio" >
                                         <option value="">---</option>
                                         <option ng-repeat="item in rutas" value="@{{ item.id }}">@{{ item.nom_ruta }}</option>
                                     </select>
@@ -155,7 +155,7 @@
                             <div class="col-md-3">
                                 <div class="mb-3 ">
                                     <label for="choices-single-default" class="form-label ">Tipo de Pasajero <span class="text-danger">(*)</span></label>
-                                    <select class="form-control" data-trigger id="tipopasajerocmb" placeholder="Seleccione" ng-model="registro.tipo_pasajero">
+                                    <select class="form-control" data-trigger id="tipopasajerocmb" placeholder="Seleccione" ng-model="registro.tipo_pasajero" >
                                         <option value="">---</option>
                                         <option value="ADULTO">ADULTO</option>
                                         <option value="INFANTE">INFANTE</option>
@@ -164,6 +164,29 @@
                                 </div>
                             </div>
                         </div>
+                        @if(Session::get('idnivel') == 1)
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="form-group form-group-default">
+                                        <label>Empresa: <span class="text-danger">(*)</span></label>
+                                        <select id="empresacmb" class="form-control" ng-model="registro.idempresa">
+                                            <option value="">----</option>
+                                            <option ng-repeat="item in empresas" value="@{{ item.idempresa }}">@{{ item.razon_social }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="form-group form-group-default">
+                                        <label>Estado: <span class="text-danger">(*)</span></label>
+                                        <select id="estadocmb" class="form-control" ng-model="registro.estado">
+                                            <option value="">----</option>
+                                            <option value="1">PENDIENTE</option>
+                                            <option value="3">OBSERVADOS</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                     </div>
 
                     <div class="mb-2 pl-3 pt-3 pr-3 pb-3 border-3 border-dark border-top border-bottom border-left border-right" style="border-radius: 5px !important;">
@@ -259,7 +282,7 @@
             </div>
             <div class="card-footer">
                 <div class="text-center align-items-center justify-content-center">
-                    <button class="btn btn-primary" type="button" ng-click="guardar()"><i class="fas fa-save"></i> GUARDAR</button>
+                    <button class="btn btn-primary" type="button" ng-click="guardarPasaje()"><i class="fas fa-save"></i> GUARDAR</button>
                     <button class="btn btn-danger" type="button" ng-click="salir()"><i class="fas fa-times"></i> SALIR</button>
                 </div>
             </div>

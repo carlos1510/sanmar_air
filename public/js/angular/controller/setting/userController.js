@@ -86,11 +86,13 @@ app.controller('userController', function ($scope, $timeout, usuarioService, pac
             }else {
                 $timeout(function () {
                     $("#idempresacmb").val("").change();
+                    $scope.estado_visible_empresa = 0;
                 }, 0);
             }
         }else {
             $timeout(function () {
                 $("#idempresacmb").val("").change();
+                $scope.estado_visible_empresa = 0;
             }, 0);
         }
     }
@@ -190,6 +192,17 @@ app.controller('userController', function ($scope, $timeout, usuarioService, pac
                 //
             }
         });
+    }
+
+    $scope.mostrarPass = function () {
+        var cambio = document.getElementById("txtPassword");
+        if(cambio.type == "password"){
+            cambio.type = "text";
+            $('#icon').removeClass('fas fa-eye-slash').addClass('fas fa-eye');
+        }else{
+            cambio.type = "password";
+            $('#icon').removeClass('fas fa-eye').addClass('fas fa-eye-slash');
+        }
     }
 
     $scope.listar();

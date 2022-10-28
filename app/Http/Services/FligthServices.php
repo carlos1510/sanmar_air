@@ -46,4 +46,14 @@ class FligthServices
         $params = (object)$params;
         return $this->repository->listarPasajesReservados($params);
     }
+
+    public function eliminarPasaje($params){
+        $params = (object)$params;
+        return $this->repository->eliminarPasaje($params);
+    }
+
+    public function listarProformas($params){
+        $params = (object)$params;
+        return $this->repository->listarProformas($params);
+    }
 }

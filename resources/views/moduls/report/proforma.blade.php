@@ -49,18 +49,19 @@
                         <div class="col-lg-2">
                             <div class="form-group">
                                 <label for="">Servicio</label>
-                                <select class="form-control" placeholder="Seleccione">
+                                <select class="form-control" placeholder="Seleccione" id="tipoServiciocmb" ng-model="filtro.tipo_servicio">
                                     <option value="">TODOS</option>
-                                    <option value="VUELOS">VUELOS</option>
-                                    <option value="CHARTER">CHARTER</option>
+                                    <option value="PASAJE AEREO">PASAJE AEREO</option>
+                                    <option value="VUELO CHARTER">VUELO CHARTER</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-lg-4">
                             <div class="form-group">
                                 <label for="">Ruta Origen - Destino</label>
-                                <select class="form-control" placeholder="Seleccione">
+                                <select class="form-control" placeholder="Seleccione" id="rutaviajecmb" ng-model="filtro.idruta_viaje_precio">
                                     <option value="">TODOS</option>
+                                    <option ng-repeat="item in rutas" value="@{{ item.id }}">@{{ item.nom_ruta }}</option>
                                 </select>
                             </div>
                         </div>
@@ -71,7 +72,7 @@
                                     <div class="input-group-prepend">
                                         <span  class="input-group-text"><i class="fa fa-calendar"></i></span>
                                     </div>
-                                    <input class="form-control " type="text" id="fecha_nacimientotxt" maxlength="10" autocomplete="off" placeholder="dd/mm/yyyy" ng-model="registro.fecha_nacimiento">
+                                    <input class="form-control " type="text" id="fecha_iniciotxt" maxlength="10" autocomplete="off" placeholder="dd/mm/yyyy" ng-model="filtro.fecha_inicio">
                                 </div>
                             </div>
                         </div>
@@ -82,7 +83,7 @@
                                     <div class="input-group-prepend">
                                         <span  class="input-group-text"><i class="fa fa-calendar"></i></span>
                                     </div>
-                                    <input class="form-control " type="text" id="fecha_nacimientotxt" maxlength="10" autocomplete="off" placeholder="dd/mm/yyyy" ng-model="registro.fecha_nacimiento">
+                                    <input class="form-control " type="text" id="fecha_finaltxt" maxlength="10" autocomplete="off" placeholder="dd/mm/yyyy" ng-model="filtro.fecha_final">
                                 </div>
                             </div>
                         </div>
@@ -91,7 +92,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="text-center align-items-center justify-content-center">
-                                <button type="button" class="btn btn-default"><i class="fas fa-search"></i> Buscar</button>
+                                <button type="button" class="btn btn-default" ng-click="listar()"><i class="fas fa-search"></i> Buscar</button>
                                 <button type="button" class="btn btn-danger "><i class="fas fa-file-pdf"></i> Descargar</button>
                             </div>
                         </div>
@@ -101,30 +102,29 @@
                     <div class="table-responsive">
                         <table class="table table-bordered">
                             <thead>
-                            <th>#</th>
-                            <th>RUC.</th>
-                            <th>RAZON SOCIAL.</th>
-                            <th>TELEFONO</th>
-                            <th>DIRECCION</th>
-                            <th>CORREO</th>
-                            <th>Acción</th>
+                            <th>ITEM</th>
+                            <th>DESCRIPCION</th>
+                            <th>CANTIDAD</th>
+                            <th>UNIDAD DE MEDIDA</th>
+                            <th>P.U.</th>
+                            <th>PRECIO TOTAL (Soles)</th>
                             </thead>
                             <tbody>
                             <tr ng-repeat="item in lista">
-                                <td>@{{ ($index + 1) }}</td>
-                                <td>@{{ item.ruc }}</td>
-                                <td>@{{ item.razon_social }}</td>
-                                <td>@{{ item.telefono }}</td>
-                                <td>@{{ item.direccion }}</td>
-                                <td>@{{ item.correo }}</td>
-                                <td>
-                                    <div class="text-center align-items-center justify-content-center">
-                                        <button class="btn btn-success btn-sm"  ng-click="prepararEditar(item)"  title="Editar"><i class="fas fa-edit"></i></button>
-                                        <button class="btn btn-danger btn-sm" title="Eliminar" ng-click="eliminarEmpresa(item)"><i class="fas fa-times"></i></button>
-                                    </div>
-                                </td>
+                                <td class="text-center">@{{ ($index + 1) }}</td>
+                                <td>@{{ item.descripcion }}</td>
+                                <td class="text-center">@{{ item.cantidad }}</td>
+                                <td class="text-center">@{{ item.unidad_medida }}</td>
+                                <td class="text-right">S/. @{{ item.precio_unitario | number:2 }}</td>
+                                <td class="text-right">S/. @{{ item.total | number:2 }}</td>
                             </tr>
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="5" class="text-center">VALOR TOTAL DE LA COTIZACION</th>
+                                    <th class="text-right text-black">S/. @{{ total | number:2 }}</th>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -140,6 +140,24 @@
     <script>
         $(function () {
             $(".numero").numeric({decimal: false, negative: false});
+
+            $('#fecha_iniciotxt').datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                calendarWeeks: true,
+                autoclose: true,
+                format: 'dd/mm/yyyy'
+            });
+
+            $('#fecha_finaltxt').datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                calendarWeeks: true,
+                autoclose: true,
+                format: 'dd/mm/yyyy'
+            });
         })
     </script>
 @endsection

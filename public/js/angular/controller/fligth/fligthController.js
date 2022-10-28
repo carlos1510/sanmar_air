@@ -2,7 +2,7 @@
  * Created by carlo on 1/09/2018.
  */
 
-app.controller('fligthController', function ($scope, $timeout, vuelosService, pacienteService){
+app.controller('fligthController', function ($scope, $timeout, vuelosService, pacienteService, empresaService){
     $scope.dtInstance = {};
     $scope.elementos = {lista:[]};
 
@@ -13,15 +13,33 @@ app.controller('fligthController', function ($scope, $timeout, vuelosService, pa
 
     $scope.filtro = {};
     $scope.lista = [];
+    $scope.empresas = [];
 
     vuelosService.getRutasVuelos({}).success(function (data) {
         $scope.rutas = data;
     })
 
+    empresaService.listarEmpresa({}).success(function (data) {
+        $scope.empresas = data;
+    });
+
+    $scope.inicio = function () {
+        var date = new Date();
+        var primerDia = new Date(date.getFullYear(), date.getMonth() , 1);
+        var ultimoDia = new Date(date.getFullYear(), (date.getMonth() + 1), 0);
+
+        //$scope.filtro.fecha_inicio = ('0'+primerDia.getDate()).toString().substr(-2)+'/'+('0'+(primerDia.getMonth()+1)).toString().substr(-2)+'/'+primerDia.getFullYear();
+        //$scope.filtro.fecha_final = ('0'+ultimoDia.getDate()).toString().substr(-2)+'/'+('0'+(ultimoDia.getMonth()+1)).toString().substr(-2)+'/'+ultimoDia.getFullYear();
+        $timeout(function () {
+            $("#estadobuscarcmb").val(1).change();
+        }, 0);
+
+    }
+
     $scope.nuevoRegistro = function () {
         $scope.registro = {};
         $scope.registro.detalle_acompanante = [];
-        $scope.registro.tipo_servicio = 'VUELOS';
+        $scope.registro.tipo_servicio = 'PASAJE AEREO';
         $scope.registro.vuelos = 'IDA Y VUELTA';
 
         $timeout(function () {
@@ -42,7 +60,7 @@ app.controller('fligthController', function ($scope, $timeout, vuelosService, pa
     }
 
     $scope.addAcompanante = function () {
-        $scope.registro.detalle_acompanante.push({idpersona: null,numero_documento: null, apellido_paterno: null, apellido_materno: null, nombres: null, edad: null, tipo_pasajero: ''});
+        $scope.registro.detalle_acompanante.push({idpersona: null,numero_documento: null, apellido_paterno: null, apellido_materno: null, nombres: null, edad: null, tipo_pasajero: '', precio_unitario: null});
     }
 
     $scope.removeAcompanante = function (index) {
@@ -97,10 +115,29 @@ app.controller('fligthController', function ($scope, $timeout, vuelosService, pa
         }
     }
 
-    $scope.guardar = function () {
+    $scope.guardarPasaje = function () {
         var valid = validar_campo(['#idtipodocumentocmb','#numerodocumentotxt','#apellido_paternotxt','#apellido_maternotxt','#nombrestxt','#edadtxt','#telefonotxt','#origen_destinocmb','#fecha_citatxt','#tipopasajerocmb']);
         if (valid){
             //var cantidad_item = ;
+            for (var i = 0; i < $scope.rutas.length; i++){
+                if ($scope.registro.tipo_servicio == 'PASAJE AEREO'){
+                    if ($scope.rutas[i].id == $("#origen_destinocmb").val()){
+                        if ($("#tipopasajerocmb").val() == 'ADULTO'){
+                            $scope.registro.precio_unitario = $scope.rutas[i].precio_adulto;
+                        }else {
+                            if ($("#tipopasajerocmb").val() == 'INFANTE'){
+                                $scope.registro.precio_unitario = $scope.rutas[i].precio_infante;
+                            }else {
+                                if ($("#tipopasajerocmb").val() == 'NIÑO'){
+                                    $scope.registro.precio_unitario = $scope.rutas[i].precio_infante;
+                                }
+                            }
+                        }
+                    }
+                }else {
+                    break;
+                }
+            }
             var valid_item = true;
             if ($scope.registro.detalle_acompanante.length > 0){
                 for (var i = 0; i < $scope.registro.detalle_acompanante.length; i++){
@@ -109,7 +146,31 @@ app.controller('fligthController', function ($scope, $timeout, vuelosService, pa
                         break;
                     }
                 }
+                for (var i = 0; i < $scope.rutas.length; i++){
+                    for (var j = 0; j < $scope.registro.detalle_acompanante.length; j++){
+                        if ($scope.registro.tipo_servicio == 'PASAJE AEREO'){
+                            if ($scope.rutas[i].id == $("#origen_destinocmb").val()){
+                                if ($scope.registro.detalle_acompanante[j].tipo_pasajero == 'ADULTO'){
+                                    $scope.registro.detalle_acompanante[j].precio_unitario = $scope.rutas[i].precio_adulto;
+                                }else {
+                                    if ($scope.registro.detalle_acompanante[j].tipo_pasajero == 'INFANTE'){
+                                        $scope.registro.detalle_acompanante[j].precio_unitario = $scope.rutas[i].precio_infante;
+                                    }else {
+                                        if ($scope.registro.detalle_acompanante[j].tipo_pasajero == 'NIÑO'){
+                                            $scope.registro.detalle_acompanante[j].precio_unitario = $scope.rutas[i].precio_infante;
+                                        }
+                                    }
+                                }
+                            }
+                        }else {
+                            break;
+                        }
+                    }
+
+                }
             }
+
+            $scope.registro.tipo = $scope.registro.tipo_servicio=='PASAJE AEREO'?1:2;
 
             if (valid_item){
                 vuelosService.guardarPasajePaciente($scope.registro).success(function (data) {
@@ -206,11 +267,14 @@ app.controller('fligthController', function ($scope, $timeout, vuelosService, pa
     }
 
     $scope.listar = function () {
-        vuelosService.listarPasajesPaciente($scope.buscar).success(function (data) {
+        vuelosService.listarPasajesPaciente($scope.filtro).success(function (data) {
             $scope.lista = data;
         })
     }
 
-    $scope.listar();
+    $scope.inicio();
+    $timeout(function () {
+        $scope.listar();
+    }, 200);
 
 });

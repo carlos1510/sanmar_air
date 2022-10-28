@@ -91,7 +91,8 @@
                                 <div class="col-lg-4">
                                     <div class="form-group form-group-default">
                                         <label>Estado</label>
-                                        <select id="estadocmb" class="form-control" ng-model="registro.estado">
+                                        <select id="estadoAsignadocmb" class="form-control" ng-model="registro.estado">
+                                            <option value="1">Pendiente</option>
                                             <option value="2">Aceptado</option>
                                             <option value="3">Observado</option>
                                         </select>
@@ -105,16 +106,16 @@
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-group form-group-default">
-                                        <label>Monto</label>
-                                        <input class="form-control" type="text" id="montotxt" ng-model="registro.monto_empresa" placeholder="0.00" >
+                                        <label>Precio Unitario</label>
+                                        <input class="form-control" type="text" id="precio_unitariotxt" ng-model="registro.precio_unitario" placeholder="0.00" >
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-4">
                                     <div class="form-group form-group-default">
-                                        <label>Empresa</label>
-                                        <select id="empresacmb" class="form-control" ng-model="registro.idempresa">
+                                        <label>Empresa: <span class="text-danger">(*)</span></label>
+                                        <select id="empresaAsignarcmb" class="form-control" ng-model="registro.idempresa">
                                             <option value="">----</option>
                                             <option ng-repeat="item in empresas" value="@{{ item.idempresa }}">@{{ item.razon_social }}</option>
                                         </select>
@@ -190,15 +191,15 @@
                                 <label>Tipo de Servicio:</label>
                                 <select class="form-control" placeholder="Seleccione" ng-model="filtro.tipo_servicio">
                                     <option value="">TODOS</option>
-                                    <option value="PASAJES">PASAJES</option>
-                                    <option value="CHARTER">CHARTER</option>
+                                    <option value="PASAJE AEREO">PASAJE AEREO</option>
+                                    <option value="VUELO CHARTER">VUELO CHARTER</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-lg-2">
                             <div class="form-group">
                                 <label>Estado:</label>
-                                <select class="form-control" placeholder="Seleccione" ng-model="filtro.estado">
+                                <select class="form-control" id="estadobuscarcmb" placeholder="Seleccione" ng-model="filtro.estado">
                                     <option value="">TODOS</option>
                                     <option value="1">PENDIENTE</option>
                                     <option value="2">ACEPTADO</option>
@@ -266,6 +267,7 @@
                             <th>TELEFONO</th>
                             <th>EDAD</th>
                             <th>TIPO DE PASAJERO</th>
+                            <th>PAC/ACOMP.</th>
                             <th>ORIGEN - DESTINO</th>
                             <th>FECHA DE CITA</th>
                             <th>FECHA DE VIAJE</th>
@@ -274,22 +276,23 @@
                             <tbody>
                             <tr ng-repeat="item in lista">
                                 <td>@{{ ($index + 1) }}</td>
-                                <td class="text-center"><i ng-class="{'flaticon-success text-success text-xl-center': item.estado==2, 'flaticon-exclamation text-warning': item.estado==3, 'flaticon-round text-primary': item.estado==1}"></td>
+                                <td class="text-center"><i ng-class="{'flaticon-success text-success text-xl-center': item.estado==2, 'flaticon-exclamation text-warning': item.estado==3, 'flaticon-round text-primary': item.estado==1}"></i></td>
                                 <td>@{{ item.tipo_servicio }}</td>
                                 <td>@{{ item.numero_documento }}</td>
                                 <td>@{{ item.apellido_paterno }} @{{ item.apellido_materno }} @{{ item.nombres }}</td>
                                 <td>@{{ item.telefono }}</td>
                                 <td>@{{ item.edad }}</td>
                                 <td>@{{ item.tipo_pasajero }}</td>
+                                <td>@{{ item.tipo_paciente }}</td>
                                 <td>@{{ item.nomb_origen_destino }}</td>
                                 <td>@{{ item.fecha_cita }}</td>
                                 <td>@{{ item.fecha_viaje }}</td>
                                 <td>
                                     <div class="text-center align-items-center justify-content-center">
-                                        <button type="button" ng-show="item.estado==3" class="btn btn-warning btn-sm"    title="Ver Observacion"><i class="fas fa-eye"></i></button>
-                                        <button type="button" ng-show="item.estado==3" class="btn btn-success btn-sm"  ng-click="prepararEditar(item)"  title="Editar"><i class="fas fa-edit"></i></button>
-                                        <button type="button" ng-show="item.estado==1" class="btn btn-primary btn-sm" ng-click="prepararAsignar(item)" title="Asignar Empresa"><i class="fas fa-check"></i></button>
-                                        <button type="button" ng-show="item.estado==1" class="btn btn-danger btn-sm" title="Anular"><i class="fas fa-times"></i></button>
+                                        <button type="button" ng-show="item.estado==3 && item.tipo_paciente=='PACIENTE'" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#verObservacionModal" ng-click="prepararVerObservacion(item)" title="Ver Observacion"><i class="fas fa-eye"></i></button>
+                                        <button type="button" ng-show="item.estado==3 && item.tipo_paciente=='PACIENTE'" class="btn btn-success btn-sm"  ng-click="prepararEditar(item)"  title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button type="button" ng-show="item.estado==1 && item.tipo_paciente=='PACIENTE'" class="btn btn-primary btn-sm" ng-click="prepararAsignar(item)" title="Asignar Empresa"><i class="fas fa-check"></i></button>
+                                        <button type="button" ng-show="(item.estado==1 || item.estado==3) && item.tipo_paciente=='PACIENTE'" class="btn btn-danger btn-sm" ng-click="eliminarPasaje(item)" title="Anular o Eliminar"><i class="fas fa-times"></i></button>
                                     </div>
                                 </td>
                             </tr>
@@ -299,6 +302,35 @@
                 </div>
             </div>
             <!-- end card -->
+        </div>
+    </div>
+
+    <div class="modal fade" id="verObservacionModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header no-bd">
+                    <h5 class="modal-title">
+                        <span class="fw-mediumbold"> Observaciones en el Paciente: </span>
+                        <span class="fw-light"> @{{ registro.nombres }} / @{{ registro.numero_documento }}</span>
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group form-group-default">
+                                <label>Observacion: </label>
+                                <textarea class="form-control" rows="3" placeholder="Observacion" ng-model="registro.observacion"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer no-bd">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> Salir</button>
+                </div>
+            </div>
         </div>
     </div>
 @endsection
@@ -335,6 +367,26 @@
                 calendarWeeks: true,
                 autoclose: true,
                 format: 'dd/mm/yyyy'
+            });
+
+            $('#fecha_citatxt').datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                calendarWeeks: true,
+                autoclose: true,
+                format: 'dd/mm/yyyy',
+                startDate: new Date()
+            });
+
+            $('#fecha_salidatxt').datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                calendarWeeks: true,
+                autoclose: true,
+                format: 'dd/mm/yyyy',
+                startDate: new Date()
             });
         })
     </script>

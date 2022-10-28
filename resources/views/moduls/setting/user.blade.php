@@ -74,7 +74,8 @@
                                         <label class="form-label" for="validationTooltipUsername">Contraseña:</label>
                                         <div class="input-group">
                                             <span class="input-group-text" id="validationTooltipUsernamePrepend"><i class="fas fa-user-lock"></i></span>
-                                            <input type="password" class="form-control" id="validationTooltipUsername" ng-model="registro.password">
+                                            <input type="password" class="form-control" ng-model="registro.password" id="txtPassword">
+                                            <button class="btn btn-info" type="button" ng-click="mostrarPass()"><i id="icon" class="fas fa-eye-slash"></i></button>
                                         </div>
                                     </div>
                                 </div>
@@ -199,9 +200,6 @@
                         </div>
                     </div>
                     <div class="card-body">
-
-                    </div>
-                    <div class="card-footer">
                         <div class="table-responsive">
                             <table class="table table-bordered">
                                 <thead>
@@ -242,6 +240,7 @@
 
 @section('javascripts')
     @parent
+    <script src="assets/js/pages/pass-addon.init.js"></script>
     <script src="js/angular/controller/setting/userController.js"></script>
     <script>
         $(function (){

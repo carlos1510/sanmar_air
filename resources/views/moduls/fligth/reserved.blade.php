@@ -252,7 +252,7 @@
                                 <td>@{{ item.fecha_viaje }}</td>
                                 <td>@{{ item.monto_empresa }}</td>
                                 <td>
-                                    <div class="text-center align-items-center justify-content-center">
+                                    <div class="text-center align-items-center justify-content-center" ng-show="item.estado == 1">
                                         <button ng-show="item.tipo_paciente=='PACIENTE'" class="btn btn-success btn-sm"  ng-click="prepararEditar(item)"  title="Reservar"><i class="fas fa-check"></i></button>
                                     </div>
                                 </td>

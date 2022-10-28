@@ -50,11 +50,11 @@
                         <div class="col-lg-2">
                             <div class="form-group">
                                 <label>Estado:</label>
-                                <select class="form-control" placeholder="Seleccione">
+                                <select class="form-control" id="estadobuscarcmb" placeholder="Seleccione" ng-model="filtro.estado">
                                     <option value="">TODOS</option>
-                                    <option value="PENDIENTE">PENDIENTE</option>
-                                    <option value="ACEPTADO">ACEPTADO</option>
-                                    <option value="NO ACEPTADO">NO ACEPTADO</option>
+                                    <option value="1">PENDIENTE</option>
+                                    <option value="2">ACEPTADO</option>
+                                    <option value="3">OBSERVADOS</option>
                                 </select>
                             </div>
                         </div>
@@ -65,7 +65,7 @@
                                     <div class="input-group-prepend">
                                         <span  class="input-group-text"><i class="fa fa-calendar"></i></span>
                                     </div>
-                                    <input class="form-control " type="text" id="fecha_iniciotxt" maxlength="10" autocomplete="off" placeholder="dd/mm/yyyy" ng-model="buscar.fecha_inicio">
+                                    <input class="form-control " type="text" id="fecha_iniciotxt" maxlength="10" autocomplete="off" placeholder="dd/mm/yyyy" ng-model="filtro.fecha_inicio">
                                 </div>
                             </div>
                         </div>
@@ -76,19 +76,19 @@
                                     <div class="input-group-prepend">
                                         <span  class="input-group-text"><i class="fa fa-calendar"></i></span>
                                     </div>
-                                    <input class="form-control " type="text" id="fecha_finaltxt" maxlength="10" autocomplete="off" placeholder="dd/mm/yyyy" ng-model="buscar.fecha_final">
+                                    <input class="form-control " type="text" id="fecha_finaltxt" maxlength="10" autocomplete="off" placeholder="dd/mm/yyyy" ng-model="filtro.fecha_final">
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-2">
                             <div class="form-group">
                                 <label>DNI:</label>
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control" ng-model="filtro.numero_documento">
                             </div>
                         </div>
                         <div class="col-lg-2">
                             <div style="padding-top: 35px !important;">
-                                <button type="button" class="btn btn-block btn-default"><i class="fas fa-search"></i> Buscar</button>
+                                <button type="button" class="btn btn-block btn-default" ng-click="listar()"><i class="fas fa-search"></i> Buscar</button>
                             </div>
                         </div>
                     </div>
@@ -97,7 +97,6 @@
                     <div class="table-responsive">
                         <table class="table table-bordered">
                             <thead>
-                            <th></th>
                             <th>#</th>
                             <th>ESTADO</th>
                             <th>DNI.</th>
@@ -115,7 +114,6 @@
                             </thead>
                             <tbody>
                             <tr ng-repeat="item in lista">
-                                <td></td>
                                 <td>@{{ ($index + 1) }}</td>
                                 <td><span class="pl-3 " ng-class="{'text-primary': item.estado==1, 'text-success': item.estado==2, 'text-warning': item.estado==3}">@{{ item.nom_estado }}</span></td>
                                 <td>@{{ item.numero_documento }}</td>
@@ -167,7 +165,8 @@
                 forceParse: false,
                 calendarWeeks: true,
                 autoclose: true,
-                format: 'dd/mm/yyyy'
+                format: 'dd/mm/yyyy',
+                startDate: new Date()
             });
 
             $('#fecha_salidatxt').datepicker({
@@ -176,7 +175,8 @@
                 forceParse: false,
                 calendarWeeks: true,
                 autoclose: true,
-                format: 'dd/mm/yyyy'
+                format: 'dd/mm/yyyy',
+                startDate: new Date()
             });
             $('#fecha_iniciotxt').datepicker({
                 todayBtn: "linked",
@@ -184,8 +184,7 @@
                 forceParse: false,
                 calendarWeeks: true,
                 autoclose: true,
-                format: 'dd/mm/yyyy',
-                endDate: new Date()
+                format: 'dd/mm/yyyy'
             });
 
             $('#fecha_finaltxt').datepicker({
@@ -194,8 +193,7 @@
                 forceParse: false,
                 calendarWeeks: true,
                 autoclose: true,
-                format: 'dd/mm/yyyy',
-                endDate: new Date()
+                format: 'dd/mm/yyyy'
             });
         })
     </script>

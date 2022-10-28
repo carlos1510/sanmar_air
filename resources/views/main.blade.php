@@ -128,10 +128,10 @@
                             <ul class="dropdown-menu dropdown-user animated fadeIn">
                                 <li>
                                     <div class="user-box">
-                                        <div class="avatar-lg"><img src="{{ asset('') }}template/assets/img/profile.jpg" alt="image profile" class="avatar-img rounded"></div>
+                                        <div class="avatar-lg"><img src="{{ asset('template/assets/img/default.png') }}" alt="image profile" class="avatar-img rounded"></div>
                                         <div class="u-text">
-                                            <h4>Hizrian</h4>
-                                            <p class="text-muted">hello@example.com</p><a href="" class="btn btn-rounded btn-danger btn-sm">View Profile</a>
+                                            <h4></h4>
+                                            {{--<p class="text-muted"></p><a href="" class="btn btn-rounded btn-danger btn-sm">View Profile</a>--}}
                                         </div>
                                     </div>
                                 </li>
@@ -211,51 +211,51 @@
 							</span>
                             <h4 class="text-section">Opciones</h4>
                         </li>
-                        <li class="nav-item" >
-                            <a href="{{ url('vuelos') }}">
-                                <i class="fas fa-plane"></i>
-                                <p>VUELOS</p>
-                                <!--<span class="badge badge-count">5</span>-->
-                            </a>
-                        </li>
+                        @if(Session::get('idnivel') == 2 || Session::get('idnivel') == 1)
+                            <li class="nav-item" >
+                                <a href="{{ url('vuelos') }}">
+                                    <i class="fas fa-plane"></i>
+                                    <p>VUELOS</p>
+                                </a>
+                            </li>
+                        @endif
 
-                        <li class="nav-item" >
-                            <a href="{{ url('reservados') }}">
-                                <i class="fas fa-plane-departure"></i>
-                                <p>VUELOS SOLICITADOS</p>
-                                <!--<span class="badge badge-count">5</span>-->
-                            </a>
-                        </li>
+                        @if(Session::get('idnivel') == 3 || Session::get('idnivel') == 1)
+                            <li class="nav-item" >
+                                <a href="{{ url('reservados') }}">
+                                    <i class="fas fa-plane-departure"></i>
+                                    <p>VUELOS SOLICITADOS</p>
+                                </a>
+                            </li>
+                        @endif
 
-                        <li class="nav-item" >
-                            <a href="{{ url('administrar_vuelo') }}">
-                                <i class="fas fa-route"></i>
-                                <p>ADMINISTRAR VUELOS</p>
-                                <!--<span class="badge badge-count">5</span>-->
-                            </a>
-                        </li>
+                        @if(Session::get('idnivel') == 1)
+                            <li class="nav-item" >
+                                <a href="{{ url('administrar_vuelo') }}">
+                                    <i class="fas fa-route"></i>
+                                    <p>ADMINISTRAR VUELOS</p>
+                                </a>
+                            </li>
 
-                        <li class="nav-item" >
-                            <a href="{{ url('proforma') }}">
-                                <i class="fas fa-file-pdf"></i>
-                                <p>PROFORMA</p>
-                                <!--<span class="badge badge-count">5</span>-->
-                            </a>
-                        </li>
-                        <li class="nav-item" >
-                            <a href="{{ url('empresa') }}">
-                                <i class="fas fa-handshake"></i>
-                                <p>Empresa</p>
-                                <!--<span class="badge badge-count">5</span>-->
-                            </a>
-                        </li>
-                        <li class="nav-item" >
-                            <a href="{{ url('usuario') }}">
-                                <i class="fas fa-users"></i>
-                                <p>Usuarios</p>
-                                <!--<span class="badge badge-count">5</span>-->
-                            </a>
-                        </li>
+                            <li class="nav-item" >
+                                <a href="{{ url('proforma') }}">
+                                    <i class="fas fa-file-pdf"></i>
+                                    <p>PROFORMA</p>
+                                </a>
+                            </li>
+                            <li class="nav-item" >
+                                <a href="{{ url('empresa') }}">
+                                    <i class="fas fa-handshake"></i>
+                                    <p>Empresa</p>
+                                </a>
+                            </li>
+                            <li class="nav-item" >
+                                <a href="{{ url('usuario') }}">
+                                    <i class="fas fa-users"></i>
+                                    <p>Usuarios</p>
+                                </a>
+                            </li>
+                        @endif
 
 
                     </ul>

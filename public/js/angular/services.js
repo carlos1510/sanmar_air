@@ -57,6 +57,12 @@ app.factory('vuelosService', function($http){
         listarPasajesReservados: function ($params) {
             return $http.post("vuelos/listarPasajesReservados", $params)
         },
+        eliminarPasaje: function ($params) {
+            return $http.post("vuelos/eliminarPasaje", $params)
+        },
+        listarProformas: function ($params) {
+            return $http.post("vuelos/listarProformas", $params)
+        },
 
     }
 });

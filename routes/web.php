@@ -45,6 +45,8 @@ Route::post('vuelos/listarPasajesReservadosEmpresa', 'App\Http\Controllers\Fligt
 Route::post('vuelos/guardarConfirmarReservaPasaje', 'App\Http\Controllers\FligthController@guardarConfirmarReservaPasaje');
 Route::post('vuelos/obtenerListaAcompanantes', 'App\Http\Controllers\FligthController@obtenerListaAcompanantes');
 Route::post('vuelos/listarPasajesReservados', 'App\Http\Controllers\FligthController@listarPasajesReservados');
+Route::post('vuelos/eliminarPasaje', 'App\Http\Controllers\FligthController@eliminarPasaje');
+Route::post('vuelos/listarProformas', 'App\Http\Controllers\FligthController@listarProformas');
 
 // Rutas Paciente
 Route::post('paciente/registrarPaciente', 'App\Http\Controllers\PatientController@registrarPaciente');

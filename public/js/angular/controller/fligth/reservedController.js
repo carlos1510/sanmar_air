@@ -17,8 +17,8 @@ app.controller('reservedController', function ($scope, $timeout, vuelosService){
         var primerDia = new Date(date.getFullYear(), date.getMonth() , 1);
         var ultimoDia = new Date(date.getFullYear(), (date.getMonth() + 1), 0);
 
-        $scope.filtro.fecha_inicio = ('0'+primerDia.getDate()).toString().substr(-2)+'/'+('0'+(primerDia.getMonth()+1)).toString().substr(-2)+'/'+primerDia.getFullYear();
-        $scope.filtro.fecha_final = ('0'+ultimoDia.getDate()).toString().substr(-2)+'/'+('0'+(ultimoDia.getMonth()+1)).toString().substr(-2)+'/'+ultimoDia.getFullYear();
+        //$scope.filtro.fecha_inicio = ('0'+primerDia.getDate()).toString().substr(-2)+'/'+('0'+(primerDia.getMonth()+1)).toString().substr(-2)+'/'+primerDia.getFullYear();
+        //$scope.filtro.fecha_final = ('0'+ultimoDia.getDate()).toString().substr(-2)+'/'+('0'+(ultimoDia.getMonth()+1)).toString().substr(-2)+'/'+ultimoDia.getFullYear();
         $("#estado_busquedacmb").val(1).change();
     },0);
 
@@ -99,6 +99,6 @@ app.controller('reservedController', function ($scope, $timeout, vuelosService){
 
     $timeout(function () {
         $scope.listar();
-    }, 100);
+    }, 200);
 
 });
