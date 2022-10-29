@@ -101,9 +101,6 @@
                     </div>
                 </div>
                 <div class="card-body">
-
-                </div>
-                <div class="card-footer">
                     <div class="table-responsive">
                         <table class="table table-bordered">
                             <thead>

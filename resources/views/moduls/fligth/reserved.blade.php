@@ -221,7 +221,7 @@
                 </div>
                 <div class="card-footer">
                     <div class="table-responsive">
-                        <table class="table table-bordered">
+                        <table class="table table-bordered table-hover" datatable="ng" dt-options="elementos.dtOptions" dt-instance="dtInstance">
                             <thead>
                             <th>#</th>
                             <th></th>
@@ -231,6 +231,7 @@
                             <th>EDAD</th>
                             <th>TIPO DE PASAJERO</th>
                             <th>PAC/ACOMP.</th>
+                            <th>TIPO DE SERVICIO</th>
                             <th>ORIGEN - DESTINO</th>
                             <th>FECHA DE CITA</th>
                             <th>FECHA DE VIAJE</th>
@@ -247,6 +248,7 @@
                                 <td>@{{ item.edad }}</td>
                                 <td>@{{ item.tipo_pasajero }}</td>
                                 <td>@{{ item.tipo_paciente }}</td>
+                                <td>@{{ item.tipo_servicio }}</td>
                                 <td>@{{ item.nomb_origen_destino }}</td>
                                 <td>@{{ item.fecha_cita }}</td>
                                 <td>@{{ item.fecha_viaje }}</td>

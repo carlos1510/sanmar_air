@@ -261,7 +261,7 @@
                             <thead>
                             <th>#</th>
                             <th></th>
-                            <th>TIPO DE RESERVA</th>
+                            <th>TIPO DE SERVICIO</th>
                             <th>DNI.</th>
                             <th>PASAJERO.</th>
                             <th>TELEFONO</th>

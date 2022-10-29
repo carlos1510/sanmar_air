@@ -48,3 +48,28 @@ function bloquear_desbloquear_campo(lista, accion){
         }
     }
 }
+
+function obtenerNombreMes(mes){
+    var lista = [
+        {'mes':1, 'nombre': 'Enero'},
+        {'mes':2, 'nombre': 'Febrero'},
+        {'mes':3, 'nombre': 'Marzo'},
+        {'mes':4, 'nombre': 'Abril'},
+        {'mes':5, 'nombre': 'Mayo'},
+        {'mes':6, 'nombre': 'Junio'},
+        {'mes':7, 'nombre': 'Julio'},
+        {'mes':8, 'nombre': 'Agosto'},
+        {'mes':9, 'nombre': 'Setiembre'},
+        {'mes':10, 'nombre': 'Octubre'},
+        {'mes':11, 'nombre': 'Noviembre'},
+        {'mes':12, 'nombre': 'Diciembre'}
+    ];
+    var resultado = "";
+    for (var i = 0; i < lista.length; i++){
+        if (mes == lista[i].mes){
+            resultado = lista[i].nombre;
+            break;
+        }
+    }
+    return resultado;
+}

@@ -95,7 +95,7 @@
                 </div>
                 <div class="card-footer">
                     <div class="table-responsive">
-                        <table class="table table-bordered">
+                        <table class="table table-bordered table-hover" datatable="ng" dt-options="elementos.dtOptions" dt-instance="dtInstance" >
                             <thead>
                             <th>#</th>
                             <th>ESTADO</th>
@@ -128,9 +128,10 @@
                                 <td>@{{ item.fecha_salida }}</td>
                                 <td>@{{ item.tipo_paciente }}</td>
                                 <td>
-                                    {{--<div class="text-center align-items-center justify-content-center">
-                                        <button class="btn btn-success btn-sm"  ng-click="prepararEditar(item)"  title="Editar"><i class="fas fa-edit"></i></button>
-                                    </div>--}}
+                                    <center>
+                                        <button class="btn btn-success btn-xs" ng-show="item.tipo_paciente=='PACIENTE'" ng-click="prepararEditar(item)"  title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-danger btn-xs" ng-show="item.tipo_paciente=='PACIENTE'" ng-click="eliminarViaje(item)" title="Eliminar"><i class="fas fa-times"></i></button>
+                                    </center>
                                 </td>
                             </tr>
                             </tbody>

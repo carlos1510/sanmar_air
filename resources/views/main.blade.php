@@ -312,8 +312,8 @@
 
 
 
-    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('plugins/dataTables/datatables.min.js') }}"></script>
+    <script src="{{ asset('plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
 
     <!-- Librerias AngularJS -->
     <script src="{{ asset('js/angular/angular.min.js') }}"></script>

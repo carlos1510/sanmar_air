@@ -38,7 +38,7 @@
                         <div class="card-tools">
                             <ul id="pills-tab" class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" role="tablist">
                                 <li class="nav-item submenu">
-                                    <button type="submit" class="btn btn-primary btn-round text-white"  ><i class="fas fa-file-pdf"></i> Declaración Jurada</button>
+                                    <button type="submit" class="btn btn-primary btn-round text-white" ng-click="generarDeclaracionJurada()" ><i class="fas fa-file-pdf"></i> Declaración Jurada</button>
                                 </li>
                             </ul>
                         </div>
@@ -136,7 +136,8 @@
 
 @section('javascripts')
     @parent
-    <script src="js/angular/controller/report/proformaController.js"></script>
+    <script src="{{ asset('js/jspdf.min.js') }}"></script>_
+    <script src="{{ asset('js/angular/controller/report/proformaController.js') }}"></script>
     <script>
         $(function () {
             $(".numero").numeric({decimal: false, negative: false});

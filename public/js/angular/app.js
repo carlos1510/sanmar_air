@@ -3,7 +3,7 @@
  */
 
 'use strict';
-var app=angular.module('app', []);
+var app=angular.module('app', ['datatables']);
 
 /*app.directive('typeahead', ['$compile', '$timeout', function($compile, $timeout)   {
     return {

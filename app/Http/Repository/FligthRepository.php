@@ -375,7 +375,7 @@ class FligthRepository
     }
 
     public function obtenerListaAcompanantes($params){
-        $sql = "SELECT pp.id AS idpasaje_paciente_acom, pp.idpersona, per.numero_documento, CONCAT_WS(' ',per.apellido_paterno, per.apellido_materno, per.nombres) AS nombres_persona,
+        $sql = "SELECT pp.id AS idpasaje_paciente_acom, pp.idpersona, per.numero_documento, CONCAT_WS(' ',per.apellido_paterno, per.apellido_materno, per.nombres) AS nombres_persona, per.apellido_paterno, per.apellido_materno, per.nombres,
             pp.edad, pp.tipo_pasajero, per.telefono, pp.unidad_medida, pp.cantidad, pp.precio_unitario FROM pasaje_paciente pp INNER JOIN persona per ON pp.idpersona=per.id
             WHERE pp.idpasaje_paciente_ac=$params->idpasaje_paciente AND pp.estado!=0";
         return DB::select($sql);

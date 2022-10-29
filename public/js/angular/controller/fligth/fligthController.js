@@ -2,11 +2,12 @@
  * Created by carlo on 1/09/2018.
  */
 
-app.controller('fligthController', function ($scope, $timeout, vuelosService, pacienteService, empresaService){
+app.controller('fligthController', function ($scope, $timeout, vuelosService, pacienteService, empresaService, DTOptionsBuilder){
     $scope.dtInstance = {};
     $scope.elementos = {lista:[]};
 
     $scope.estado_registro = 0;
+    $scope.estado_editar = 0;
     $scope.registro = {};
     $scope.registro.detalle_acompanante = [];
     $scope.rutas = [];
@@ -68,24 +69,27 @@ app.controller('fligthController', function ($scope, $timeout, vuelosService, pa
     }
 
     $scope.tipo_busqueda_persona = function () {
-        if ($("#idtipodocumentocmb").val() != ""){
-            if ($("#idtipodocumentocmb").val() == 1){
-                $timeout(function () {
-                    $('#numerodocumentotxt').val("");
-                    $("#numerodocumentotxt").addClass( 'numero_dni' );
-                    $("#numerodocumentotxt").attr('maxlength', 8);
-                    $(".numero_dni").numeric({decimal: false, negative: false});
-                    $("#nro_documentotxt").focus();
-                }, 100);
-            }else {
-                $timeout(function () {
-                    $('#numerodocumentotxt').val("");
-                    $("#numerodocumentotxt").attr('maxlength', 12);
-                    $(".numero_dni").removeNumeric();
-                    $("#numerodocumentotxt").focus();
-                }, 100);
+        if ($scope.estado_editar == 0){
+            if ($("#idtipodocumentocmb").val() != ""){
+                if ($("#idtipodocumentocmb").val() == 1){
+                    $timeout(function () {
+                        $('#numerodocumentotxt').val("");
+                        $("#numerodocumentotxt").addClass( 'numero_dni' );
+                        $("#numerodocumentotxt").attr('maxlength', 8);
+                        $(".numero_dni").numeric({decimal: false, negative: false});
+                        $("#nro_documentotxt").focus();
+                    }, 100);
+                }else {
+                    $timeout(function () {
+                        $('#numerodocumentotxt').val("");
+                        $("#numerodocumentotxt").attr('maxlength', 12);
+                        $(".numero_dni").removeNumeric();
+                        $("#numerodocumentotxt").focus();
+                    }, 100);
+                }
             }
         }
+        $scope.estado_editar = 0;
     }
 
     $scope.buscarPersonaDocumento = function () {
@@ -222,8 +226,8 @@ app.controller('fligthController', function ($scope, $timeout, vuelosService, pa
 
     $scope.eliminarViaje = function (item) {
         swal({
-            title: 'Desea Eliminar?',
-            text: "Se eliminará el Vuelo del Paciente " + item.nombres,
+            title: 'Desea Anular / Eliminar?',
+            text: "Se eliminará el Pasaje del Paciente " + item.nombres,
             icon : "warning",
             type: 'warning',
             buttons:{
@@ -239,10 +243,10 @@ app.controller('fligthController', function ($scope, $timeout, vuelosService, pa
         }).then(function(willDelete) {
             if (willDelete) {
                 //registramos los datos
-                /*empresaService.eliminarEmpresa({id: item.idempresa}).success(function (data) {
+                vuelosService.eliminarPasaje({idpasaje_paciente: item.idpasaje_paciente}).success(function (data) {
                     if (data.confirm == true){
                         $scope.listar();
-                        swal("Exito!", "" + data.message, {
+                        swal("Exito!", "Se Elimino Exitosamente", {
                             icon : "success",
                             buttons: {
                                 confirm: {
@@ -251,7 +255,7 @@ app.controller('fligthController', function ($scope, $timeout, vuelosService, pa
                             },
                         });
                     }
-                })*/
+                })
             } else {
                 //
             }
@@ -259,11 +263,22 @@ app.controller('fligthController', function ($scope, $timeout, vuelosService, pa
     }
 
     $scope.prepararEditar = function (item) {
+        $scope.estado_editar = 1;
         $scope.registro = {};
         $scope.registro = item;
+        $scope.registro.detalle_acompanante = [];
+        vuelosService.obtenerListaAcompanantes({idpasaje_paciente: item.idpasaje_paciente}).success(function (data) {
+            $scope.registro.detalle_acompanante = data;
+        })
         $timeout(function () {
+            $("#idtipodocumentocmb").val(item.idtipo_documento).change();
+            $("#sexocmb").val(item.sexo).change();
+            $("#origen_destinocmb").val(item.idruta_viaje_precio).change();
+            $("#empresacmb").val(item.idempresa!=undefined?item.idempresa:'').change();
+            $("#estadocmb").val(item.estado).change();
             $scope.estado_registro = 1;
-        }, 0);
+
+        }, 50);
     }
 
     $scope.listar = function () {
@@ -271,6 +286,51 @@ app.controller('fligthController', function ($scope, $timeout, vuelosService, pa
             $scope.lista = data;
         })
     }
+
+    $scope.elementos.dtOptions = DTOptionsBuilder.newOptions().withPaginationType('full_numbers').withLanguage({
+        "sEmptyTable": "No hay Datos Disponibles",
+        "sInfo": "Mostrando _START_ hasta _END_ de _TOTAL_ Filas",
+        "sInfoEmpty": "Viendo 0 hasta 0 de 0 filas",
+        "sInfoFiltered": "(filtrado de _MAX_ Filas)",
+        "sInfoPostFix": "",
+        "sInfoThousands": ",",
+        "sLengthMenu": "Ver _MENU_ Filas",
+        "sLoadingRecords": "Cargando...",
+        "sProcessing": "Procesando...",
+        "sSearch": "Buscar:",
+        "sZeroRecords": "No se encontraron registros",
+        "oPaginate": {
+            "sFirst": "Primero",
+            "sLast": "Ultimo",
+            "sNext": ">>",
+            "sPrevious": "<<"
+        },
+        "oAria": {
+            "sSortAscending": ": activado para ordenar columna ascendente",
+            "sSortDescending": ": activado para ordenar columna descendente"
+        }
+    }).withOption('order', [0, 'asc'])
+        .withOption('lengthMenu',[[50,100],[50,100]])
+        .withOption('processing', true);
+    /*.withButtons([
+     {
+     extend: "excelHtml5",
+     filename:  "Nominal",
+     title:"LISTADO DE NOMINAL",
+     exportOptions: {
+     columns: ':visible'
+     },
+     //CharSet: "utf8",
+     exportData: { decodeEntities: true }
+     }
+     ]);*/
+    $scope.redrawDT = function(){
+        $scope.$emit('event:dataTableLoaded');
+    }
+
+    $scope.$on("event:dataTableLoaded", function(event, loadedDT) {
+        $scope.dtInstance.DataTable.draw();
+    });
 
     $scope.inicio();
     $timeout(function () {

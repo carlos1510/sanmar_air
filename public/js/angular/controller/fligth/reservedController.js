@@ -2,7 +2,7 @@
  * Created by carlo on 1/09/2018.
  */
 
-app.controller('reservedController', function ($scope, $timeout, vuelosService){
+app.controller('reservedController', function ($scope, $timeout, vuelosService, DTOptionsBuilder){
     $scope.dtInstance = {};
     $scope.elementos = {lista:[]};
 
@@ -96,6 +96,51 @@ app.controller('reservedController', function ($scope, $timeout, vuelosService){
             $scope.lista = data;
         });
     }
+
+    $scope.elementos.dtOptions = DTOptionsBuilder.newOptions().withPaginationType('full_numbers').withLanguage({
+        "sEmptyTable": "No hay Datos Disponibles",
+        "sInfo": "Mostrando _START_ hasta _END_ de _TOTAL_ Filas",
+        "sInfoEmpty": "Viendo 0 hasta 0 de 0 filas",
+        "sInfoFiltered": "(filtrado de _MAX_ Filas)",
+        "sInfoPostFix": "",
+        "sInfoThousands": ",",
+        "sLengthMenu": "Ver _MENU_ Filas",
+        "sLoadingRecords": "Cargando...",
+        "sProcessing": "Procesando...",
+        "sSearch": "Buscar:",
+        "sZeroRecords": "No se encontraron registros",
+        "oPaginate": {
+            "sFirst": "Primero",
+            "sLast": "Ultimo",
+            "sNext": ">>",
+            "sPrevious": "<<"
+        },
+        "oAria": {
+            "sSortAscending": ": activado para ordenar columna ascendente",
+            "sSortDescending": ": activado para ordenar columna descendente"
+        }
+    }).withOption('order', [0, 'asc'])
+        .withOption('lengthMenu',[[50,100],[50,100]])
+        .withOption('processing', true);
+    /*.withButtons([
+     {
+     extend: "excelHtml5",
+     filename:  "Nominal",
+     title:"LISTADO DE NOMINAL",
+     exportOptions: {
+     columns: ':visible'
+     },
+     //CharSet: "utf8",
+     exportData: { decodeEntities: true }
+     }
+     ]);*/
+    $scope.redrawDT = function(){
+        $scope.$emit('event:dataTableLoaded');
+    }
+
+    $scope.$on("event:dataTableLoaded", function(event, loadedDT) {
+        $scope.dtInstance.DataTable.draw();
+    });
 
     $timeout(function () {
         $scope.listar();
