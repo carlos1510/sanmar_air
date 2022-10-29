@@ -93,7 +93,7 @@
                         <div class="col-lg-12">
                             <div class="text-center align-items-center justify-content-center">
                                 <button type="button" class="btn btn-default" ng-click="listar()"><i class="fas fa-search"></i> Buscar</button>
-                                <button type="button" class="btn btn-danger "><i class="fas fa-file-pdf"></i> Descargar</button>
+                                <button type="button" class="btn btn-danger" ng-show="lista.length > 0 && filtro.tipo_servicio!='' && filtro.idruta_viaje_precio!=''" ng-click="generarProforma()"><i class="fas fa-file-pdf"></i> Descargar</button>
                             </div>
                         </div>
                     </div>

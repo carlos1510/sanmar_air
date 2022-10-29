@@ -26,6 +26,11 @@ app.controller('proformaController', function ($scope, $timeout, empresaService,
         $scope.filtro.fecha_inicio = ('0'+primerDia.getDate()).toString().substr(-2)+'/'+('0'+(primerDia.getMonth()+1)).toString().substr(-2)+'/'+primerDia.getFullYear();
         $scope.filtro.fecha_final = ('0'+ultimoDia.getDate()).toString().substr(-2)+'/'+('0'+(ultimoDia.getMonth()+1)).toString().substr(-2)+'/'+ultimoDia.getFullYear();
 
+        $timeout(function () {
+            $("#tipoServiciocmb").val("").change();
+            $("#rutaviajecmb").val("").change();
+        },0);
+
     }
 
     $scope.salir = function () {
@@ -100,6 +105,49 @@ app.controller('proformaController', function ($scope, $timeout, empresaService,
         pdf.autoPrint({variant: 'non-conform'});
 
         pdf.save('declaracion_jurada.pdf');
+    }
+
+    $scope.generarProforma = function () {
+        var date = new Date();
+        var pdf = new jsPDF("p","mm","a4");
+        pdf.setFontSize(11);
+        pdf.text( 'ANEXO N° 06', 90, 20 );
+        pdf.text( 'FORMATO DE COTIZACION DE SERVICIOS', 65, 25 );
+
+        pdf.text( 'Pucallpa, '+ ('0'+date.getDate()).toString().substr(-2) +' de ' + obtenerNombreMes((date.getMonth() + 1 )) + ' del ' + date.getFullYear(), 10, 35 );
+        pdf.text( 'Señores', 10, 45 );
+        pdf.text( 'Seguro Social de Salud-Red Asistencial Ucayali', 10, 50 );
+        pdf.text( 'De mi consideracion:', 10, 60 );
+
+        var texto_tipo_servicio1 = "";
+        var texto_tipo_servicio2 = "";
+        var texto_tipo_servicio3 = "";
+        var texto_tipo_servicio4 = "";
+        var texto_tipo_servicio5 = "";
+        if ($scope.filtro.tipo_servicio != ""){
+            if ($scope.filtro.tipo_servicio == 'PASAJE AEREO'){
+                texto_tipo_servicio1 = 'En  respuesta a  la  solicitud de cotizacion  sobre la prestacion de mis servicios  para  el "SERVICIO DE';
+                texto_tipo_servicio2 = 'AGENCIAMIENTO DE PASAJES AEREOS REGIONALES PARA LOS PACIENTES REFERIDOS POR CONSULTA';
+                texto_tipo_servicio3 = 'EXTERNA ESPECIALIZADA  ", y despues de haber analizado los terminos de referencia del mencionado';
+                texto_tipo_servicio4 = "servicio, los mismos que acepto en todos sus extremos, Indico que cumplo con los requerimientos solicitados";
+                texto_tipo_servicio5 = "e indico que el costo total de mis servicios seria por el importe detallado a continuacion:";
+            }else {
+                texto_tipo_servicio1 = 'En  respuesta a  la  solicitud de cotizacion  sobre la prestacion de mis servicios  para  el "SERVICIO';
+                texto_tipo_servicio2 = 'DE VUELO CHARTER ", y despues de haber analizado los terminos de referencia del mencionado';
+                texto_tipo_servicio3 = 'servicio, los mismos que acepto en todos sus extremos, Indico que cumplo con los';
+                texto_tipo_servicio4 = "requerimientos solicitados e indico que el costo total de mis servicios seria por el importe";
+                texto_tipo_servicio5 = "detallado a continuacion:";
+            }
+        }
+
+        pdf.setFontSize(10);
+        pdf.text(''+texto_tipo_servicio1, 10, 70);
+        pdf.text(''+texto_tipo_servicio2, 10, 74);
+        pdf.text(''+texto_tipo_servicio3, 10, 78);
+        pdf.text(''+texto_tipo_servicio4, 10, 82);
+        pdf.text(''+texto_tipo_servicio5, 10, 86);
+
+        pdf.save('proforma.pdf');
     }
 
     $scope.inicio();
