@@ -10,6 +10,7 @@ app.controller('fligthController', function ($scope, $timeout, vuelosService, pa
     $scope.estado_editar = 0;
     $scope.registro = {};
     $scope.registro.detalle_acompanante = [];
+    $scope.registro.detalle_personal = [];
     $scope.rutas = [];
 
     $scope.filtro = {};
@@ -40,8 +41,9 @@ app.controller('fligthController', function ($scope, $timeout, vuelosService, pa
     $scope.nuevoRegistro = function () {
         $scope.registro = {};
         $scope.registro.detalle_acompanante = [];
+        $scope.registro.detalle_personal = [];
         $scope.registro.tipo_servicio = 'PASAJE AEREO';
-        $scope.registro.vuelos = 'IDA Y VUELTA';
+        $scope.registro.vuelos = 'SOLO IDA';
 
         $timeout(function () {
             $("#idtipodocumentocmb").val(1).change();
@@ -52,6 +54,14 @@ app.controller('fligthController', function ($scope, $timeout, vuelosService, pa
 
         $scope.estado_registro = 1;
 
+    }
+
+    $scope.cambiarVuelos = function () {
+        if ($scope.registro.tipo_servicio == 'PASAJE AEREO'){
+            $scope.registro.vuelos = 'SOLO IDA';
+        }else {
+            $scope.registro.vuelos = 'IDA Y VUELTA';
+        }
     }
 
     $scope.salir = function () {
@@ -119,6 +129,27 @@ app.controller('fligthController', function ($scope, $timeout, vuelosService, pa
         }
     }
 
+    $scope.addPersonalSalud = function () {
+        $scope.registro.detalle_personal.push({idpersona: null,numero_documento: null, apellido_paterno: null, apellido_materno: null, nombres: null, edad: null, tipo_pasajero: '', precio_unitario: null});
+    }
+
+    $scope.removePersonalSalud = function (index) {
+        $scope.registro.detalle_personal.splice(index, 1);
+    }
+
+    $scope.buscarPersonaDocumentoPersonal = function (id, item) {
+        //console.log(id);
+        if ($("#numero_documentopstxt_"+id).val() != ""){
+            pacienteService.buscarPersonaDocumento({idtipo_documento: 1, 'numero_documento': $("#numero_documentopstxt_"+id).val()}).success(function (data) {
+                item.numero_documento = data.data.numero_documento;
+                item.apellido_paterno = data.data.apellido_paterno;
+                item.apellido_materno = data.data.apellido_materno;
+                item.nombres = data.data.nombres;
+                item.idpersona = data.data.idpersona;
+            })
+        }
+    }
+
     $scope.guardarPasaje = function () {
         var valid = validar_campo(['#idtipodocumentocmb','#numerodocumentotxt','#apellido_paternotxt','#apellido_maternotxt','#nombrestxt','#edadtxt','#telefonotxt','#origen_destinocmb','#fecha_citatxt','#tipopasajerocmb']);
         if (valid){
@@ -164,6 +195,30 @@ app.controller('fligthController', function ($scope, $timeout, vuelosService, pa
                                             $scope.registro.detalle_acompanante[j].precio_unitario = $scope.rutas[i].precio_infante;
                                         }
                                     }
+                                }
+                            }
+                        }else {
+                            break;
+                        }
+                    }
+
+                }
+            }
+
+            var valid_item_personal = true;
+            if ($scope.registro.detalle_personal.length > 0){
+                for (var i = 0; i < $scope.registro.detalle_personal.length; i++){
+                    if ($scope.registro.detalle_personal[i].nombres == ""){
+                        valid_item_personal = false;
+                        break;
+                    }
+                }
+                for (var i = 0; i < $scope.rutas.length; i++){
+                    for (var j = 0; j < $scope.registro.detalle_personal.length; j++){
+                        if ($scope.registro.tipo_servicio == 'PASAJE AEREO'){
+                            if ($scope.rutas[i].id == $("#origen_destinocmb").val()){
+                                if ($scope.registro.detalle_personal[j].tipo_pasajero == 'ADULTO'){
+                                    $scope.registro.detalle_personal[j].precio_unitario = $scope.rutas[i].precio_adulto;
                                 }
                             }
                         }else {
@@ -285,6 +340,75 @@ app.controller('fligthController', function ($scope, $timeout, vuelosService, pa
         vuelosService.listarPasajesPaciente($scope.filtro).success(function (data) {
             $scope.lista = data;
         })
+    }
+
+    $scope.imprimirTickets = function () {
+        var opciones = {
+            orientation: 'p',
+            unit: 'mm',
+            format: [80, 258]
+        };
+
+        var doc = new jsPDF(opciones);
+
+        doc.setFontSize(10);
+        doc.setFont('Verdana','bold');
+        doc.text(10, 30, 'FENIX EMERGENCY GROUP EIRL');
+        doc.text(20, 35, 'RUC: 20606397322');
+        doc.line(5, 39, 75, 39, 'F');
+        doc.text(20, 45, 'Ticket: 123654');
+        doc.setFont('Verdana','normal');
+        doc.setFontSize(9);
+        doc.text(5, 55, 'DNI:'); doc.text(15, 55, '46902128');
+        doc.text(5, 60, 'Nombres:');
+        doc.setFontSize(7);
+        doc.text(20, 60, 'CARLOS CLEMENTE VASQUEZ CISNEROS');
+        doc.setFontSize(9);
+        doc.text(5, 65, 'Edad:'); doc.text(15, 65, '32');
+        doc.text(5, 70, 'Tipo de Pasajero:'); doc.text(33, 70, 'ADULTO');
+        doc.text(5, 75, 'Servicio:'); doc.text(19, 75, 'VUELO AEREO');
+        doc.text(5, 82, '------------------------------------------------------------------');
+        doc.text(7, 85, 'Origen'); doc.text(30, 85, 'Destino'); doc.text(55, 85, 'Fecha Cita');
+        doc.text(5, 87, '------------------------------------------------------------------');
+        doc.text(5, 92, 'PUCALLPA'); doc.text(30, 92, 'CONTAMANA'); doc.text(55, 92, '10/11/2022');
+        doc.text(5, 97, '------------------------------------------------------------------');
+        doc.text(5, 102, 'Estado: Pendiente');
+
+        doc.addPage()
+        doc.setFontSize(10);
+        doc.text(10, 30, 'Recibo de venta de orquídeas');
+        doc.text(10, 35, 'Comprobante No.: 7854214587');
+        doc.text(10, 40, 'PDV: Pedro Pérez');
+        doc.text(10, 45, 'Operador: 123654');
+        doc.text(10, 55, 'Especie vendida: Sophronitis coccinea');
+        doc.text(10, 60, 'Valor: 35.00');
+        doc.text(10, 65, 'TBX: 242985290');
+        doc.text(10, 70, 'Fecha/Hora: 2019-11-05 12:28:21');
+        doc.text(10, 90, '_______________________________');
+        doc.text(10, 95, 'Recibí conforme');
+        doc.addPage()
+        doc.setFontSize(10);
+        doc.text(10, 30, 'Recibo de venta de orquídeas');
+        doc.text(10, 35, 'Comprobante No.: 7854214587');
+        doc.text(10, 40, 'PDV: Pedro Pérez');
+        doc.text(10, 45, 'Operador: 123654');
+        doc.text(10, 55, 'Especie vendida: Sophronitis coccinea');
+        doc.text(10, 60, 'Valor: 35.00');
+        doc.text(10, 65, 'TBX: 242985290');
+        doc.text(10, 70, 'Fecha/Hora: 2019-11-05 12:28:21');
+        doc.text(10, 90, '_______________________________');
+        doc.text(10, 95, 'Recibí conforme');
+        /*doc.text('I am on page 3', 10, 10)
+        doc.setPage(1)
+        doc.text('I am on page 1', 10, 10)*/
+
+        doc.save('comprobante.pdf');
+
+        //doc.autoPrint({variant: 'non-conform'});
+
+        //doc.output('dataurlnewwindow', {filename: 'comprobante.pdf'});
+        /*var pdf = new jsPDF("p","mm","a4");
+        pdf.setFontSize(11);*/
     }
 
     $scope.elementos.dtOptions = DTOptionsBuilder.newOptions().withPaginationType('full_numbers').withLanguage({

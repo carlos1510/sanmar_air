@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Exports\ReservedReportExport;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
 use App\Http\Services\FligthServices;
+use Maatwebsite\Excel\Facades\Excel;
 
 class FligthController extends Controller
 {
@@ -77,5 +79,9 @@ class FligthController extends Controller
         $content = $request->getContent();
         $params = json_decode($content);
         return new JsonResponse($this->service->listarProformas($params));
+    }
+
+    public function exportarReservasPasajesEmpresa(Request $request){
+        return Excel::download(new ReservedReportExport($request->get('estado'), $request->get('fecha_inicio'), $request->get('fecha_final'), $request->get('numero_documento')), 'ReporteReservaPasaje_'.date('YmdHis').'.xlsx');
     }
 }

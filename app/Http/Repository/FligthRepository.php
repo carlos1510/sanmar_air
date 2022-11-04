@@ -334,7 +334,7 @@ class FligthRepository
             (isset($params->estado)?($params->estado!=""?" AND pp.estado=$params->estado ":" AND pp.estado!=0 "):" AND pp.estado!=0 ").
             (Session::get('idnivel')==1?"":" AND pp.idempresa=".Session::get('idempresa')).
             (isset($params->numero_documento)?($params->numero_documento!=""?" AND p.numero_documento='$params->numero_documento'":""):"").
-            (isset($params->fecha_inicio)?($params->fecha_inicio!=""?(isset($params->fecha_final)?($params->fecha_final!=""?" AND pp.fecha_cita BETWEEN '".Util::convertirStringFecha($params->fecha_inicio, false)."' AND '".Util::convertirStringFecha($params->fecha_final, false)."'":""):""):""):"");
+            (isset($params->fecha_inicio)?($params->fecha_inicio!=""?(isset($params->fecha_final)?($params->fecha_final!=""?" AND pp.fecha_viaje BETWEEN '".Util::convertirStringFecha($params->fecha_inicio, false)."' AND '".Util::convertirStringFecha($params->fecha_final, false)."'":""):""):""):"");
         return DB::select($sql);
     }
 
@@ -415,7 +415,11 @@ class FligthRepository
     public function listarProformas($params){
         $sql = "SELECT DATE_FORMAT(pp.fecha_viaje,'%d/%m/%Y') AS fecha_viaje, pp.tipo_pasajero, pp.tipo_servicio, CONCAT_WS(' - ',rvp.origen,rvp.destino) AS nomb_origen_destino, pp.tipo_paciente,p.idtipo_documento, p.numero_documento,
                 p.apellido_paterno, p.apellido_materno, p.nombres, p.telefono, pp.monto_empresa, IF(pp.tipo_servicio='VUELO CHARTER',CONCAT_WS(' ','SERVICIO',pp.tipo_servicio,'EN LA RUTA',CONCAT_WS(' - ',rvp.origen,rvp.destino),'(',p.apellido_paterno,p.apellido_materno,p.nombres,'-',pp.tipo_pasajero,')','-','FECHA DE VIAJE', DATE_FORMAT(pp.fecha_viaje,'%d/%m/%Y')),
-                CONCAT_WS(' ',pp.tipo_servicio,CONCAT_WS(' - ',rvp.origen,rvp.destino),'(',p.apellido_paterno,p.apellido_materno,p.nombres,'-',pp.tipo_pasajero,')','-','FECHA DE VIAJE', DATE_FORMAT(pp.fecha_viaje,'%d/%m/%Y'))) AS descripcion, pp.unidad_medida, pp.cantidad, pp.precio_unitario, (pp.precio_unitario * pp.cantidad) as total
+                CONCAT_WS(' ',pp.tipo_servicio,CONCAT_WS(' - ',rvp.origen,rvp.destino),'(',p.apellido_paterno,p.apellido_materno,p.nombres,'-',pp.tipo_pasajero,')','-','FECHA DE VIAJE', DATE_FORMAT(pp.fecha_viaje,'%d/%m/%Y'))) AS descripcion, pp.unidad_medida, pp.cantidad, pp.precio_unitario, (pp.precio_unitario * pp.cantidad) as total,
+                IF(pp.tipo_servicio='VUELO CHARTER','SERVICIO VUELO CHARTER EN LA', CONCAT_WS(' ',pp.tipo_servicio, CONCAT_WS(' - ',rvp.origen,rvp.destino))) AS descrip_1,
+                IF(pp.tipo_servicio='VUELO CHARTER',CONCAT_WS(' ','RUTA ', CONCAT_WS(' - ',rvp.origen,rvp.destino)), CONCAT_WS(' ','(',p.apellido_paterno,p.apellido_materno,p.nombres,IF(pp.tipo_pasajero='ADULTO','', CONCAT(' - ',pp.tipo_pasajero)),')','-')) AS descrip_2,
+                IF(pp.tipo_servicio='VUELO CHARTER',CONCAT_WS(' - ','',rvp.origen), CONCAT_WS(' ','FECHA DE VIAJE', DATE_FORMAT(pp.fecha_viaje,'%d/%m/%Y'))) AS descrip_3
+
              FROM pasaje_paciente pp INNER JOIN persona p ON pp.idpersona=p.id
              INNER JOIN ruta_viaje_precio rvp ON pp.idruta_viaje_precio=rvp.id
             WHERE pp.tipo IN (1,2) AND pp.estado=2 ".

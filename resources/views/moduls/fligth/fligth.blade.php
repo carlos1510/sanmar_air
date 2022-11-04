@@ -47,7 +47,7 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-lg-2">
+                        <div class="col-lg-3">
                             <div class="form-group">
                                 <label>Estado:</label>
                                 <select class="form-control" id="estadobuscarcmb" placeholder="Seleccione" ng-model="filtro.estado">
@@ -80,15 +80,20 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-2">
+                        <div class="col-lg-3">
                             <div class="form-group">
                                 <label>DNI:</label>
                                 <input type="text" class="form-control" ng-model="filtro.numero_documento">
                             </div>
                         </div>
-                        <div class="col-lg-2">
-                            <div style="padding-top: 35px !important;">
-                                <button type="button" class="btn btn-block btn-default" ng-click="listar()"><i class="fas fa-search"></i> Buscar</button>
+
+                    </div>
+                    <hr/>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="text-center align-items-center justify-content-center">
+                                <button type="button" class="btn btn-default" ng-click="listar()"><i class="fas fa-search"></i> Buscar</button>
+                                <button type="button" class="btn btn-warning" ng-click="imprimirTickets()"><i class="fas fa-print"></i> Imprimir</button>
                             </div>
                         </div>
                     </div>
@@ -98,6 +103,9 @@
                         <table class="table table-bordered table-hover" datatable="ng" dt-options="elementos.dtOptions" dt-instance="dtInstance" >
                             <thead>
                             <th>#</th>
+                            <th>
+                                <input type="checkbox" ng-model="filtro.check_total" />
+                            </th>
                             <th>ESTADO</th>
                             <th>DNI.</th>
                             <th>PASAJERO.</th>
@@ -115,6 +123,9 @@
                             <tbody>
                             <tr ng-repeat="item in lista">
                                 <td>@{{ ($index + 1) }}</td>
+                                <th>
+                                    <input type="checkbox" ng-model="item.check" />
+                                </th>
                                 <td><span class="pl-3 " ng-class="{'text-primary': item.estado==1, 'text-success': item.estado==2, 'text-warning': item.estado==3}">@{{ item.nom_estado }}</span></td>
                                 <td>@{{ item.numero_documento }}</td>
                                 <td>@{{ item.apellido_paterno }} @{{ item.apellido_materno }} @{{ item.nombres }}</td>
@@ -147,6 +158,7 @@
 
 @section('javascripts')
     @parent
+    <script src="{{ asset('js/jspdf.min.js') }}"></script>
     <script src="js/angular/controller/fligth/fligthController.js"></script>
     <script>
         $(function () {

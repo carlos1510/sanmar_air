@@ -88,6 +88,36 @@
                         </div>
                     </div>
 
+                    <div class="row">
+                        <label>Adjuntar Documentos</label> <button type="button" class="ml-2 btn btn-default btn-sm"><i class="flaticon-tool"></i> Agregar</button>
+                        <div class="col-lg-12">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Documento</th>
+                                        <th>Acción</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td></td>
+                                        <td>
+                                            <input type="file" class="file" />
+                                        </td>
+                                        <td>
+                                            <div class="text-center align-items-center justify-content-center">
+                                                <button class="btn btn-danger btn-sm" title="Eliminar" ><i class="fas fa-times"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="mb-2 pl-3 pt-3 pr-3 pb-3 border-3 border-dark border-top border-bottom border-left border-right" style="border-radius: 5px !important;">
                         <h4>Datos del Pasaje</h4>
                         <div class="row">
@@ -96,11 +126,11 @@
                                     <label>Servicios</label>
                                     <br>
                                     <label class="form-radio-label">
-                                        <input class="form-radio-input" type="radio" value="PASAJE AEREO" name="servicioRadios" ng-model="registro.tipo_servicio">
+                                        <input class="form-radio-input" type="radio" value="PASAJE AEREO" name="servicioRadios" ng-model="registro.tipo_servicio" ng-change="cambiarVuelos()">
                                         <span class="form-radio-sign">PASAJE AEREO</span>
                                     </label>
                                     <label class="form-radio-label ml-3">
-                                        <input class="form-radio-input" type="radio" value="VUELO CHARTER" name="servicioRadios" ng-model="registro.tipo_servicio">
+                                        <input class="form-radio-input" type="radio" value="VUELO CHARTER" name="servicioRadios" ng-model="registro.tipo_servicio" ng-change="cambiarVuelos()">
                                         <span class="form-radio-sign">VUELO CHARTER</span>
                                     </label>
                                 </div>
@@ -109,11 +139,11 @@
                                 <div class="form-check">
                                     <label>Vuelos</label>
                                     <br>
-                                    <label class="form-radio-label">
-                                        <input class="form-radio-input" type="radio" value="IDA Y VUELTA" name="vuelosRadios" ng-model="registro.vuelos">
+                                    <label class="form-radio-label" ng-show="registro.tipo_servicio == 'VUELO CHARTER'">
+                                        <input class="form-radio-input" type="radio" value="IDA Y VUELTA" name="vuelosRadios" ng-model="registro.vuelos" >
                                         <span class="form-radio-sign">Ida y Vuelta</span>
                                     </label>
-                                    <label class="form-radio-label ml-3">
+                                    <label class="form-radio-label ml-3" ng-show="registro.tipo_servicio == 'PASAJE AEREO'">
                                         <input class="form-radio-input" type="radio" value="SOLO IDA" name="vuelosRadios" ng-model="registro.vuelos">
                                         <span class="form-radio-sign">Sólo Ida</span>
                                     </label>
@@ -249,35 +279,66 @@
                             </div>
                         </div>
                     </div>
-                    {{--<div class="row">
-                        <label>Adjuntar Documentos</label> <button type="button" class="ml-2 btn btn-default btn-sm"><i class="flaticon-tool"></i> Agregar</button>
-                        <div class="col-lg-12">
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Documento</th>
-                                            <th>Acción</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td></td>
-                                            <td>
-                                                <input type="file" class="file" />
-                                            </td>
-                                            <td>
-                                                <div class="text-center align-items-center justify-content-center">
-                                                    <button class="btn btn-danger btn-sm" title="Eliminar" ><i class="fas fa-times"></i></button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+
+                    <div ng-show="registro.tipo_servicio == 'VUELO CHARTER'" class="mb-2 pl-3 pt-3 pr-3 pb-3 border-3 border-dark border-top border-bottom border-left border-right" style="border-radius: 5px !important;">
+                        <h4>Datos Personal Salud
+                            <button type="button" class="btn btn-icon btn-primary btn-round btn-sm" title="Agregar Personal de Salud" ng-click="addPersonalSalud()">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </h4>
+                        <div class="row" ng-repeat="item in registro.detalle_personal">
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label>DNI:</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="" id="numero_documentopstxt_@{{ $index }}" ng-model="item.numero_documento" required>
+                                        <a href="javascript:void(0)" class="btn btn-primary" ng-click="buscarPersonaDocumentoPersonal($index, item)"><i class="fas fa-search"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label class="form-label" >Apellido Paterno</label>
+                                    <input type="text" class="form-control" ng-model="item.apellido_paterno" >
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label class="form-label" >Apellido Materno</label>
+                                    <input type="text" class="form-control" ng-model="item.apellido_materno" >
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label class="form-label" >Nombres</label>
+                                    <input type="text" class="form-control" ng-model="item.nombres" >
+                                </div>
+                            </div>
+                            <div class="col-lg-1">
+                                <div class="form-group">
+                                    <label class="form-label" >Edad</label>
+                                    <input type="text" class="form-control" ng-model="item.edad" >
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label for="choices-single-default" class="form-label ">Tipo de Pasajero</label>
+                                    <select class="form-control" data-trigger placeholder="Seleccione" ng-model="item.tipo_pasajero">
+                                        <option value="">---</option>
+                                        <option value="ADULTO">ADULTO</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-1">
+                                <div class="text-center align-items-center justify-content-center" style="padding-top: 35px !important;">
+                                    <button class="btn btn-icon btn-danger btn-round btn-sm" title="Quitar Personal de Salud" ng-click="removePersonalSalud($index)">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>--}}
+                    </div>
+
                 </form>
             </div>
             <div class="card-footer">

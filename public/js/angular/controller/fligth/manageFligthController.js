@@ -41,6 +41,14 @@ app.controller('manageFligthController', function ($scope, $timeout, empresaServ
         $scope.registro = {};
     }
 
+    $scope.cambiarVuelos = function () {
+        if ($scope.registro.tipo_servicio == 'PASAJE AEREO'){
+            $scope.registro.vuelos = 'SOLO IDA';
+        }else {
+            $scope.registro.vuelos = 'IDA Y VUELTA';
+        }
+    }
+
     $scope.guardarPasaje = function () {
         var valid = validar_campo(['#idtipodocumentocmb','#numerodocumentotxt','#apellido_paternotxt','#apellido_maternotxt','#nombrestxt','#edadtxt','#telefonotxt','#origen_destinocmb','#fecha_citatxt','#tipopasajerocmb','#empresacmb','#estadocmb']);
         if (valid){

@@ -57,4 +57,7 @@ Route::post('paciente/buscarPersonaDocumento', 'App\Http\Controllers\PatientCont
 // Rutas Reportes
 Route::post('reporte/reporteSeguimiento', 'App\Http\Controllers\ReportTracingController@reporteSeguimiento');
 
+//exportar excel
+Route::post('/exportarReservaPasaje', 'App\Http\Controllers\FligthController@exportarReservasPasajesEmpresa');
+
 

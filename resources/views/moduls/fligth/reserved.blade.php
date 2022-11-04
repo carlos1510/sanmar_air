@@ -172,52 +172,60 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-lg-2">
-                            <div class="form-group">
-                                <label>Estado:</label>
-                                <select class="form-control" id="estado_busquedacmb" placeholder="Seleccione" ng-model="filtro.estado">
-                                    <option value="">TODOS</option>
-                                    <option value="1">PENDIENTE</option>
-                                    <option value="2">ACEPTADO</option>
-                                    <option value="3">OBSERVADO</option>
-                                </select>
+                    <form role="form" method="POST" action="{{ url('exportarReservaPasaje') }}">
+                        @csrf
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label>Estado:</label>
+                                    <select class="form-control" id="estado_busquedacmb" placeholder="Seleccione" ng-model="filtro.estado" name="estado">
+                                        <option value="">TODOS</option>
+                                        <option value="1">PENDIENTE</option>
+                                        <option value="2">ACEPTADO</option>
+                                        <option value="3">OBSERVADO</option>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-lg-3">
-                            <div class="form-group">
-                                <label class="form-label" for="validationTooltip04">Fecha Inicio</label>
-                                <div class="input-group date">
-                                    <div class="input-group-prepend">
-                                        <span  class="input-group-text"><i class="fa fa-calendar"></i></span>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label class="form-label" for="validationTooltip04">Fecha Inicio</label>
+                                    <div class="input-group date">
+                                        <div class="input-group-prepend">
+                                            <span  class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                        </div>
+                                        <input class="form-control " type="text" id="fecha_iniciotxt" maxlength="10" autocomplete="off" placeholder="dd/mm/yyyy" ng-model="filtro.fecha_inicio" name="fecha_inicio">
                                     </div>
-                                    <input class="form-control " type="text" id="fecha_iniciotxt" maxlength="10" autocomplete="off" placeholder="dd/mm/yyyy" ng-model="filtro.fecha_inicio">
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label class="form-label" for="validationTooltip04">Fecha Final</label>
+                                    <div class="input-group date">
+                                        <div class="input-group-prepend">
+                                            <span  class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                        </div>
+                                        <input class="form-control " type="text" id="fecha_finaltxt" maxlength="10" autocomplete="off" placeholder="dd/mm/yyyy" ng-model="filtro.fecha_final" name="fecha_final">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label>DNI:</label>
+                                    <input type="text" class="form-control numero" ng-model="filtro.numero_documento" maxlength="8" name="numero_documento">
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-3">
-                            <div class="form-group">
-                                <label class="form-label" for="validationTooltip04">Fecha Final</label>
-                                <div class="input-group date">
-                                    <div class="input-group-prepend">
-                                        <span  class="input-group-text"><i class="fa fa-calendar"></i></span>
-                                    </div>
-                                    <input class="form-control " type="text" id="fecha_finaltxt" maxlength="10" autocomplete="off" placeholder="dd/mm/yyyy" ng-model="filtro.fecha_final">
+                        <hr/>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="text-center align-items-center justify-content-center">
+                                    <button type="button" class="btn btn-default" ng-click="listar()"><i class="fas fa-search"></i> Buscar</button>
+                                    <button type="submit" class="btn btn-success" ><i class="fas fa-file-excel"></i> Exportar</button>
                                 </div>
                             </div>
+
                         </div>
-                        <div class="col-lg-2">
-                            <div class="form-group">
-                                <label>DNI:</label>
-                                <input type="text" class="form-control numero" ng-model="filtro.numero_documento" maxlength="8">
-                            </div>
-                        </div>
-                        <div class="col-lg-2">
-                            <div style="padding-top: 35px !important;">
-                                <button type="button" class="btn btn-block btn-default" ng-click="listar()"><i class="fas fa-search"></i> Buscar</button>
-                            </div>
-                        </div>
-                    </div>
+                    </form>
                 </div>
                 <div class="card-footer">
                     <div class="table-responsive">
@@ -241,7 +249,7 @@
                             <tbody>
                             <tr ng-repeat="item in lista">
                                 <td>@{{ ($index + 1) }}</td>
-                                <td class="text-center"><i ng-class="{'flaticon-success text-success text-xl-center': item.estado==2, 'flaticon-exclamation text-warning': item.estado==3, 'flaticon-round text-primary': item.estado==1}"></td>
+                                <td class="text-center"><i ng-class="{'flaticon-success text-success text-xl-center': item.estado==2, 'flaticon-exclamation text-warning': item.estado==3, 'flaticon-round text-primary': item.estado==1}"></i></td>
                                 <td>@{{ item.numero_documento }}</td>
                                 <td>@{{ item.apellido_paterno }} @{{ item.apellido_materno }} @{{ item.nombres }}</td>
                                 <td>@{{ item.telefono }}</td>
@@ -254,7 +262,7 @@
                                 <td>@{{ item.fecha_viaje }}</td>
                                 <td>@{{ item.monto_empresa }}</td>
                                 <td>
-                                    <div class="text-center align-items-center justify-content-center" ng-show="item.estado == 1">
+                                    <div class="text-center align-items-center justify-content-center" ng-show="item.estado != 0">
                                         <button ng-show="item.tipo_paciente=='PACIENTE'" class="btn btn-success btn-sm"  ng-click="prepararEditar(item)"  title="Reservar"><i class="fas fa-check"></i></button>
                                     </div>
                                 </td>
