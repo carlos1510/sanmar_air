@@ -289,6 +289,7 @@
                                 <td>@{{ item.fecha_viaje }}</td>
                                 <td>
                                     <div class="text-center align-items-center justify-content-center">
+                                        <button type="button" ng-show="item.tipo_paciente=='PACIENTE'" data-toggle="modal" data-target="#verDocumentosModal" ng-click="listarArchivos(item.idpasaje_paciente)" class="btn btn-success btn-sm" title="Ver Archivos"><i class="fas fa-download"></i></button>
                                         <button type="button" ng-show="item.estado==3 && item.tipo_paciente=='PACIENTE'" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#verObservacionModal" ng-click="prepararVerObservacion(item)" title="Ver Observacion"><i class="fas fa-eye"></i></button>
                                         <button type="button" ng-show="item.estado==3 && item.tipo_paciente=='PACIENTE'" class="btn btn-success btn-sm"  ng-click="prepararEditar(item)"  title="Editar"><i class="fas fa-edit"></i></button>
                                         <button type="button" ng-show="item.estado==1 && item.tipo_paciente=='PACIENTE'" class="btn btn-primary btn-sm" ng-click="prepararAsignar(item)" title="Asignar Empresa"><i class="fas fa-check"></i></button>
@@ -323,6 +324,62 @@
                             <div class="form-group form-group-default">
                                 <label>Observacion: </label>
                                 <textarea class="form-control" rows="3" placeholder="Observacion" ng-model="registro.observacion"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer no-bd">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> Salir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="verDocumentosModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header no-bd">
+                    <h5 class="modal-title">
+                        <span class="fw-mediumbold"> Documentos: </span>
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div ng-show="lista_documentos.length < 1">
+                                <div class="card card-info bg-info-gradient">
+                                    <div class="card-body">
+                                        <h4 class="mb-1 fw-bold">Resultado</h4>
+                                        <div id="task-complete" class="chart-circle mt-4 mb-3">
+                                            <div >
+                                                <h2>No se encontraron Documentos.</h2>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="table-responsive" ng-show="lista_documentos.length > 0">
+                                <table class="table table-hover table-striped">
+                                    <thead>
+                                        <th>#</th>
+                                        <th>Nombre del Doc.</th>
+                                        <th>Descargar</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="item in lista_documentos">
+                                            <td>@{{ $index + 1 }}</td>
+                                            <td>@{{ item.nombre_archivo }}</td>
+                                            <td>
+                                                <div class="text-center align-items-center justify-content-center">
+                                                    <a class="btn btn-primary" href="file/documentos_paciente/@{{ item.nombre_archivo }}" download="@{{ item.nombre_archivo }}"><i class="fas fa-download"></i></a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>

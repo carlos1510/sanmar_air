@@ -85,6 +85,9 @@ app.controller('reservedController', function ($scope, $timeout, vuelosService, 
         vuelosService.obtenerListaAcompanantes({idpasaje_paciente: item.idpasaje_paciente}).success(function (data) {
             $scope.registro.detalle_acompanante = data;
         })
+        vuelosService.obtenerListaPersonalSalud({idpasaje_paciente: item.idpasaje_paciente}).success(function (data) {
+            $scope.registro.detalle_personal = data;
+        })
         $timeout(function () {
             $("#estadocmb").val(item.estado==1?2:item.estado).change();
             $scope.estado_registro = 1;

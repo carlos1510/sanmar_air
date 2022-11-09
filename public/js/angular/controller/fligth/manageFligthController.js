@@ -9,6 +9,7 @@ app.controller('manageFligthController', function ($scope, $timeout, empresaServ
     $scope.estado_registro = 0;
     $scope.estado_editar = 0;
     $scope.registro = {detalle_acompanante:[]};
+    $scope.registro.detalle_personal = [];
 
     $scope.filtro = {};
     $scope.lista = [];
@@ -53,18 +54,17 @@ app.controller('manageFligthController', function ($scope, $timeout, empresaServ
         var valid = validar_campo(['#idtipodocumentocmb','#numerodocumentotxt','#apellido_paternotxt','#apellido_maternotxt','#nombrestxt','#edadtxt','#telefonotxt','#origen_destinocmb','#fecha_citatxt','#tipopasajerocmb','#empresacmb','#estadocmb']);
         if (valid){
             //var cantidad_item = ;
-            var valid_item = true;
             for (var i = 0; i < $scope.rutas.length; i++){
                 if ($scope.registro.tipo_servicio == 'PASAJE AEREO'){
                     if ($scope.rutas[i].id == $("#origen_destinocmb").val()){
                         if ($("#tipopasajerocmb").val() == 'ADULTO'){
-                            $scope.registro.precio_unitario = $scope.rutas[i].precio_adulto;
+                            $scope.registro.precio_unitario = $scope.rutas[i].precio_adulto_venta;
                         }else {
                             if ($("#tipopasajerocmb").val() == 'INFANTE'){
-                                $scope.registro.precio_unitario = $scope.rutas[i].precio_infante;
+                                $scope.registro.precio_unitario = $scope.rutas[i].precio_infante_venta;
                             }else {
                                 if ($("#tipopasajerocmb").val() == 'NIÑO'){
-                                    $scope.registro.precio_unitario = $scope.rutas[i].precio_infante;
+                                    $scope.registro.precio_unitario = $scope.rutas[i].precio_infante_venta;
                                 }
                             }
                         }
@@ -73,7 +73,7 @@ app.controller('manageFligthController', function ($scope, $timeout, empresaServ
                     break;
                 }
             }
-
+            var valid_item = true;
             if ($scope.registro.detalle_acompanante.length > 0){
                 for (var i = 0; i < $scope.registro.detalle_acompanante.length; i++){
                     if ($scope.registro.detalle_acompanante[i].nombres == ""){
@@ -81,19 +81,18 @@ app.controller('manageFligthController', function ($scope, $timeout, empresaServ
                         break;
                     }
                 }
-
                 for (var i = 0; i < $scope.rutas.length; i++){
                     for (var j = 0; j < $scope.registro.detalle_acompanante.length; j++){
                         if ($scope.registro.tipo_servicio == 'PASAJE AEREO'){
                             if ($scope.rutas[i].id == $("#origen_destinocmb").val()){
                                 if ($scope.registro.detalle_acompanante[j].tipo_pasajero == 'ADULTO'){
-                                    $scope.registro.detalle_acompanante[j].precio_unitario = $scope.rutas[i].precio_adulto;
+                                    $scope.registro.detalle_acompanante[j].precio_unitario = $scope.rutas[i].precio_adulto_venta;
                                 }else {
                                     if ($scope.registro.detalle_acompanante[j].tipo_pasajero == 'INFANTE'){
-                                        $scope.registro.detalle_acompanante[j].precio_unitario = $scope.rutas[i].precio_infante;
+                                        $scope.registro.detalle_acompanante[j].precio_unitario = $scope.rutas[i].precio_infante_venta;
                                     }else {
                                         if ($scope.registro.detalle_acompanante[j].tipo_pasajero == 'NIÑO'){
-                                            $scope.registro.detalle_acompanante[j].precio_unitario = $scope.rutas[i].precio_infante;
+                                            $scope.registro.detalle_acompanante[j].precio_unitario = $scope.rutas[i].precio_infante_venta;
                                         }
                                     }
                                 }
@@ -102,27 +101,72 @@ app.controller('manageFligthController', function ($scope, $timeout, empresaServ
                             break;
                         }
                     }
+
+                }
+            }
+
+            var valid_item_personal = true;
+            if ($scope.registro.detalle_personal.length > 0){
+                for (var i = 0; i < $scope.registro.detalle_personal.length; i++){
+                    if ($scope.registro.detalle_personal[i].nombres == ""){
+                        valid_item_personal = false;
+                        break;
+                    }
                 }
             }
 
             $scope.registro.tipo = $scope.registro.tipo_servicio=='PASAJE AEREO'?1:2;
 
             if (valid_item){
-                vuelosService.guardarPasajePaciente($scope.registro).success(function (data) {
-                    if (data.confirm == true){
-                        swal("Exito!", "Se registro correctamente la información!", {
-                            icon : "success",
-                            buttons: {
-                                confirm: {
-                                    className : 'btn btn-success'
-                                }
-                            },
-                        });
-                        $timeout(function () {
-                            $scope.estado_registro = 0;
-                            $scope.listar();
-                        }, 0);
-                    }else {
+                const $archivos = document.querySelector("#archivos");
+                let archivos = $archivos.files;
+                let formdata = new FormData();
+                // variables
+                formdata.append('registro', JSON.stringify($scope.registro));
+                if (archivos.length > 0 ){
+                    // Agregar cada archivo al formdata
+                    var i = 1;
+                    angular.forEach(archivos, function (archivo) {
+                        formdata.append('archivo_'+i, archivo);
+                        i++;
+                    });
+                }
+                let configuracion = {
+                    headers: {
+                        "Content-Type": undefined,
+                    },
+                    transformRequest: angular.identity,
+                };
+
+                $http
+                    .post("vuelos/guardarPasajePaciente", formdata, configuracion)
+                    .then(function (respuesta) {
+                        if (respuesta.data.confirm == true){
+                            swal("Exito!", "Se registro correctamente la información!", {
+                                icon : "success",
+                                buttons: {
+                                    confirm: {
+                                        className : 'btn btn-success'
+                                    }
+                                },
+                            });
+                            $timeout(function () {
+                                $scope.estado_registro = 0;
+                                $scope.listar();
+                            }, 0);
+                        }else {
+                            swal("Error!", "No se pudo completar el registro!", {
+                                icon : "warning",
+                                buttons: {
+                                    confirm: {
+                                        className : 'btn btn-warning'
+                                    }
+                                },
+                            });
+                        }
+                        //console.log("Después de enviar los archivos, el servidor dice:", respuesta.data);
+                    })
+                    .catch(function (detallesDelError) {
                         swal("Error!", "No se pudo completar el registro!", {
                             icon : "warning",
                             buttons: {
@@ -131,8 +175,9 @@ app.controller('manageFligthController', function ($scope, $timeout, empresaServ
                                 }
                             },
                         });
-                    }
-                });
+                        //console.warn("Error al enviar archivos:", detallesDelError);
+                    })
+
             }else {
                 swal("Error!", "Campos obligatorios!", {
                     icon : "danger",
@@ -257,7 +302,7 @@ app.controller('manageFligthController', function ($scope, $timeout, empresaServ
     }
 
     $scope.addAcompanante = function () {
-        $scope.registro.detalle_acompanante.push({idpersona: null,numero_documento: null, apellido_paterno: null, apellido_materno: null, nombres: null, edad: null, tipo_pasajero: '', precio_unitario: null});
+        $scope.registro.detalle_acompanante.push({idpersona: null,numero_documento: null, apellido_paterno: null, apellido_materno: null, nombres: null, edad: null, tipo_pasajero: '', precio_unitario: null, monto_empresa: null});
     }
 
     $scope.removeAcompanante = function (index) {
@@ -290,7 +335,6 @@ app.controller('manageFligthController', function ($scope, $timeout, empresaServ
     }
 
     $scope.buscarPersonaDocumentoAcomp = function (id, item) {
-        //console.log(id);
         if ($("#numero_documentotxt_"+id).val() != ""){
             pacienteService.buscarPersonaDocumento({idtipo_documento: 1, 'numero_documento': $("#numero_documentotxt_"+id).val()}).success(function (data) {
                 item.numero_documento = data.data.numero_documento;
@@ -300,6 +344,28 @@ app.controller('manageFligthController', function ($scope, $timeout, empresaServ
                 item.idpersona = data.data.idpersona;
             })
         }
+    }
+
+    $scope.buscarPersonaDocumentoAcomp = function (id, item) {
+        if ($("#numero_documentotxt_"+id).val() != ""){
+            $scope.estado_busqueda_cliente = 1;
+            pacienteService.buscarPersonaDocumento({idtipo_documento: 1, 'numero_documento': $("#numero_documentotxt_"+id).val()}).success(function (data) {
+                item.numero_documento = data.data.numero_documento;
+                item.apellido_paterno = data.data.apellido_paterno;
+                item.apellido_materno = data.data.apellido_materno;
+                item.nombres = data.data.nombres;
+                item.idpersona = data.data.idpersona;
+                $scope.estado_busqueda_cliente = 0;
+            })
+        }
+    }
+
+    $scope.addPersonalSalud = function () {
+        $scope.registro.detalle_personal.push({idpersona: null,numero_documento: null, apellido_paterno: null, apellido_materno: null, nombres: null, edad: null, tipo_pasajero: '', precio_unitario: null});
+    }
+
+    $scope.removePersonalSalud = function (index) {
+        $scope.registro.detalle_personal.splice(index, 1);
     }
 
     $scope.prepararEditar = function (item) {
@@ -325,6 +391,13 @@ app.controller('manageFligthController', function ($scope, $timeout, empresaServ
         vuelosService.listarPasajesReservados($scope.filtro).success(function (data) {
             $scope.lista = data;
         });
+    }
+
+    $scope.listarArchivos = function (id) {
+        $scope.lista_documentos = [];
+        vuelosService.obtenerDocumentosById({idpasaje_paciente: id}).success(function (data) {
+            $scope.lista_documentos = data;
+        })
     }
 
     $scope.elementos.dtOptions = DTOptionsBuilder.newOptions().withPaginationType('full_numbers').withLanguage({

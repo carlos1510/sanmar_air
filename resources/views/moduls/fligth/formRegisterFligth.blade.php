@@ -25,7 +25,7 @@
                                     <label class="form-label" for="validationTooltipUsername">Numero Documento <span class="text-danger">(*)</span></label>
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="numerodocumentotxt" placeholder="" ng-model="registro.numero_documento" required>
-                                        <a href="javascript:void(0)" class="btn btn-primary" ng-click="buscarPersonaDocumento()"><i class="fas fa-search"></i></a>
+                                        <a href="javascript:void(0)" class="btn btn-primary" ng-click="buscarPersonaDocumento()"><i ng-show="estado_busqueda_cliente == 1" class="fas fa-spinner fa-spin" ></i><i class="fas fa-search" ng-show="estado_busqueda_cliente == 0"></i></a>
                                     </div>
                                 </div>
                             </div>
@@ -88,32 +88,11 @@
                         </div>
                     </div>
 
-                    <div class="row">
-                        <label>Adjuntar Documentos</label> <button type="button" class="ml-2 btn btn-default btn-sm"><i class="flaticon-tool"></i> Agregar</button>
-                        <div class="col-lg-12">
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Documento</th>
-                                        <th>Acción</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td></td>
-                                        <td>
-                                            <input type="file" class="file" />
-                                        </td>
-                                        <td>
-                                            <div class="text-center align-items-center justify-content-center">
-                                                <button class="btn btn-danger btn-sm" title="Eliminar" ><i class="fas fa-times"></i></button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
+                    <div class="mb-2 pl-3 pt-3 pr-3 pb-3 border-3 border-dark border-top border-bottom border-left border-right" style="border-radius: 5px !important;">
+                        <h4>Adjuntar Documentos</h4>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <input id="archivos" multiple type="file" >
                             </div>
                         </div>
                     </div>
@@ -121,7 +100,7 @@
                     <div class="mb-2 pl-3 pt-3 pr-3 pb-3 border-3 border-dark border-top border-bottom border-left border-right" style="border-radius: 5px !important;">
                         <h4>Datos del Pasaje</h4>
                         <div class="row">
-                            <div class="col-lg-6">
+                            <div class="col-lg-5">
                                 <div class="form-check">
                                     <label>Servicios</label>
                                     <br>
@@ -135,7 +114,7 @@
                                     </label>
                                 </div>
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-5">
                                 <div class="form-check">
                                     <label>Vuelos</label>
                                     <br>
@@ -147,6 +126,12 @@
                                         <input class="form-radio-input" type="radio" value="SOLO IDA" name="vuelosRadios" ng-model="registro.vuelos">
                                         <span class="form-radio-sign">Sólo Ida</span>
                                     </label>
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label>Código Ticket:</label>
+                                    <input type="text" class="form-control" ng-model="registro.codigo_generado" readonly/>
                                 </div>
                             </div>
                         </div>
@@ -230,8 +215,8 @@
                                 <div class="form-group">
                                     <label>DNI:</label>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="" id="numero_documentotxt_@{{ $index }}" ng-model="item.numero_documento" required>
-                                        <a href="javascript:void(0)" class="btn btn-primary" ng-click="buscarPersonaDocumentoAcomp($index, item)"><i class="fas fa-search"></i></a>
+                                        <input type="text" class="form-control numero_1" placeholder="" id="numero_documentotxt_@{{ $index }}" maxlength="8" ng-model="item.numero_documento" required>
+                                        <a href="javascript:void(0)" class="btn btn-primary" ng-click="buscarPersonaDocumentoAcomp($index, item)"><i ng-show="estado_busqueda_cliente == 1" class="fas fa-spinner fa-spin" ></i><i class="fas fa-search" ng-show="estado_busqueda_cliente == 0"></i></a>
                                     </div>
                                 </div>
                             </div>
@@ -277,6 +262,11 @@
                                     </button>
                                 </div>
                             </div>
+                            <script>
+                                $(function () {
+                                    $(".numero_1").numeric({decimal: false, negative: false});
+                                });
+                            </script>
                         </div>
                     </div>
 
@@ -291,8 +281,8 @@
                                 <div class="form-group">
                                     <label>DNI:</label>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="" id="numero_documentopstxt_@{{ $index }}" ng-model="item.numero_documento" required>
-                                        <a href="javascript:void(0)" class="btn btn-primary" ng-click="buscarPersonaDocumentoPersonal($index, item)"><i class="fas fa-search"></i></a>
+                                        <input type="text" class="form-control numero_2" placeholder="" id="numero_documentopstxt_@{{ $index }}" maxlength="8" ng-model="item.numero_documento" required>
+                                        <a href="javascript:void(0)" class="btn btn-primary" ng-click="buscarPersonaDocumentoPersonal($index, item)"><i ng-show="estado_busqueda_cliente == 1" class="fas fa-spinner fa-spin" ></i><i class="fas fa-search" ng-show="estado_busqueda_cliente == 0"></i></a>
                                     </div>
                                 </div>
                             </div>
@@ -336,6 +326,11 @@
                                     </button>
                                 </div>
                             </div>
+                            <script>
+                                $(function () {
+                                    $(".numero_2").numeric({decimal: false, negative: false});
+                                });
+                            </script>
                         </div>
                     </div>
 

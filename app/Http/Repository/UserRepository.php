@@ -133,7 +133,11 @@ class UserRepository
 
     public function obtenerUsuarioSesion($params){
         try {
-            $sql = "SELECT u.id, u.idpersona, u.usuario, u.`password`, u.idnivel, u.acceso, u.idempresa FROM usuario as u WHERE usuario='$params->usuario' AND password='$params->password' AND estado=1 AND acceso=1 LIMIT 1";
+            $sql = "SELECT u.id, u.idpersona, u.usuario, u.`password`, u.idnivel, u.acceso, u.idempresa, per.numero_documento, per.idtipo_documento, per.nombres, per.apellido_paterno, per.apellido_materno, e.razon_social, n.nivel
+                    FROM usuario as u INNER JOIN persona per ON u.idpersona=per.id
+                    LEFT JOIN empresa e ON u.idempresa=e.id
+                    INNER JOIN nivel n ON u.idnivel=n.id
+                    WHERE u.usuario='$params->usuario' AND u.password='$params->password' AND u.estado=1 AND u.acceso=1 LIMIT 1";
             $resultado = DB::selectOne($sql);
             $data['confirm'] = true;
             $data['user'] = $resultado;

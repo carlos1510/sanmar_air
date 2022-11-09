@@ -50,31 +50,27 @@ class HomeController extends Controller
      */
     public function viewHome(Request $request)
     {
-        /*$id = Session::get('idusuario');
-        if(isset($id)){
-            Session::put('menu_primario', 'configuracion');
-            return view('configuracion/importar');
+        if(Session::has('idusuario')){
+            Session::put('menu_primario', 'home');
+            return view('welcome');
         }else{
             return redirect('/');
-        }*/
-        return view('welcome');
+        }
     }
 
     /**
-     * Vista Paciente
+     * Vista vuelo
      * @param Request $request
      * @return void
      */
     public function viewFligth(Request $request)
     {
-        /*$id = Session::get('idusuario');
-        if(isset($id)){
-            Session::put('menu_primario', 'configuracion');
-            return view('configuracion/importar');
+        if(Session::has('idusuario')){
+            Session::put('menu_primario', 'vuelos');
+            return view('moduls.fligth.fligth');
         }else{
             return redirect('/');
-        }*/
-        return view('moduls.fligth.fligth');
+        }
     }
 
     /**
@@ -84,14 +80,12 @@ class HomeController extends Controller
      */
     public function viewCompany(Request $request)
     {
-        /*$id = Session::get('idusuario');
-        if(isset($id)){
-            Session::put('menu_primario', 'configuracion');
-            return view('configuracion/importar');
+        if(Session::has('idusuario')){
+            Session::put('menu_primario', 'empresa');
+            return view('moduls.register.company');
         }else{
             return redirect('/');
-        }*/
-        return view('moduls.register.company');
+        }
     }
 
     /**
@@ -101,14 +95,12 @@ class HomeController extends Controller
      */
     public function viewUser(Request $request)
     {
-        /*$id = Session::get('idusuario');
-        if(isset($id)){
-            Session::put('menu_primario', 'configuracion');
-            return view('configuracion/importar');
+        if(Session::has('idusuario')){
+            Session::put('menu_primario', 'usuario');
+            return view('moduls.setting.user');
         }else{
             return redirect('/');
-        }*/
-        return view('moduls.setting.user');
+        }
     }
 
     /**
@@ -118,14 +110,12 @@ class HomeController extends Controller
      */
     public function viewManageFligth(Request $request)
     {
-        /*$id = Session::get('idusuario');
-        if(isset($id)){
-            Session::put('menu_primario', 'configuracion');
-            return view('configuracion/importar');
+        if(Session::has('idusuario')){
+            Session::put('menu_primario', 'administrar_vuelo');
+            return view('moduls.fligth.manageFligth');
         }else{
             return redirect('/');
-        }*/
-        return view('moduls.fligth.manageFligth');
+        }
     }
 
     /**
@@ -135,14 +125,12 @@ class HomeController extends Controller
      */
     public function viewReserved(Request $request)
     {
-        /*$id = Session::get('idusuario');
-        if(isset($id)){
-            Session::put('menu_primario', 'configuracion');
-            return view('configuracion/importar');
+        if(Session::has('idusuario')){
+            Session::put('menu_primario', 'reservados');
+            return view('moduls.fligth.reserved');
         }else{
             return redirect('/');
-        }*/
-        return view('moduls.fligth.reserved');
+        }
     }
 
     /**
@@ -152,13 +140,11 @@ class HomeController extends Controller
      */
     public function viewReportProforma(Request $request)
     {
-        /*$id = Session::get('idusuario');
-        if(isset($id)){
-            Session::put('menu_primario', 'configuracion');
-            return view('configuracion/importar');
+        if(Session::has('idusuario')){
+            Session::put('menu_primario', 'proforma');
+            return view('moduls.report.proforma');
         }else{
             return redirect('/');
-        }*/
-        return view('moduls.report.proforma');
+        }
     }
 }

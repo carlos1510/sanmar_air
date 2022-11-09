@@ -36,6 +36,10 @@ class UserController extends Controller
                 //Session::put('nick', $user[0]->nick);
                 Session::put('idnivel', isset($user['user']->idnivel)?$user['user']->idnivel:null);
                 Session::put('idempresa', isset($user['user']->idempresa)?$user['user']->idempresa:null);
+                Session::put('nombres', isset($user['user']->nombres)?$user['user']->nombres:null);
+                Session::put('nivel', isset($user['user']->nivel)?$user['user']->nivel:null);
+                Session::put('empresa', isset($user['user']->razon_social)?$user['user']->razon_social:null);
+                Session::put('letra_inicial', substr($user['user']->nombres, 0, 1));
 
                 return redirect('/home');
             }else{

@@ -71,6 +71,65 @@ var app=angular.module('app', ['datatables']);
 
 }]);*/
 
+/*app.directive('fileDropZone', function () {
+    return{
+        restrict: 'A',
+        scope: {
+            filesToUpload: '='
+        },
+        link : function (scope, element, attributes) {
+            element.bind('dragstart',function(e){
+                //e.dataTransfer.effectAllowed = 'copy';
+            });
+
+            element.bind('dragover', function (e) {
+                if (e != null){
+                    e.preventDefault();
+                }
+                //e.dataTransfer.affectAllowed = 'copy';
+                element.attr('class', 'file-drop-zone-over');
+            });
+
+            element.bind('dragenter', function (e) {
+                if (e != null){
+                    e.preventDefault();
+                }
+                //e.dataTransfer.affectAllowed = 'copy';
+                element.attr('class', 'file-drop-zone-over');
+            });
+
+            element.bind('drop', function (e) {
+                element.attr('class', 'file-drop-zone');
+                if (e != null){
+                    e.preventDefault();
+                }
+
+                var fileObjectsArray = [];
+                angular.forEach(e.dataTransfer.files, function (file) {
+                    var reader = FileReader();
+                    reader.onload = function (e) {
+                        scope.$apply(function () {
+                            var newFilePreview = e.target.result;
+                            var newFileName = file.name;
+                            var newFileSize = file.size;
+
+                            var fileObject = {
+                                file: file,
+                                name: newFileName,
+                                size: newFileSize,
+                                preview: newFilePreview
+                            }
+                            fileObjectsArray.push(fileObject);
+                        })
+                    }
+                    reader.readAsDataURL(file);
+                });
+                scope.filesToUpload = fileObjectsArray;
+            })
+        }
+    }
+})*/
+
 app.directive('uploaderModel', ["$parse", function($parse){
     return {
         restrict: 'A',
@@ -118,6 +177,7 @@ app.filter('startFrom', function()
 });
 
 app.run(function($rootScope,$sce,$filter,$timeout ) {
+    $rootScope.numero_generado = 0;
     $rootScope.allowHtml=function(text){
         if(text!=null){
             text=text.replace(/\n/g,"<br />");
@@ -125,6 +185,16 @@ app.run(function($rootScope,$sce,$filter,$timeout ) {
         }
         return null;
     }
+
+    $rootScope.generarNumeroRandom = function () {
+        var min = Math.ceil(1);
+        var max = Math.floor(4);
+        $rootScope.numero_generado = Math.floor(Math.random() * (max - min + 1)) + min;
+        //console.log($rootScope.numero_generado);
+    }
+
+    $rootScope.generarNumeroRandom();
+
 
    /* $rootScope.datatableLanguageConfig={
         "sEmptyTable": "No hay Datos Disponibles",

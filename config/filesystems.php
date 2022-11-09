@@ -42,9 +42,9 @@ return [
             'visibility' => 'public',
         ],
 
-        'archivo' => [
+        'documentos_paciente' => [
             'driver' => 'local',
-            'root' => public_path().'/file',
+            'root' => public_path().'/file/documentos_paciente',
             'visibility' => 'public',
         ],
 

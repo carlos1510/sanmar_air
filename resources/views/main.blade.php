@@ -20,16 +20,12 @@
     <link href="{{ asset('css/plugins/select2/select2.min.css') }}" rel="stylesheet">
     <link href="{{ asset('plugins/datapicker/datepicker3.css') }}" rel="stylesheet">
 
-
-
+    {{--<link rel="stylesheet" href="{{ asset('css/styles.css') }}">--}}
 @endsection
 
 @section('body')
 
     <div class="wrapper">
-        <!--
-            Tip 1: You can change the background color of the main header using: data-background-color="blue | purple | light-blue | green | orange | red"
-        -->
         <div class="main-header" data-background-color="light-blue">
             <!-- Logo Header -->
             <div class="logo-header">
@@ -62,10 +58,10 @@
                             </a>
                         </li>
                         <li class="nav-item dropdown hidden-caret">
-                            <a class="nav-link dropdown-toggle" href="#" id="notifDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{--<a class="nav-link dropdown-toggle" href="#" id="notifDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fa fa-bell"></i>
                                 <span class="notification">4</span>
-                            </a>
+                            </a>--}}
                             {{--<ul class="dropdown-menu notif-box animated fadeIn" aria-labelledby="notifDropdown">
                                 <li>
                                     <div class="dropdown-title">You have 4 new notification</div>
@@ -130,13 +126,14 @@
                                     <div class="user-box">
                                         <div class="avatar-lg"><img src="{{ asset('template/assets/img/default.png') }}" alt="image profile" class="avatar-img rounded"></div>
                                         <div class="u-text">
-                                            <h4></h4>
+                                            <h4>{{ Session::get('nombres') }}</h4>
+                                            <p>{{ Session::get('nivel') }}</p>
                                             {{--<p class="text-muted"></p><a href="" class="btn btn-rounded btn-danger btn-sm">View Profile</a>--}}
                                         </div>
                                     </div>
                                 </li>
                                 <li>
-                                    <div class="dropdown-divider"></div>
+                                    {{--<div class="dropdown-divider"></div>--}}
                                     <!--<a class="dropdown-item" href="#">My Profile</a>
                                     <a class="dropdown-item" href="#">My Balance</a>
                                     <a class="dropdown-item" href="#">Inbox</a>
@@ -170,7 +167,7 @@
                             <a data-toggle="collapse" href="#collapseExample" aria-expanded="true">
 								<span>
 									{{ Session::get('nombres') }}
-									<span class="user-level">{{ Session::get('nom_nivel') }}</span>
+									<span class="user-level">{{ Session::get('nivel') }}</span>
 									<span class="caret"></span>
 								</span>
                             </a>
@@ -198,7 +195,7 @@
                         </div>
                     </div>
                     <ul class="nav">
-                        <li class="nav-item active">
+                        <li @if(Session::get('menu_primario')=='home')class="nav-item active" @else class="nav-item" @endif>
                             <a href="{{ url('home') }}">
                                 <i class="fas fa-home"></i>
                                 <p>Inicio</p>
@@ -212,7 +209,7 @@
                             <h4 class="text-section">Opciones</h4>
                         </li>
                         @if(Session::get('idnivel') == 2 || Session::get('idnivel') == 1)
-                            <li class="nav-item" >
+                            <li @if(Session::get('menu_primario')=='vuelos')class="nav-item active" @else class="nav-item" @endif >
                                 <a href="{{ url('vuelos') }}">
                                     <i class="fas fa-plane"></i>
                                     <p>VUELOS</p>
@@ -221,7 +218,7 @@
                         @endif
 
                         @if(Session::get('idnivel') == 3 || Session::get('idnivel') == 1)
-                            <li class="nav-item" >
+                            <li @if(Session::get('menu_primario')=='reservados')class="nav-item active" @else class="nav-item" @endif >
                                 <a href="{{ url('reservados') }}">
                                     <i class="fas fa-plane-departure"></i>
                                     <p>VUELOS SOLICITADOS</p>
@@ -229,35 +226,35 @@
                             </li>
                         @endif
 
-                        @if(Session::get('idnivel') == 1)
-                            <li class="nav-item" >
+                        @if(Session::get('idnivel') == 1 || Session::get('idnivel') == 4)
+                            <li @if(Session::get('menu_primario')=='administrar_vuelo')class="nav-item active" @else class="nav-item" @endif >
                                 <a href="{{ url('administrar_vuelo') }}">
                                     <i class="fas fa-route"></i>
                                     <p>ADMINISTRAR VUELOS</p>
                                 </a>
                             </li>
 
-                            <li class="nav-item" >
+                            <li @if(Session::get('menu_primario')=='proforma')class="nav-item active" @else class="nav-item" @endif >
                                 <a href="{{ url('proforma') }}">
                                     <i class="fas fa-file-pdf"></i>
                                     <p>PROFORMA</p>
                                 </a>
                             </li>
-                            <li class="nav-item" >
+                        @endif
+                        @if(Session::get('idnivel') == 1 || Session::get('idnivel') == 4)
+                            <li @if(Session::get('menu_primario')=='empresa')class="nav-item active" @else class="nav-item" @endif >
                                 <a href="{{ url('empresa') }}">
                                     <i class="fas fa-handshake"></i>
                                     <p>Empresa</p>
                                 </a>
                             </li>
-                            <li class="nav-item" >
+                            <li @if(Session::get('menu_primario')=='usuario')class="nav-item active" @else class="nav-item" @endif >
                                 <a href="{{ url('usuario') }}">
                                     <i class="fas fa-users"></i>
                                     <p>Usuarios</p>
                                 </a>
                             </li>
                         @endif
-
-
                     </ul>
                 </div>
             </div>
@@ -332,7 +329,6 @@
             $(window).resize(function() {
                 $(window).width();
             });
-
 
             $('.changeMainHeaderColor').on('click', function(){
                 if($(this).attr('data-color') == 'default'){

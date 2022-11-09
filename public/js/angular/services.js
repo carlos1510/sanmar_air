@@ -63,6 +63,15 @@ app.factory('vuelosService', function($http){
         listarProformas: function ($params) {
             return $http.post("vuelos/listarProformas", $params)
         },
+        obtenerListaPersonalSalud: function ($params) {
+            return $http.post("vuelos/obtenerListaPersonalSalud", $params)
+        },
+        obtenerDocumentosById: function ($params) {
+            return $http.post("vuelos/obtenerDocumentosById", $params)
+        },
+        generarCodigoTicket: function ($params) {
+            return $http.post("vuelos/generarCodigoTicket", $params)
+        },
 
     }
 });

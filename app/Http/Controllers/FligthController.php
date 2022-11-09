@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
 use App\Http\Services\FligthServices;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 
 class FligthController extends Controller
@@ -26,10 +27,27 @@ class FligthController extends Controller
     }
 
     public function guardarPasajePaciente(Request $request){
-        $request->isXmlHttpRequest();
-        $content = $request->getContent();
+        $content = $request->get('registro');
         $params = json_decode($content);
-        return new JsonResponse($this->service->guardarPasajePaciente($params));
+
+        $result = $this->service->guardarPasajePaciente($params);
+        $resultado = (object)$result;
+
+        if (count($request->files) > 0){
+            for ($i = 1; $i <= count($request->files); $i++){
+                $archivo = $request->files->get('archivo_'.$i);
+                $nombre_original = $archivo->getClientOriginalName();
+                $extension = $archivo->getClientOriginalExtension();
+                $nombre_archivo = "paciente_id_".$resultado->idpasaje_paciente."_nro_".$i.".".$extension;
+                $datos = array('idpasaje_paciente' => $resultado->idpasaje_paciente, 'nombre_archivo' => $nombre_archivo, 'extension_archivo' => $extension, 'numero_archivo' =>$i);
+                $res = $this->service->guardarArchivosPaciente($datos);
+                if ($res == true){
+                    Storage::disk('documentos_paciente')->put($nombre_archivo,  \File::get($archivo) );
+                }
+            }
+        }
+
+        return new JsonResponse($result);
     }
 
     public function listarPasajesPaciente(Request $request){
@@ -60,6 +78,13 @@ class FligthController extends Controller
         return new JsonResponse($this->service->obtenerListaAcompanantes($params));
     }
 
+    public function obtenerListaPersonalSalud(Request $request){
+        $request->isXmlHttpRequest();
+        $content = $request->getContent();
+        $params = json_decode($content);
+        return new JsonResponse($this->service->obtenerListaPersonalSalud($params));
+    }
+
     public function listarPasajesReservados(Request $request){
         $request->isXmlHttpRequest();
         $content = $request->getContent();
@@ -79,6 +104,20 @@ class FligthController extends Controller
         $content = $request->getContent();
         $params = json_decode($content);
         return new JsonResponse($this->service->listarProformas($params));
+    }
+
+    public function obtenerDocumentosById(Request $request){
+        $request->isXmlHttpRequest();
+        $content = $request->getContent();
+        $params = json_decode($content);
+        return new JsonResponse($this->service->obtenerDocumentosById($params));
+    }
+
+    public function generarCodigoTicket(Request $request){
+        $request->isXmlHttpRequest();
+        $content = $request->getContent();
+        $params = json_decode($content);
+        return new JsonResponse($this->service->generarCodigoTicket($params));
     }
 
     public function exportarReservasPasajesEmpresa(Request $request){

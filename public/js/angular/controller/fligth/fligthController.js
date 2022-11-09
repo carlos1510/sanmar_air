@@ -2,16 +2,18 @@
  * Created by carlo on 1/09/2018.
  */
 
-app.controller('fligthController', function ($scope, $timeout, vuelosService, pacienteService, empresaService, DTOptionsBuilder){
+app.controller('fligthController', function ($scope, $http, $timeout, vuelosService, pacienteService, empresaService, DTOptionsBuilder){
     $scope.dtInstance = {};
     $scope.elementos = {lista:[]};
 
     $scope.estado_registro = 0;
     $scope.estado_editar = 0;
+    $scope.estado_busqueda_cliente = 0;
     $scope.registro = {};
     $scope.registro.detalle_acompanante = [];
     $scope.registro.detalle_personal = [];
     $scope.rutas = [];
+    $scope.files = [];
 
     $scope.filtro = {};
     $scope.lista = [];
@@ -52,6 +54,11 @@ app.controller('fligthController', function ($scope, $timeout, vuelosService, pa
             $("#tipopasajerocmb").val('').change();
         }, 0);
 
+        vuelosService.generarCodigoTicket({}).success(function (data) {
+            $scope.registro.codigo = data.codigo;
+            $scope.registro.codigo_generado = data.codigo_generado;
+        })
+
         $scope.estado_registro = 1;
 
     }
@@ -71,7 +78,7 @@ app.controller('fligthController', function ($scope, $timeout, vuelosService, pa
     }
 
     $scope.addAcompanante = function () {
-        $scope.registro.detalle_acompanante.push({idpersona: null,numero_documento: null, apellido_paterno: null, apellido_materno: null, nombres: null, edad: null, tipo_pasajero: '', precio_unitario: null});
+        $scope.registro.detalle_acompanante.push({idpersona: null,numero_documento: null, apellido_paterno: null, apellido_materno: null, nombres: null, edad: null, tipo_pasajero: '', precio_unitario: null, monto_empresa: null});
     }
 
     $scope.removeAcompanante = function (index) {
@@ -105,26 +112,29 @@ app.controller('fligthController', function ($scope, $timeout, vuelosService, pa
     $scope.buscarPersonaDocumento = function () {
         if ($("#idtipodocumentocmb").val() != ""){
             if ($("#numerodocumentotxt").val() != ""){
+                $scope.estado_busqueda_cliente = 1;
                 pacienteService.buscarPersonaDocumento({idtipo_documento: $("#idtipodocumentocmb").val(), 'numero_documento': $("#numerodocumentotxt").val()}).success(function (data) {
                     $scope.registro.numero_documento = data.data.numero_documento;
                     $scope.registro.apellido_paterno = data.data.apellido_paterno;
                     $scope.registro.apellido_materno = data.data.apellido_materno;
                     $scope.registro.nombres = data.data.nombres;
                     $scope.registro.idpersona = data.data.idpersona;
+                    $scope.estado_busqueda_cliente = 0;
                 })
             }
         }
     }
 
     $scope.buscarPersonaDocumentoAcomp = function (id, item) {
-        //console.log(id);
         if ($("#numero_documentotxt_"+id).val() != ""){
+            $scope.estado_busqueda_cliente = 1;
             pacienteService.buscarPersonaDocumento({idtipo_documento: 1, 'numero_documento': $("#numero_documentotxt_"+id).val()}).success(function (data) {
                 item.numero_documento = data.data.numero_documento;
                 item.apellido_paterno = data.data.apellido_paterno;
                 item.apellido_materno = data.data.apellido_materno;
                 item.nombres = data.data.nombres;
                 item.idpersona = data.data.idpersona;
+                $scope.estado_busqueda_cliente = 0;
             })
         }
     }
@@ -138,14 +148,15 @@ app.controller('fligthController', function ($scope, $timeout, vuelosService, pa
     }
 
     $scope.buscarPersonaDocumentoPersonal = function (id, item) {
-        //console.log(id);
         if ($("#numero_documentopstxt_"+id).val() != ""){
+            $scope.estado_busqueda_cliente = 1;
             pacienteService.buscarPersonaDocumento({idtipo_documento: 1, 'numero_documento': $("#numero_documentopstxt_"+id).val()}).success(function (data) {
                 item.numero_documento = data.data.numero_documento;
                 item.apellido_paterno = data.data.apellido_paterno;
                 item.apellido_materno = data.data.apellido_materno;
                 item.nombres = data.data.nombres;
                 item.idpersona = data.data.idpersona;
+                $scope.estado_busqueda_cliente = 0;
             })
         }
     }
@@ -158,13 +169,16 @@ app.controller('fligthController', function ($scope, $timeout, vuelosService, pa
                 if ($scope.registro.tipo_servicio == 'PASAJE AEREO'){
                     if ($scope.rutas[i].id == $("#origen_destinocmb").val()){
                         if ($("#tipopasajerocmb").val() == 'ADULTO'){
-                            $scope.registro.precio_unitario = $scope.rutas[i].precio_adulto;
+                            $scope.registro.precio_unitario = $scope.rutas[i].precio_adulto_venta;
+                            $scope.registro.monto_empresa = $scope.rutas[i].precio_adulto_compra;
                         }else {
                             if ($("#tipopasajerocmb").val() == 'INFANTE'){
-                                $scope.registro.precio_unitario = $scope.rutas[i].precio_infante;
+                                $scope.registro.precio_unitario = $scope.rutas[i].precio_infante_venta;
+                                $scope.registro.monto_empresa = $scope.rutas[i].precio_infante_compra;
                             }else {
                                 if ($("#tipopasajerocmb").val() == 'NIÑO'){
-                                    $scope.registro.precio_unitario = $scope.rutas[i].precio_infante;
+                                    $scope.registro.precio_unitario = $scope.rutas[i].precio_infante_venta;
+                                    $scope.registro.monto_empresa = $scope.rutas[i].precio_infante_compra;
                                 }
                             }
                         }
@@ -186,13 +200,16 @@ app.controller('fligthController', function ($scope, $timeout, vuelosService, pa
                         if ($scope.registro.tipo_servicio == 'PASAJE AEREO'){
                             if ($scope.rutas[i].id == $("#origen_destinocmb").val()){
                                 if ($scope.registro.detalle_acompanante[j].tipo_pasajero == 'ADULTO'){
-                                    $scope.registro.detalle_acompanante[j].precio_unitario = $scope.rutas[i].precio_adulto;
+                                    $scope.registro.detalle_acompanante[j].precio_unitario = $scope.rutas[i].precio_adulto_venta;
+                                    $scope.registro.detalle_acompanante[j].monto_empresa = $scope.rutas[i].precio_adulto_compra;
                                 }else {
                                     if ($scope.registro.detalle_acompanante[j].tipo_pasajero == 'INFANTE'){
-                                        $scope.registro.detalle_acompanante[j].precio_unitario = $scope.rutas[i].precio_infante;
+                                        $scope.registro.detalle_acompanante[j].precio_unitario = $scope.rutas[i].precio_infante_venta;
+                                        $scope.registro.detalle_acompanante[j].monto_empresa = $scope.rutas[i].precio_infante_compra;
                                     }else {
                                         if ($scope.registro.detalle_acompanante[j].tipo_pasajero == 'NIÑO'){
-                                            $scope.registro.detalle_acompanante[j].precio_unitario = $scope.rutas[i].precio_infante;
+                                            $scope.registro.detalle_acompanante[j].precio_unitario = $scope.rutas[i].precio_infante_venta;
+                                            $scope.registro.detalle_acompanante[j].monto_empresa = $scope.rutas[i].precio_infante_compra;
                                         }
                                     }
                                 }
@@ -213,40 +230,63 @@ app.controller('fligthController', function ($scope, $timeout, vuelosService, pa
                         break;
                     }
                 }
-                for (var i = 0; i < $scope.rutas.length; i++){
-                    for (var j = 0; j < $scope.registro.detalle_personal.length; j++){
-                        if ($scope.registro.tipo_servicio == 'PASAJE AEREO'){
-                            if ($scope.rutas[i].id == $("#origen_destinocmb").val()){
-                                if ($scope.registro.detalle_personal[j].tipo_pasajero == 'ADULTO'){
-                                    $scope.registro.detalle_personal[j].precio_unitario = $scope.rutas[i].precio_adulto;
-                                }
-                            }
-                        }else {
-                            break;
-                        }
-                    }
-
-                }
             }
 
             $scope.registro.tipo = $scope.registro.tipo_servicio=='PASAJE AEREO'?1:2;
 
             if (valid_item){
-                vuelosService.guardarPasajePaciente($scope.registro).success(function (data) {
-                    if (data.confirm == true){
-                        swal("Exito!", "Se registro correctamente la información!", {
-                            icon : "success",
-                            buttons: {
-                                confirm: {
-                                    className : 'btn btn-success'
-                                }
-                            },
-                        });
-                        $timeout(function () {
-                            $scope.estado_registro = 0;
-                            $scope.listar();
-                        }, 0);
-                    }else {
+                const $archivos = document.querySelector("#archivos");
+                let archivos = $archivos.files;
+                let formdata = new FormData();
+                // variables
+                formdata.append('registro', JSON.stringify($scope.registro));
+                if (archivos.length > 0 ){
+                    // Agregar cada archivo al formdata
+                    var i = 1;
+                    angular.forEach(archivos, function (archivo) {
+                        formdata.append('archivo_'+i, archivo);
+                        i++;
+                    });
+                }
+                let configuracion = {
+                    headers: {
+                        "Content-Type": undefined,
+                    },
+                    transformRequest: angular.identity,
+                };
+
+                $http
+                    .post("vuelos/guardarPasajePaciente", formdata, configuracion)
+                    .then(function (respuesta) {
+                        if (respuesta.data.confirm == true){
+                            swal("Exito!", "Se registro correctamente la información!", {
+                                icon : "success",
+                                buttons: {
+                                    confirm: {
+                                        className : 'btn btn-success'
+                                    }
+                                },
+                            });
+                            $timeout(function () {
+                                $scope.estado_registro = 0;
+                                $scope.listar();
+                                $scope.registro = {};
+                                var archivo = document.getElementById('archivos');
+                                archivo.value = '';
+                            }, 0);
+                        }else {
+                            swal("Error!", "No se pudo completar el registro!", {
+                                icon : "warning",
+                                buttons: {
+                                    confirm: {
+                                        className : 'btn btn-warning'
+                                    }
+                                },
+                            });
+                        }
+                        //console.log("Después de enviar los archivos, el servidor dice:", respuesta.data);
+                    })
+                    .catch(function (detallesDelError) {
                         swal("Error!", "No se pudo completar el registro!", {
                             icon : "warning",
                             buttons: {
@@ -255,8 +295,9 @@ app.controller('fligthController', function ($scope, $timeout, vuelosService, pa
                                 }
                             },
                         });
-                    }
-                });
+                        //console.warn("Error al enviar archivos:", detallesDelError);
+                    })
+
             }else {
                 swal("Error!", "Campos obligatorios!", {
                     icon : "danger",
@@ -325,6 +366,9 @@ app.controller('fligthController', function ($scope, $timeout, vuelosService, pa
         vuelosService.obtenerListaAcompanantes({idpasaje_paciente: item.idpasaje_paciente}).success(function (data) {
             $scope.registro.detalle_acompanante = data;
         })
+        vuelosService.obtenerListaPersonalSalud({idpasaje_paciente: item.idpasaje_paciente}).success(function (data) {
+            $scope.registro.detalle_personal = data;
+        })
         $timeout(function () {
             $("#idtipodocumentocmb").val(item.idtipo_documento).change();
             $("#sexocmb").val(item.sexo).change();
@@ -342,6 +386,49 @@ app.controller('fligthController', function ($scope, $timeout, vuelosService, pa
         })
     }
 
+    $scope.contarMarcados = function () {
+        var contador = 0;
+        for(var i=0; i < $scope.lista.length; i++){
+            if ($scope.lista[i].check_imprimir == true){
+                contador++;
+            }
+        }
+        return contador;
+    }
+
+    $scope.marcarCheckBox = function () {
+        for(var i=0; i < $scope.lista.length; i++){
+            if ($scope.filtro.check_total == true){
+                $scope.lista[i].check_imprimir = true;
+            }else {
+                $scope.lista[i].check_imprimir = false;
+            }
+        }
+    }
+
+    $scope.desmarcarTotalCheck = function (item) {
+        var contador = 0;
+        var cantidad = $scope.lista.length;
+        if (item.check_imprimir == false){
+            if ($scope.filtro.check_total == true){
+                $scope.filtro.check_total = false;
+            }
+        }else {
+            if (item.check_imprimir == true){
+                for(var i=0; i < $scope.lista.length; i++){
+                    if ($scope.lista[i].check_imprimir == true){
+                        contador++;
+                    }
+                }
+                if (contador == cantidad){
+                    $scope.filtro.check_total = true;
+                }else {
+                    $scope.filtro.check_total = false;
+                }
+            }
+        }
+    }
+
     $scope.imprimirTickets = function () {
         var opciones = {
             orientation: 'p',
@@ -350,65 +437,43 @@ app.controller('fligthController', function ($scope, $timeout, vuelosService, pa
         };
 
         var doc = new jsPDF(opciones);
+        var indice = 0;
+        for (var i = 0; i < $scope.lista.length; i++){
+            if ($scope.lista[i].check_imprimir == true){
+                if(indice != 0){
+                    doc.addPage();
+                }
+                doc.setFontSize(10);
+                doc.setFont('Verdana','bold');
+                doc.text(10, 30, 'FENIX EMERGENCY GROUP EIRL');
+                doc.text(20, 35, 'RUC: 20606397322');
+                var codigo_generado = $scope.lista[i].codigo_generado!=undefined?$scope.lista[i].codigo_generado:'';
+                doc.text(25, 40, 'Ticket Nro.: ' + codigo_generado);
+                doc.line(5, 44, 75, 44, 'F');
+                doc.setFont('Verdana','normal');
+                doc.setFontSize(9);
+                doc.text(5, 55, 'DNI:'); doc.text(15, 55, '' + $scope.lista[i].numero_documento);
+                doc.text(5, 60, 'Nombres:');
+                doc.setFontSize(7);
+                doc.text(20, 60, '' + $scope.lista[i].apellido_paterno + ' ' + $scope.lista[i].apellido_materno + ' ' + $scope.lista[i].nombres);
+                doc.setFontSize(9);
+                doc.text(5, 65, 'Edad:'); doc.text(15, 65, '' + $scope.lista[i].edad);
+                doc.text(5, 70, 'Tipo de Pasajero:'); doc.text(33, 70, '' + $scope.lista[i].tipo_pasajero);
+                doc.text(5, 75, 'Pasajero:'); doc.text(25, 75, '' + $scope.lista[i].tipo_paciente);
+                doc.text(5, 80, 'Servicio:'); doc.text(19, 80, '' + $scope.lista[i].tipo_servicio);
+                doc.text(5, 87, '------------------------------------------------------------------');
+                doc.text(7, 90, 'Origen'); doc.text(30, 90, 'Destino'); doc.text(55, 90, 'Fecha Cita');
+                doc.text(5, 93, '------------------------------------------------------------------');
+                doc.text(5, 98, '' + $scope.lista[i].origen); doc.text(30, 98, '' + $scope.lista[i].destino); doc.text(55, 98, '' + $scope.lista[i].fecha_cita);
+                doc.text(5, 102, '------------------------------------------------------------------');
+                doc.text(5, 107, 'Estado: ' + $scope.lista[i].nom_estado);
+                indice++;
+            }
+        }
 
-        doc.setFontSize(10);
-        doc.setFont('Verdana','bold');
-        doc.text(10, 30, 'FENIX EMERGENCY GROUP EIRL');
-        doc.text(20, 35, 'RUC: 20606397322');
-        doc.line(5, 39, 75, 39, 'F');
-        doc.text(20, 45, 'Ticket: 123654');
-        doc.setFont('Verdana','normal');
-        doc.setFontSize(9);
-        doc.text(5, 55, 'DNI:'); doc.text(15, 55, '46902128');
-        doc.text(5, 60, 'Nombres:');
-        doc.setFontSize(7);
-        doc.text(20, 60, 'CARLOS CLEMENTE VASQUEZ CISNEROS');
-        doc.setFontSize(9);
-        doc.text(5, 65, 'Edad:'); doc.text(15, 65, '32');
-        doc.text(5, 70, 'Tipo de Pasajero:'); doc.text(33, 70, 'ADULTO');
-        doc.text(5, 75, 'Servicio:'); doc.text(19, 75, 'VUELO AEREO');
-        doc.text(5, 82, '------------------------------------------------------------------');
-        doc.text(7, 85, 'Origen'); doc.text(30, 85, 'Destino'); doc.text(55, 85, 'Fecha Cita');
-        doc.text(5, 87, '------------------------------------------------------------------');
-        doc.text(5, 92, 'PUCALLPA'); doc.text(30, 92, 'CONTAMANA'); doc.text(55, 92, '10/11/2022');
-        doc.text(5, 97, '------------------------------------------------------------------');
-        doc.text(5, 102, 'Estado: Pendiente');
-
-        doc.addPage()
-        doc.setFontSize(10);
-        doc.text(10, 30, 'Recibo de venta de orquídeas');
-        doc.text(10, 35, 'Comprobante No.: 7854214587');
-        doc.text(10, 40, 'PDV: Pedro Pérez');
-        doc.text(10, 45, 'Operador: 123654');
-        doc.text(10, 55, 'Especie vendida: Sophronitis coccinea');
-        doc.text(10, 60, 'Valor: 35.00');
-        doc.text(10, 65, 'TBX: 242985290');
-        doc.text(10, 70, 'Fecha/Hora: 2019-11-05 12:28:21');
-        doc.text(10, 90, '_______________________________');
-        doc.text(10, 95, 'Recibí conforme');
-        doc.addPage()
-        doc.setFontSize(10);
-        doc.text(10, 30, 'Recibo de venta de orquídeas');
-        doc.text(10, 35, 'Comprobante No.: 7854214587');
-        doc.text(10, 40, 'PDV: Pedro Pérez');
-        doc.text(10, 45, 'Operador: 123654');
-        doc.text(10, 55, 'Especie vendida: Sophronitis coccinea');
-        doc.text(10, 60, 'Valor: 35.00');
-        doc.text(10, 65, 'TBX: 242985290');
-        doc.text(10, 70, 'Fecha/Hora: 2019-11-05 12:28:21');
-        doc.text(10, 90, '_______________________________');
-        doc.text(10, 95, 'Recibí conforme');
-        /*doc.text('I am on page 3', 10, 10)
-        doc.setPage(1)
-        doc.text('I am on page 1', 10, 10)*/
-
+        doc.autoPrint({variant: 'non-conform'});
         doc.save('comprobante.pdf');
 
-        //doc.autoPrint({variant: 'non-conform'});
-
-        //doc.output('dataurlnewwindow', {filename: 'comprobante.pdf'});
-        /*var pdf = new jsPDF("p","mm","a4");
-        pdf.setFontSize(11);*/
     }
 
     $scope.elementos.dtOptions = DTOptionsBuilder.newOptions().withPaginationType('full_numbers').withLanguage({

@@ -48,6 +48,7 @@ class LoginController extends Controller
                 Session::put('telefono', isset($user[0]->telefono)? $user[0]->telefono:'');
                 Session::put('id_establecimiento', isset($user[0]->id_establecimiento)?$user[0]->id_establecimiento:'');
                 Session::put('nom_establecimiento', isset($user[0]->nom_establecimiento)?$user[0]->nom_establecimiento:'');
+                Session::put('letra_inicial', substr($user[0]->nombres, 0, 1));
                 //return $user[0]->id;
                 return redirect('/home');
             }

@@ -4,6 +4,10 @@
     Vuelos
 @endsection
 
+@section('stylesheets')
+    @parent
+@endsection
+
 @section('bodycontroller')
     id='fligthController' ng-controller='fligthController'
 @endsection
@@ -93,7 +97,7 @@
                         <div class="col-lg-12">
                             <div class="text-center align-items-center justify-content-center">
                                 <button type="button" class="btn btn-default" ng-click="listar()"><i class="fas fa-search"></i> Buscar</button>
-                                <button type="button" class="btn btn-warning" ng-click="imprimirTickets()"><i class="fas fa-print"></i> Imprimir</button>
+                                <button type="button" class="btn btn-warning" ng-disabled="contarMarcados() == 0" ng-click="imprimirTickets()"><i class="fas fa-print"></i> Imprimir</button>
                             </div>
                         </div>
                     </div>
@@ -104,7 +108,7 @@
                             <thead>
                             <th>#</th>
                             <th>
-                                <input type="checkbox" ng-model="filtro.check_total" />
+                                <input type="checkbox" ng-model="filtro.check_total" ng-change="marcarCheckBox()" />
                             </th>
                             <th>ESTADO</th>
                             <th>DNI.</th>
@@ -124,7 +128,7 @@
                             <tr ng-repeat="item in lista">
                                 <td>@{{ ($index + 1) }}</td>
                                 <th>
-                                    <input type="checkbox" ng-model="item.check" />
+                                    <input type="checkbox" ng-model="item.check_imprimir" ng-change="desmarcarTotalCheck(item)" />
                                 </th>
                                 <td><span class="pl-3 " ng-class="{'text-primary': item.estado==1, 'text-success': item.estado==2, 'text-warning': item.estado==3}">@{{ item.nom_estado }}</span></td>
                                 <td>@{{ item.numero_documento }}</td>
@@ -163,6 +167,8 @@
     <script>
         $(function () {
             $(".numero").numeric({decimal: false, negative: false});
+            var archivo = document.getElementById('archivos');
+            archivo.value = '';
             $('#fecha_nacimientotxt').datepicker({
                 todayBtn: "linked",
                 keyboardNavigation: false,
@@ -209,5 +215,6 @@
                 format: 'dd/mm/yyyy'
             });
         })
+
     </script>
 @endsection

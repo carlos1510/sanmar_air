@@ -22,6 +22,11 @@ class FligthServices
         return $this->repository->guardarPasajePaciente($params);
     }
 
+    public function guardarArchivosPaciente($params){
+        $params = (object)$params;
+        return $this->repository->guardarArchivosPaciente($params);
+    }
+
     public function listarPasajesPaciente($params){
         $params = (object)$params;
         return $this->repository->listarPasajesPaciente($params);
@@ -42,6 +47,11 @@ class FligthServices
         return $this->repository->obtenerListaAcompanantes($params);
     }
 
+    public function obtenerListaPersonalSalud($params){
+        $params = (object)$params;
+        return $this->repository->obtenerListaPersonalSalud($params);
+    }
+
     public function listarPasajesReservados($params){
         $params = (object)$params;
         return $this->repository->listarPasajesReservados($params);
@@ -55,5 +65,15 @@ class FligthServices
     public function listarProformas($params){
         $params = (object)$params;
         return $this->repository->listarProformas($params);
+    }
+
+    public function obtenerDocumentosById($params){
+        $params = (object)$params;
+        return $this->repository->obtenerDocumentosById($params);
+    }
+
+    public function generarCodigoTicket($params){
+        $params = (object)$params;
+        return $this->repository->generarCodigoTicket($params);
     }
 }
