@@ -127,7 +127,7 @@
                                 <td class="text-right">S/. @{{ item.precio_unitario | number:2 }}</td>
                                 <td class="text-right">S/. @{{ item.total | number:2 }}</td>
                                 <td ng-show="filtro.tipo_servicio == 'VUELO CHARTER'">
-                                    <button type="button" class="btn btn-sm btn-primary"><i class="fas fa-money"></i></button>
+                                    <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#montoModal" ng-click="prepararAsignarMonto(item)"><i class="fas fa-money-bill-alt"></i></button>
                                 </td>
                             </tr>
                             </tbody>
@@ -142,6 +142,43 @@
                 </div>
             </div>
             <!-- end card -->
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="montoModal"  tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header no-bd">
+                    <h5 class="modal-title">
+                        <span class="fw-mediumbold"> Asignar Precio del  </span>
+                        <span class="fw-light"> Servicio CHARTER</span>
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group form-group-default">
+                                <label>RUTA</label>
+                                <label class="form-control">@{{ asignar.nomb_origen_destino }}</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group form-group-default">
+                                <label>Monto: <span>(*)</span></label>
+                                <input type="text" class="form-control numerico" id="precio_unitario_asignartxt" ng-model="asignar.precio_unitario" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer no-bd">
+                    <button type="button" ng-click="guardarMontoCharter()" class="btn btn-primary"><i class="fa fa-save"></i> Guardar</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> Salir</button>
+                </div>
+            </div>
         </div>
     </div>
 @endsection
