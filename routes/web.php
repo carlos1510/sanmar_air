@@ -50,6 +50,8 @@ Route::post('vuelos/eliminarPasaje', 'App\Http\Controllers\FligthController@elim
 Route::post('vuelos/listarProformas', 'App\Http\Controllers\FligthController@listarProformas');
 Route::post('vuelos/obtenerDocumentosById', 'App\Http\Controllers\FligthController@obtenerDocumentosById');
 Route::post('vuelos/generarCodigoTicket', 'App\Http\Controllers\FligthController@generarCodigoTicket');
+Route::post('vuelos/guardarOficioProforma', 'App\Http\Controllers\FligthController@guardarOficioProforma');
+Route::post('vuelos/guardarActaConformidadProforma', 'App\Http\Controllers\FligthController@guardarActaConformidadProforma');
 
 // Rutas Paciente
 Route::post('paciente/registrarPaciente', 'App\Http\Controllers\PatientController@registrarPaciente');

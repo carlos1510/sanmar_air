@@ -149,6 +149,41 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="row" ng-show="registro.detalle_personal.length == 0">
+                                <div class="col-lg-12" >
+                                    <div class="view-profile">
+                                        <span class="btn btn-secondary btn-block" >No Cuenta con Personal de Salud</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" ng-show="registro.detalle_personal.length > 0">
+                                <div class="col-lg-12">
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th colspan="5" class="text-center">DATOS DEL PERSONAL DE SALUD</th>
+                                            </tr>
+                                            <tr>
+                                                <th>DNI</th>
+                                                <th>NOMBRES</th>
+                                                <th>EDAD</th>
+                                                <th>TIPO PASAJERO</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr ng-repeat="item in registro.detalle_personal">
+                                                <td>@{{ item.numero_documento }}</td>
+                                                <td>@{{ item.nombres_persona }}</td>
+                                                <td>@{{ item.edad }}</td>
+                                                <td>@{{ item.tipo_pasajero }}</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="card-footer">
                             <div class="text-center align-items-center justify-content-center">

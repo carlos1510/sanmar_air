@@ -63,6 +63,12 @@ app.controller('fligthController', function ($scope, $http, $timeout, vuelosServ
 
     }
 
+    $scope.calcularEdadActual = function () {
+        if($("#fecha_nacimientotxt").val()!=""){
+            $scope.registro.edad = calculateAge($("#fecha_nacimientotxt").val());
+        }
+    }
+
     $scope.cambiarVuelos = function () {
         if ($scope.registro.tipo_servicio == 'PASAJE AEREO'){
             $scope.registro.vuelos = 'SOLO IDA';
@@ -430,6 +436,45 @@ app.controller('fligthController', function ($scope, $http, $timeout, vuelosServ
     }
 
     $scope.imprimirTickets = function () {
+        var doc = new jsPDF("p","mm","a4");
+        var indice = 0;
+        for (var i = 0; i < $scope.lista.length; i++){
+            if ($scope.lista[i].check_imprimir == true){
+                if(indice != 0){
+                    doc.addPage();
+                }
+                doc.setFontSize(10);
+                doc.setFont('Verdana','bold');
+                doc.text(70, 30, 'FENIX EMERGENCY GROUP EIRL');
+                doc.text(80, 35, 'RUC: 20606397322');
+                var codigo_generado = $scope.lista[i].codigo_generado!=undefined?$scope.lista[i].codigo_generado:'';
+                doc.text(75, 40, 'Ticket Nro.: ' + codigo_generado);
+                doc.line(55, 44, 140, 44, 'F');
+                doc.setFont('Verdana','normal');
+                doc.setFontSize(9);
+                doc.text(55, 55, 'DNI:'); doc.text(65, 55, '' + $scope.lista[i].numero_documento);
+                doc.text(55, 60, 'Nombres:');
+                doc.text(72, 60, '' + $scope.lista[i].apellido_paterno + ' ' + $scope.lista[i].apellido_materno + ' ' + $scope.lista[i].nombres);
+                doc.text(55, 65, 'Edad:'); doc.text(68, 65, '' + $scope.lista[i].edad);
+                doc.text(55, 70, 'Tipo de Pasajero:'); doc.text(83, 70, '' + $scope.lista[i].tipo_pasajero);
+                doc.text(55, 75, 'Pasajero:'); doc.text(72, 75, '' + $scope.lista[i].tipo_paciente);
+                doc.text(55, 80, 'Servicio:'); doc.text(70, 80, '' + $scope.lista[i].tipo_servicio);
+                doc.text(55, 87, '-------------------------------------------------------------------------------');
+                doc.text(55, 90, 'Origen'); doc.text(85, 90, 'Destino'); doc.text(115, 90, 'Fecha Cita');
+                doc.text(55, 93, '-------------------------------------------------------------------------------');
+                doc.text(55, 98, '' + $scope.lista[i].origen); doc.text(85, 98, '' + $scope.lista[i].destino); doc.text(115, 98, '' + $scope.lista[i].fecha_cita);
+                doc.text(55, 102, '-------------------------------------------------------------------------------');
+                doc.text(55, 107, 'Estado: ' + $scope.lista[i].nom_estado);
+                indice++;
+            }
+        }
+
+        //doc.autoPrint({variant: 'non-conform'});
+        doc.save('comprobante.pdf');
+
+    }
+
+    /*$scope.imprimirTickets = function () {
         var opciones = {
             orientation: 'p',
             unit: 'mm',
@@ -474,7 +519,7 @@ app.controller('fligthController', function ($scope, $http, $timeout, vuelosServ
         doc.autoPrint({variant: 'non-conform'});
         doc.save('comprobante.pdf');
 
-    }
+    }*/
 
     $scope.elementos.dtOptions = DTOptionsBuilder.newOptions().withPaginationType('full_numbers').withLanguage({
         "sEmptyTable": "No hay Datos Disponibles",

@@ -76,4 +76,14 @@ class FligthServices
         $params = (object)$params;
         return $this->repository->generarCodigoTicket($params);
     }
+
+    public function guardarOficioProforma($params){
+        $params = (object)$params;
+        return $this->repository->guardarOficioProforma($params);
+    }
+
+    public function guardarActaConformidadProforma($params){
+        $params = (object)$params;
+        return $this->repository->guardarActaConformidadProforma($params);
+    }
 }

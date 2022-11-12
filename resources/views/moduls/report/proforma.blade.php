@@ -38,7 +38,12 @@
                         <div class="card-tools">
                             <ul id="pills-tab" class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" role="tablist">
                                 <li class="nav-item submenu">
-                                    <button type="submit" class="btn btn-primary btn-round text-white" ng-click="generarDeclaracionJurada()" ><i class="fas fa-file-pdf"></i> Declaración Jurada</button>
+                                    <button class="btn btn-primary btn-border dropdown-toggle" aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" type="button">Generar PDF</button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="javascript:void(0)" ng-click="generarDeclaracionJurada()">D.J. Anexo 12</a>
+                                        <a class="dropdown-item" href="javascript:void(0)" ng-click="generarDec_jurada_NEICE()">D.J. No estar Inhabilitado</a>
+                                        <a class="dropdown-item" href="javascript:void(0)" ng-click="generarDec_jurada_pacto_integridad()">D.J. Pacto de Integridad</a>
+                                    </div>
                                 </li>
                             </ul>
                         </div>
@@ -48,7 +53,7 @@
                     <div class="row">
                         <div class="col-lg-2">
                             <div class="form-group">
-                                <label for="">Servicio</label>
+                                <label for="">Servicio: <span class="text-danger">(*)</span></label>
                                 <select class="form-control" placeholder="Seleccione" id="tipoServiciocmb" ng-model="filtro.tipo_servicio">
                                     <option value="">TODOS</option>
                                     <option value="PASAJE AEREO">PASAJE AEREO</option>
@@ -58,7 +63,7 @@
                         </div>
                         <div class="col-lg-4">
                             <div class="form-group">
-                                <label for="">Ruta Origen - Destino</label>
+                                <label for="">Ruta Origen - Destino: <span class="text-danger">(*)</span></label>
                                 <select class="form-control" placeholder="Seleccione" id="rutaviajecmb" ng-model="filtro.idruta_viaje_precio">
                                     <option value="">TODOS</option>
                                     <option ng-repeat="item in rutas" value="@{{ item.id }}">@{{ item.nom_ruta }}</option>
@@ -67,7 +72,7 @@
                         </div>
                         <div class="col-lg-3">
                             <div class="form-group">
-                                <label class="form-label" for="validationTooltip04">Fecha Inicio</label>
+                                <label class="form-label" for="validationTooltip04">Fecha Inicio: <span class="text-danger">(*)</span></label>
                                 <div class="input-group date">
                                     <div class="input-group-prepend">
                                         <span  class="input-group-text"><i class="fa fa-calendar"></i></span>
@@ -78,7 +83,7 @@
                         </div>
                         <div class="col-lg-3">
                             <div class="form-group">
-                                <label class="form-label" for="validationTooltip04">Fecha Final</label>
+                                <label class="form-label" for="validationTooltip04">Fecha Final: <span class="text-danger">(*)</span></label>
                                 <div class="input-group date">
                                     <div class="input-group-prepend">
                                         <span  class="input-group-text"><i class="fa fa-calendar"></i></span>
@@ -94,7 +99,9 @@
                             <div class="text-center align-items-center justify-content-center">
                                 <button type="button" class="btn btn-default" ng-click="listar()"><i class="fas fa-search"></i> Buscar</button>
                                 {{--<button type="button" class="btn btn-danger" ng-show="lista.length > 0 && filtro.tipo_servicio!='' && filtro.idruta_viaje_precio!=''" ng-click="generarProforma()"><i class="fas fa-file-pdf"></i> Descargar</button>--}}
-                                <button type="button" class="btn btn-danger" ng-click="generarProforma()"><i class="fas fa-file-pdf"></i> Descargar</button>
+                                <button type="button" class="btn btn-danger" ng-click="generarProforma()"><i class="fas fa-file-pdf"></i> Generar Proforma</button>
+                                <button type="button" class="btn btn-primary" ng-click="generarOficio()"><i class="fas fa-file-pdf"></i> Generar Oficio</button>
+                                <button type="button" class="btn btn-warning" ng-click="generarActa()"><i class="fas fa-file-pdf"></i> Generar Acta de Conformidad</button>
                             </div>
                         </div>
                     </div>
@@ -109,6 +116,7 @@
                             <th>UNIDAD DE MEDIDA</th>
                             <th>P.U.</th>
                             <th>PRECIO TOTAL (Soles)</th>
+                            <th ng-show="filtro.tipo_servicio == 'VUELO CHARTER'">Acción</th>
                             </thead>
                             <tbody>
                             <tr ng-repeat="item in lista">
@@ -118,6 +126,9 @@
                                 <td class="text-center">@{{ item.unidad_medida }}</td>
                                 <td class="text-right">S/. @{{ item.precio_unitario | number:2 }}</td>
                                 <td class="text-right">S/. @{{ item.total | number:2 }}</td>
+                                <td ng-show="filtro.tipo_servicio == 'VUELO CHARTER'">
+                                    <button type="button" class="btn btn-sm btn-primary"><i class="fas fa-money"></i></button>
+                                </td>
                             </tr>
                             </tbody>
                             <tfoot>

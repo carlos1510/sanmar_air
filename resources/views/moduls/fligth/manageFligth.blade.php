@@ -162,6 +162,41 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="row" ng-show="registro.detalle_personal.length == 0">
+                                <div class="col-lg-12" >
+                                    <div class="view-profile">
+                                        <span class="btn btn-secondary btn-block" >No Cuenta con Personal de Salud</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" ng-show="registro.detalle_personal.length > 0">
+                                <div class="col-lg-12">
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th colspan="5" class="text-center">DATOS DEL PERSONAL DE SALUD</th>
+                                            </tr>
+                                            <tr>
+                                                <th>DNI</th>
+                                                <th>NOMBRES</th>
+                                                <th>EDAD</th>
+                                                <th>TIPO PASAJERO</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr ng-repeat="item in registro.detalle_personal">
+                                                <td>@{{ item.numero_documento }}</td>
+                                                <td>@{{ item.nombres_persona }}</td>
+                                                <td>@{{ item.edad }}</td>
+                                                <td>@{{ item.tipo_pasajero }}</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="card-footer">
                             <div class="text-center align-items-center justify-content-center">
@@ -292,7 +327,7 @@
                                         <button type="button" ng-show="item.tipo_paciente=='PACIENTE'" data-toggle="modal" data-target="#verDocumentosModal" ng-click="listarArchivos(item.idpasaje_paciente)" class="btn btn-success btn-sm" title="Ver Archivos"><i class="fas fa-download"></i></button>
                                         <button type="button" ng-show="item.estado==3 && item.tipo_paciente=='PACIENTE'" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#verObservacionModal" ng-click="prepararVerObservacion(item)" title="Ver Observacion"><i class="fas fa-eye"></i></button>
                                         <button type="button" ng-show="item.estado==3 && item.tipo_paciente=='PACIENTE'" class="btn btn-success btn-sm"  ng-click="prepararEditar(item)"  title="Editar"><i class="fas fa-edit"></i></button>
-                                        <button type="button" ng-show="item.estado==1 && item.tipo_paciente=='PACIENTE'" class="btn btn-primary btn-sm" ng-click="prepararAsignar(item)" title="Asignar Empresa"><i class="fas fa-check"></i></button>
+                                        <button type="button" ng-show="item.tipo_paciente=='PACIENTE'" class="btn btn-primary btn-sm" ng-click="prepararAsignar(item)" title="Asignar Empresa"><i class="fas fa-check"></i></button>
                                         <button type="button" ng-show="(item.estado==1 || item.estado==3) && item.tipo_paciente=='PACIENTE'" class="btn btn-danger btn-sm" ng-click="eliminarPasaje(item)" title="Anular o Eliminar"><i class="fas fa-times"></i></button>
                                     </div>
                                 </td>

@@ -552,7 +552,7 @@ class FligthRepository
                     'fecha_viaje' => isset($params->fecha_viaje)?($params->fecha_viaje!=""?Util::convertirStringFecha($params->fecha_viaje, false):null):null,
                     'fecha_retorno' => isset($params->fecha_retorno)?($params->fecha_retorno!=""?Util::convertirStringFecha($params->fecha_retorno, false):null):null,
                     'observacion' => isset($params->observacion)?$params->observacion:null,
-                    'monto_empresa' => isset($params->monto_empresa)?$params->monto_empresa:null,
+                    'monto_empresa' => ($params->tipo_servicio == 'VUELO CHARTER'?0:(isset($params->monto_empresa)?$params->monto_empresa:null)),
                     'idempresa' => isset($params->idempresa)?$params->idempresa:null,
                     'precio_unitario' => ($params->tipo_servicio == 'VUELO CHARTER'?0:(isset($params->precio_unitario)?$params->precio_unitario:null)),
                     'fecha_modificacion' => date('Y-m-d H:i:s'),
@@ -568,7 +568,7 @@ class FligthRepository
                     'fecha_viaje' => isset($params->fecha_viaje)?($params->fecha_viaje!=""?Util::convertirStringFecha($params->fecha_viaje, false):null):null,
                     'fecha_retorno' => isset($params->fecha_retorno)?($params->fecha_retorno!=""?Util::convertirStringFecha($params->fecha_retorno, false):null):null,
                     'observacion' => isset($params->observacion)?$params->observacion:null,
-                    'monto_empresa' => isset($params->monto_empresa)?$params->monto_empresa:null,
+                    'monto_empresa' => 0,
                     'idempresa' => isset($params->idempresa)?$params->idempresa:null,
                     'precio_unitario' => ($params->tipo_servicio == 'VUELO CHARTER'?0:(isset($params->precio_unitario)?$params->precio_unitario:null)),
                     'fecha_modificacion' => date('Y-m-d H:i:s'),
@@ -632,7 +632,9 @@ class FligthRepository
     }
 
     public function listarProformas($params){
-        $sql = "SELECT DATE_FORMAT(pp.fecha_viaje,'%d/%m/%Y') AS fecha_viaje, pp.tipo_pasajero, pp.tipo_servicio, CONCAT_WS(' - ',rvp.origen,rvp.destino) AS nomb_origen_destino, pp.tipo_paciente,p.idtipo_documento, p.numero_documento,
+        if ($params->tipo_servicio == 'PASAJE AEREO'){
+            //vuelos pasajes
+            $sql = "SELECT pp.id AS idpasaje_paciente,DATE_FORMAT(pp.fecha_viaje,'%d/%m/%Y') AS fecha_viaje, pp.tipo_pasajero, pp.tipo_servicio, CONCAT_WS(' - ',rvp.origen,rvp.destino) AS nomb_origen_destino, pp.tipo_paciente,p.idtipo_documento, p.numero_documento,
                 p.apellido_paterno, p.apellido_materno, p.nombres, p.telefono, pp.monto_empresa, IF(pp.tipo_servicio='VUELO CHARTER',CONCAT_WS(' ','SERVICIO',pp.tipo_servicio,'EN LA RUTA',CONCAT_WS(' - ',rvp.origen,rvp.destino),'(',p.apellido_paterno,p.apellido_materno,p.nombres,'-',pp.tipo_pasajero,')','-','FECHA DE VIAJE', DATE_FORMAT(pp.fecha_viaje,'%d/%m/%Y')),
                 CONCAT_WS(' ',pp.tipo_servicio,CONCAT_WS(' - ',rvp.origen,rvp.destino),'(',p.apellido_paterno,p.apellido_materno,p.nombres,'-',pp.tipo_pasajero,')','-','FECHA DE VIAJE', DATE_FORMAT(pp.fecha_viaje,'%d/%m/%Y'))) AS descripcion, pp.unidad_medida, pp.cantidad, pp.precio_unitario, (pp.precio_unitario * pp.cantidad) as total,
                 IF(pp.tipo_servicio='VUELO CHARTER','SERVICIO VUELO CHARTER EN LA', CONCAT_WS(' ',pp.tipo_servicio, CONCAT_WS(' - ',rvp.origen,rvp.destino))) AS descrip_1,
@@ -641,10 +643,23 @@ class FligthRepository
 
              FROM pasaje_paciente pp INNER JOIN persona p ON pp.idpersona=p.id
              INNER JOIN ruta_viaje_precio rvp ON pp.idruta_viaje_precio=rvp.id
-            WHERE pp.tipo IN (1,2) AND pp.estado=2 ".
-            (isset($params->tipo_servicio)?($params->tipo_servicio!=""?" AND pp.tipo_servicio='$params->tipo_servicio'":""):"").
-            (isset($params->idruta_viaje_precio)?($params->idruta_viaje_precio!=""?" AND pp.idruta_viaje_precio=$params->idruta_viaje_precio":""):"").
-            (isset($params->fecha_inicio)?($params->fecha_inicio!=""?(isset($params->fecha_final)?($params->fecha_final!=""?" AND pp.fecha_cita BETWEEN '".Util::convertirStringFecha($params->fecha_inicio, false)."' AND '".Util::convertirStringFecha($params->fecha_final, false)."'":""):""):""):"");
+            WHERE pp.tipo IN (1,2) AND pp.estado=2 AND pp.tipo_servicio='PASAJE AEREO' ".
+                (isset($params->idruta_viaje_precio)?($params->idruta_viaje_precio!=""?" AND pp.idruta_viaje_precio=$params->idruta_viaje_precio":""):"").
+                (isset($params->fecha_inicio)?($params->fecha_inicio!=""?(isset($params->fecha_final)?($params->fecha_final!=""?" AND pp.fecha_cita BETWEEN '".Util::convertirStringFecha($params->fecha_inicio, false)."' AND '".Util::convertirStringFecha($params->fecha_final, false)."'":""):""):""):"");
+        }else{
+            //charter
+            $sql = "SELECT pp.tipo_servicio, CONCAT_WS(' - ',rvp.origen,rvp.destino) AS nomb_origen_destino,
+                IF(pp.tipo_servicio='VUELO CHARTER',CONCAT_WS(' ','SERVICIO',pp.tipo_servicio,'EN LA RUTA',CONCAT_WS(' - ',rvp.origen,rvp.destino)),'') AS descripcion, pp.unidad_medida, pp.cantidad, pp.precio_unitario, (pp.precio_unitario * pp.cantidad) as total,
+                IF(pp.tipo_servicio='VUELO CHARTER','SERVICIO VUELO CHARTER EN LA', CONCAT_WS(' ',pp.tipo_servicio, CONCAT_WS(' - ',rvp.origen,rvp.destino))) AS descrip_1,
+                IF(pp.tipo_servicio='VUELO CHARTER',CONCAT_WS(' ','RUTA ', CONCAT_WS(' - ',rvp.origen,rvp.destino)), '') AS descrip_2,
+                IF(pp.tipo_servicio='VUELO CHARTER',CONCAT_WS(' - ','',rvp.origen),'') AS descrip_3
+             FROM pasaje_paciente pp INNER JOIN persona p ON pp.idpersona=p.id
+             INNER JOIN ruta_viaje_precio rvp ON pp.idruta_viaje_precio=rvp.id
+            WHERE pp.tipo IN (1,2) AND pp.estado=2 AND pp.tipo_servicio='VUELO CHARTER' AND pp.tipo_paciente='PACIENTE' ".
+                (isset($params->idruta_viaje_precio)?($params->idruta_viaje_precio!=""?" AND pp.idruta_viaje_precio=$params->idruta_viaje_precio":""):"").
+                (isset($params->fecha_inicio)?($params->fecha_inicio!=""?(isset($params->fecha_final)?($params->fecha_final!=""?" AND pp.fecha_cita BETWEEN '".Util::convertirStringFecha($params->fecha_inicio, false)."' AND '".Util::convertirStringFecha($params->fecha_final, false)."'":""):""):""):"");
+        }
+
         return DB::select($sql);
     }
 
@@ -657,5 +672,49 @@ class FligthRepository
     public function generarCodigoTicket(){
         $sql = "SELECT (IFNULL(MAX(codigo),0) + 1) AS codigo, LPAD((IFNULL(MAX(codigo),0) + 1),6,'0') AS codigo_generado FROM pasaje_paciente ";
         return DB::selectOne($sql);
+    }
+
+    public function guardarOficioProforma($params){
+        try {
+            //
+            $sql = "INSERT INTO oficio (nombre_anio, nro_oficio, anio, fecha, nom_ruta, fecha_expreso, precio_total, nro_factura, fecha_generado, idusuario) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+            DB::insert($sql, [
+                isset($params->nombre_anio)?($params->nombre_anio!=""?$params->nombre_anio:null):null,
+                isset($params->nro_oficio)?($params->nro_oficio!=""?$params->nro_oficio:null):null,
+                date('Y'),
+                date('Y-m-d'),
+                isset($params->nom_ruta)?($params->nom_ruta!=""?$params->nom_ruta:null):null,
+                isset($params->fecha_expreso)?($params->fecha_expreso!=""?$params->fecha_expreso:null):null,
+                isset($params->precio_total)?($params->precio_total!=""?$params->precio_total:0):0,
+                isset($params->nro_factura)?($params->nro_factura!=""?$params->nro_factura:null):null,
+                date('Y-m-d H:i:s'),
+                Session::get('idusuario')
+            ]);
+            $data['confirm'] = true;
+            return $data;
+        }catch (Exception $ex){
+            $data['confirm'] = false;
+            return $data;
+        }
+    }
+
+    public function guardarActaConformidadProforma($params){
+        try {
+            //
+            $sql = "INSERT INTO acta_conformidad (fecha, nom_ruta, fecha_expreso, precio_total, fecha_generado, idusuario) VALUES (?, ?, ?, ?, ?, ?);";
+            DB::insert($sql, [
+                date('Y-m-d'),
+                isset($params->nom_ruta)?($params->nom_ruta!=""?$params->nom_ruta:null):null,
+                isset($params->fecha_expreso)?($params->fecha_expreso!=""?$params->fecha_expreso:null):null,
+                isset($params->precio_total)?($params->precio_total!=""?$params->precio_total:0):0,
+                date('Y-m-d H:i:s'),
+                Session::get('idusuario')
+            ]);
+            $data['confirm'] = true;
+            return $data;
+        }catch (Exception $ex){
+            $data['confirm'] = false;
+            return $data;
+        }
     }
 }

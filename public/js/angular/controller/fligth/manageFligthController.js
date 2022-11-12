@@ -250,6 +250,11 @@ app.controller('manageFligthController', function ($scope, $timeout, empresaServ
         vuelosService.obtenerListaAcompanantes({idpasaje_paciente: item.idpasaje_paciente}).success(function (data) {
             $scope.registro.detalle_acompanante = data;
         })
+
+        vuelosService.obtenerListaPersonalSalud({idpasaje_paciente: item.idpasaje_paciente}).success(function (data) {
+            $scope.registro.detalle_personal = data;
+        })
+
         $timeout(function () {
             $("#estadoAsignadocmb").val(item.estado).change();
             $("#empresaAsignarcmb").val(item.idempresa!=undefined?item.idempresa:'').change();
@@ -307,6 +312,12 @@ app.controller('manageFligthController', function ($scope, $timeout, empresaServ
 
     $scope.removeAcompanante = function (index) {
         $scope.registro.detalle_acompanante.splice(index, 1);
+    }
+
+    $scope.calcularEdadActual = function () {
+        if($("#fecha_nacimientotxt").val()!=""){
+            $scope.registro.edad = calculateAge($("#fecha_nacimientotxt").val());
+        }
     }
 
     $scope.tipo_busqueda_persona = function () {
