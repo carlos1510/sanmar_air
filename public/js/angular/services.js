@@ -72,6 +72,18 @@ app.factory('vuelosService', function($http){
         generarCodigoTicket: function ($params) {
             return $http.post("vuelos/generarCodigoTicket", $params)
         },
+        guardarMontoAsignado: function ($params) {
+            return $http.post("vuelos/guardarMontoAsignado", $params)
+        },
+        guardarOficioProforma: function ($params) {
+            return $http.post("vuelos/guardarOficioProforma", $params)
+        },
+        guardarActaConformidadProforma: function ($params) {
+            return $http.post("vuelos/guardarActaConformidadProforma", $params)
+        },
+        obtenerDatosGeneradosOficio: function ($params) {
+            return $http.post("vuelos/obtenerDatosGeneradosOficio", $params)
+        },
 
     }
 });

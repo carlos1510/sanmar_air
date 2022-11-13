@@ -52,6 +52,8 @@ Route::post('vuelos/obtenerDocumentosById', 'App\Http\Controllers\FligthControll
 Route::post('vuelos/generarCodigoTicket', 'App\Http\Controllers\FligthController@generarCodigoTicket');
 Route::post('vuelos/guardarOficioProforma', 'App\Http\Controllers\FligthController@guardarOficioProforma');
 Route::post('vuelos/guardarActaConformidadProforma', 'App\Http\Controllers\FligthController@guardarActaConformidadProforma');
+Route::post('vuelos/guardarMontoAsignado', 'App\Http\Controllers\FligthController@guardarMontoAsignado');
+Route::post('vuelos/obtenerDatosGeneradosOficio', 'App\Http\Controllers\FligthController@obtenerDatosGeneradosOficio');
 
 // Rutas Paciente
 Route::post('paciente/registrarPaciente', 'App\Http\Controllers\PatientController@registrarPaciente');

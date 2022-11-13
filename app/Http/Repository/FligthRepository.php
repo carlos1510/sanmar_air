@@ -677,14 +677,14 @@ class FligthRepository
     public function guardarOficioProforma($params){
         try {
             //
-            $sql = "INSERT INTO oficio (nombre_anio, nro_oficio, anio, fecha, nom_ruta, fecha_expreso, precio_total, nro_factura, fecha_generado, idusuario) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+            $sql = "INSERT INTO oficio (nombre_anio, nro_oficio, anio, fecha_inicio, nom_ruta, fecha_final, precio_total, nro_factura, fecha_generado, idusuario) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
             DB::insert($sql, [
                 isset($params->nombre_anio)?($params->nombre_anio!=""?$params->nombre_anio:null):null,
                 isset($params->nro_oficio)?($params->nro_oficio!=""?$params->nro_oficio:null):null,
                 date('Y'),
-                date('Y-m-d'),
+                isset($params->fecha_inicio)?($params->fecha_inicio!=""?Util::convertirStringFecha($params->fecha_inicio, false):null):null,
                 isset($params->nom_ruta)?($params->nom_ruta!=""?$params->nom_ruta:null):null,
-                isset($params->fecha_expreso)?($params->fecha_expreso!=""?$params->fecha_expreso:null):null,
+                isset($params->fecha_final)?($params->fecha_final!=""?Util::convertirStringFecha($params->fecha_final, false):null):null,
                 isset($params->precio_total)?($params->precio_total!=""?$params->precio_total:0):0,
                 isset($params->nro_factura)?($params->nro_factura!=""?$params->nro_factura:null):null,
                 date('Y-m-d H:i:s'),
@@ -701,11 +701,11 @@ class FligthRepository
     public function guardarActaConformidadProforma($params){
         try {
             //
-            $sql = "INSERT INTO acta_conformidad (fecha, nom_ruta, fecha_expreso, precio_total, fecha_generado, idusuario) VALUES (?, ?, ?, ?, ?, ?);";
+            $sql = "INSERT INTO acta_conformidad (fecha_inicio, nom_ruta, fecha_final, precio_total, fecha_generado, idusuario) VALUES (?, ?, ?, ?, ?, ?);";
             DB::insert($sql, [
-                date('Y-m-d'),
+                isset($params->fecha_inicio)?($params->fecha_inicio!=""?Util::convertirStringFecha($params->fecha_inicio, false):null):null,
                 isset($params->nom_ruta)?($params->nom_ruta!=""?$params->nom_ruta:null):null,
-                isset($params->fecha_expreso)?($params->fecha_expreso!=""?$params->fecha_expreso:null):null,
+                isset($params->fecha_final)?($params->fecha_final!=""?Util::convertirStringFecha($params->fecha_final, false):null):null,
                 isset($params->precio_total)?($params->precio_total!=""?$params->precio_total:0):0,
                 date('Y-m-d H:i:s'),
                 Session::get('idusuario')
@@ -716,5 +716,35 @@ class FligthRepository
             $data['confirm'] = false;
             return $data;
         }
+    }
+
+    public function guardarMontoAsignado($params){
+        try {
+            //
+            $sql = "UPDATE pasaje_paciente SET precio_unitario=:precio_unitario, fecha_modificacion=:fecha_modificacion, idusuario_modificacion=:idusuario_modificacion WHERE id=:id;";
+            DB::update($sql, array(
+                'precio_unitario' => $params->precio_unitario,
+                'fecha_modificacion' => date('Y-m-d H:i:s'),
+                'idusuario_modificacion' => Session::get('idusuario'),
+                'id' => $params->idpasaje_paciente,
+            ));
+            $data['confirm'] = true;
+            return $data;
+        }catch (Exception $ex){
+            $data['confirm'] = false;
+            return $data;
+        }
+    }
+
+    public function obtenerDatosGeneradosOficio($params){
+        $anio = date('Y');
+        $sql_oficio = "SELECT (IFNULL(MAX(nro_oficio),0) + 1) AS numero_oficio FROM oficio";
+        $result_oficio = DB::selectOne($sql_oficio);
+        $sql_nom_anio = "SELECT nom_anio FROM nombre_anio_actual WHERE anio='$anio'";
+        $result_nom_anio = DB::selectOne($sql_nom_anio);
+        $data['anio'] = $anio;
+        $data['nro_oficio'] = $result_oficio->numero_oficio;
+        $data['nombre_anio'] = $result_nom_anio->nom_anio;
+        return $data;
     }
 }

@@ -54,7 +54,7 @@
                         <div class="col-lg-2">
                             <div class="form-group">
                                 <label for="">Servicio: <span class="text-danger">(*)</span></label>
-                                <select class="form-control" placeholder="Seleccione" id="tipoServiciocmb" ng-model="filtro.tipo_servicio">
+                                <select class="form-control" placeholder="Seleccione" id="tipoServiciocmb" ng-model="filtro.tipo_servicio" ng-change="limpiarLista()">
                                     <option value="">TODOS</option>
                                     <option value="PASAJE AEREO">PASAJE AEREO</option>
                                     <option value="VUELO CHARTER">VUELO CHARTER</option>
@@ -64,7 +64,7 @@
                         <div class="col-lg-4">
                             <div class="form-group">
                                 <label for="">Ruta Origen - Destino: <span class="text-danger">(*)</span></label>
-                                <select class="form-control" placeholder="Seleccione" id="rutaviajecmb" ng-model="filtro.idruta_viaje_precio">
+                                <select class="form-control" placeholder="Seleccione" id="rutaviajecmb" ng-model="filtro.idruta_viaje_precio" ng-change="limpiarLista()">
                                     <option value="">TODOS</option>
                                     <option ng-repeat="item in rutas" value="@{{ item.id }}">@{{ item.nom_ruta }}</option>
                                 </select>
@@ -77,7 +77,7 @@
                                     <div class="input-group-prepend">
                                         <span  class="input-group-text"><i class="fa fa-calendar"></i></span>
                                     </div>
-                                    <input class="form-control " type="text" id="fecha_iniciotxt" maxlength="10" autocomplete="off" placeholder="dd/mm/yyyy" ng-model="filtro.fecha_inicio">
+                                    <input class="form-control " type="text" id="fecha_iniciotxt" maxlength="10" autocomplete="off" placeholder="dd/mm/yyyy" ng-model="filtro.fecha_inicio" ng-change="limpiarLista()" ng-blur="limpiarLista()">
                                 </div>
                             </div>
                         </div>
@@ -88,7 +88,7 @@
                                     <div class="input-group-prepend">
                                         <span  class="input-group-text"><i class="fa fa-calendar"></i></span>
                                     </div>
-                                    <input class="form-control " type="text" id="fecha_finaltxt" maxlength="10" autocomplete="off" placeholder="dd/mm/yyyy" ng-model="filtro.fecha_final">
+                                    <input class="form-control " type="text" id="fecha_finaltxt" maxlength="10" autocomplete="off" placeholder="dd/mm/yyyy" ng-model="filtro.fecha_final" ng-change="limpiarLista()" ng-blur="limpiarLista()">
                                 </div>
                             </div>
                         </div>
@@ -99,9 +99,9 @@
                             <div class="text-center align-items-center justify-content-center">
                                 <button type="button" class="btn btn-default" ng-click="listar()"><i class="fas fa-search"></i> Buscar</button>
                                 {{--<button type="button" class="btn btn-danger" ng-show="lista.length > 0 && filtro.tipo_servicio!='' && filtro.idruta_viaje_precio!=''" ng-click="generarProforma()"><i class="fas fa-file-pdf"></i> Descargar</button>--}}
-                                <button type="button" class="btn btn-danger" ng-click="generarProforma()"><i class="fas fa-file-pdf"></i> Generar Proforma</button>
-                                <button type="button" class="btn btn-primary" ng-click="generarOficio()"><i class="fas fa-file-pdf"></i> Generar Oficio</button>
-                                <button type="button" class="btn btn-warning" ng-click="generarActa()"><i class="fas fa-file-pdf"></i> Generar Acta de Conformidad</button>
+                                <button type="button" ng-show="lista.length > 0" class="btn btn-danger" ng-click="generarProforma()"><i class="fas fa-file-pdf"></i> Generar Proforma</button>
+                                <button type="button" ng-show="lista.length > 0" class="btn btn-primary" ng-click="prepararOficio()"><i class="fas fa-file-pdf"></i> Generar Oficio</button>
+                                <button type="button" ng-show="lista.length > 0" class="btn btn-warning" ng-click="prepararActaConformidad()"><i class="fas fa-file-pdf"></i> Generar Acta de Conformidad</button>
                             </div>
                         </div>
                     </div>
@@ -142,6 +142,126 @@
                 </div>
             </div>
             <!-- end card -->
+        </div>
+    </div>
+
+    <div class="row" ng-show="estado_registro == 1">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-head-row">
+                        <h4 class="card-title">Oficio a Generar</h4>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label>Nombre del Año</label>
+                                <input type="text" class="form-control" ng-model="oficio.nombre_anio" />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label>N° de Oficio: </label>
+                                <input type="text" class="form-control" ng-model="oficio.nro_oficio" readonly/>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label>Ruta:</label>
+                                <input type="text" class="form-control" ng-model="oficio.nom_ruta" readonly />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label for="">Precio Total:</label>
+                                <input type="text" class="form-control" ng-model="oficio.precio_total" readonly/>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label for="">Fecha Desde:</label>
+                                <input type="text" class="form-control" ng-model="oficio.fecha_inicio" readonly/>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label for="">Fecha Hasta:</label>
+                                <input type="text" class="form-control" ng-model="oficio.fecha_final" readonly/>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label for="">Nro. Factura Electronica: <span class="text-danger">(*)</span></label>
+                                <input type="text" class="form-control" id="nro_facturatxt" ng-model="oficio.nro_factura" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="text-center align-items-center justify-content-center">
+                                <button type="button" class="btn btn-primary" ng-click="guardarOficio()"><i class="fas fa-file-pdf"></i> Guardar y Descargar</button>
+                                <button type="button" class="btn btn-danger"><i class="fas fa-times"></i> Salir</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" ng-show="estado_registro == 2">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-head-row">
+                        <h4 class="card-title">Acta de Conformidad a Generar</h4>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label>Ruta:</label>
+                                <input type="text" class="form-control" ng-model="acta_conformidad.nom_ruta" readonly />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label for="">Precio Total:</label>
+                                <input type="text" class="form-control" ng-model="acta_conformidad.precio_total" readonly/>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label for="">Fecha Desde:</label>
+                                <input type="text" class="form-control" ng-model="acta_conformidad.fecha_inicio" readonly/>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label for="">Fecha Hasta:</label>
+                                <input type="text" class="form-control" ng-model="acta_conformidad.fecha_final" readonly/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="text-center align-items-center justify-content-center">
+                                <button type="button" class="btn btn-primary" ng-click="guardarActaConformidad()"><i class="fas fa-file-pdf"></i> Guardar y Descargar</button>
+                                <button type="button" class="btn btn-danger"><i class="fas fa-times"></i> Salir</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

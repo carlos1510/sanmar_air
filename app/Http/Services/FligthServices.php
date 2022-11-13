@@ -86,4 +86,14 @@ class FligthServices
         $params = (object)$params;
         return $this->repository->guardarActaConformidadProforma($params);
     }
+
+    public function guardarMontoAsignado($params){
+        $params = (object)$params;
+        return $this->repository->guardarMontoAsignado($params);
+    }
+
+    public function obtenerDatosGeneradosOficio($params){
+        $params = (object)$params;
+        return $this->repository->obtenerDatosGeneradosOficio($params);
+    }
 }
