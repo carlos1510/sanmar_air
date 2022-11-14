@@ -747,4 +747,15 @@ class FligthRepository
         $data['nombre_anio'] = $result_nom_anio->nom_anio;
         return $data;
     }
+
+    public function listarOficios($params){
+        $sql = "SELECT id, nombre_anio, nro_factura, anio, DATE_FORMAT(fecha_inicio,'%d/%m/%Y') AS fecha_inicio, nom_ruta, DATE_FORMAT(fecha_final,'%d/%m/%Y') AS fecha_final, precio_total, nro_oficio FROM oficio ".
+            (isset($params->fecha_inicio)?($params->fecha_inicio!=""?(isset($params->fecha_final)?($params->fecha_final!=""?" WHERE DATE_FORMAT(fecha_generado,'%Y-%m-%d') BETWEEN ".Util::convertirStringFecha($params->fecha_inicio, false)." AND '".Util::convertirStringFecha($params->fecha_final, false)."'":""):""):""):"");
+        return DB::select($sql);
+    }
+
+    public function listarActaConformidad($params){
+        $sql = "SELECT DATE_FORMAT(fecha_inicio,'%d/%m/%Y') AS fecha_inicio, DATE_FORMAT(fecha_final,'%d/%m/%Y') AS fecha_final, nom_ruta, precio_total FROM acta_conformidad WHERE DATE_FORMAT(fecha_generado,'%Y-%m-%d') BETWEEN '' AND ''";
+        return DB::select($sql);
+    }
 }

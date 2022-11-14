@@ -40,9 +40,12 @@
                                 <li class="nav-item submenu">
                                     <button class="btn btn-primary btn-border dropdown-toggle" aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" type="button">Generar PDF</button>
                                     <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="javascript:void(0)" ng-click="generarDeclaracionJurada()">D.J. Anexo 12</a>
-                                        <a class="dropdown-item" href="javascript:void(0)" ng-click="generarDec_jurada_NEICE()">D.J. No estar Inhabilitado</a>
-                                        <a class="dropdown-item" href="javascript:void(0)" ng-click="generarDec_jurada_pacto_integridad()">D.J. Pacto de Integridad</a>
+                                        <a class="dropdown-item" href="javascript:void(0)" ng-click="generarDeclaracionJurada()"><i class="far fa-hand-point-right"></i> D.J. Anexo 12</a>
+                                        <a class="dropdown-item" href="javascript:void(0)" ng-click="generarDec_jurada_NEICE()"><i class="far fa-hand-point-right"></i> D.J. No estar Inhabilitado</a>
+                                        <a class="dropdown-item" href="javascript:void(0)" ng-click="generarDec_jurada_pacto_integridad()"><i class="far fa-hand-point-right"></i> D.J. Pacto de Integridad</a>
+                                        <div class="dropdown-divider" role="separator"></div>
+                                        <a class="dropdown-item" href="javascript:void(0)" ng-click="verListaOficio()"><i class="far fa-hand-point-right"></i> Lista de Oficios</a>
+                                        <a class="dropdown-item" href="javascript:void(0)" ng-click="verListaActaConformidad()"><i class="far fa-hand-point-right"></i> Lista de Acta de Conformidad</a>
                                     </div>
                                 </li>
                             </ul>
@@ -265,6 +268,157 @@
         </div>
     </div>
 
+    <div class="row" ng-show="estado_registro == 3">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-head-row">
+                        <h4 class="card-title">Lista de Oficios Emitidos</h4>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label class="form-label" for="validationTooltip04">Fecha Inicio: <span class="text-danger">(*)</span></label>
+                                <div class="input-group date">
+                                    <div class="input-group-prepend">
+                                        <span  class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                    </div>
+                                    <input class="form-control " type="text" id="fecha_inicio_otxt" maxlength="10" autocomplete="off" placeholder="dd/mm/yyyy" ng-model="filtro_oficio.fecha_inicio" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label class="form-label" for="validationTooltip04">Fecha Final: <span class="text-danger">(*)</span></label>
+                                <div class="input-group date">
+                                    <div class="input-group-prepend">
+                                        <span  class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                    </div>
+                                    <input class="form-control " type="text" id="fecha_final_otxt" maxlength="10" autocomplete="off" placeholder="dd/mm/yyyy" ng-model="filtro_oficio.fecha_final" >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="text-center align-items-center justify-content-center">
+                                <button type="button" class="btn btn-default" ng-click="listarOficios()"><i class="fas fa-search"></i> Buscar</button>
+                                <button type="button" class="btn btn-warning" ng-click="salir()"><i class="fas fa-times"></i> Salir</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                            <th>ITEM</th>
+                            <th>Nro. Oficio</th>
+                            <th>Año</th>
+                            <th>Ruta</th>
+                            <th>Fecha de Expreso</th>
+                            <th>Nro. Factura</th>
+                            <th>PRECIO TOTAL (Soles)</th>
+                            <th >Acción</th>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="item in lista_oficio">
+                                <td class="text-center">@{{ ($index + 1) }}</td>
+                                <td>@{{ item.nro_oficio }}</td>
+                                <td class="text-center">@{{ item.anio }}</td>
+                                <td class="text-center">@{{ item.nom_ruta }}</td>
+                                <td class="text-center">@{{ item.fecha_inicio }} al @{{ item.fecha_final }}</td>
+                                <td class="text-center">@{{ item.nro_factura }}</td>
+                                <td class="text-right">S/. @{{ item.precio_total | number:2 }}</td>
+                                <td >
+                                    <button type="button" class="btn btn-sm btn-primary" ng-click="prepararGeneracionOficioDuplicado(item)"><i class="fas fa-download"></i></button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- end card -->
+        </div>
+    </div>
+
+    <div class="row" ng-show="estado_registro == 4">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-head-row">
+                        <h4 class="card-title">Lista de Actas de Conformidad Emitidos</h4>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label class="form-label" for="validationTooltip04">Fecha Inicio: <span class="text-danger">(*)</span></label>
+                                <div class="input-group date">
+                                    <div class="input-group-prepend">
+                                        <span  class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                    </div>
+                                    <input class="form-control " type="text" id="fecha_inicio_actxt" maxlength="10" autocomplete="off" placeholder="dd/mm/yyyy" ng-model="filtro_acta_conformidad.fecha_inicio" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label class="form-label" for="validationTooltip04">Fecha Final: <span class="text-danger">(*)</span></label>
+                                <div class="input-group date">
+                                    <div class="input-group-prepend">
+                                        <span  class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                    </div>
+                                    <input class="form-control " type="text" id="fecha_final_actxt" maxlength="10" autocomplete="off" placeholder="dd/mm/yyyy" ng-model="filtro_acta_conformidad.fecha_final">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="text-center align-items-center justify-content-center">
+                                <button type="button" class="btn btn-default" ng-click="listarActaConformidad()"><i class="fas fa-search"></i> Buscar</button>
+                                <button type="button" class="btn btn-danger" ng-click="salir()"><i class="fas fa-times"></i> Salir</button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                            <th>ITEM</th>
+                            <th>Ruta</th>
+                            <th>Fecha de Expreso</th>
+                            <th>PRECIO TOTAL (Soles)</th>
+                            <th>Acción</th>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="item in lista_acta_conformidad">
+                                <td class="text-center">@{{ ($index + 1) }}</td>
+                                <td>@{{ item.nom_ruta }}</td>
+                                <td class="text-center">@{{ item.fecha_inicio }} al @{{ item.fecha_final }}</td>
+                                <td class="text-center">S/. @{{ item.precio_total | number:2 }}</td>
+                                <td >
+                                    <button type="button" class="btn btn-sm btn-primary" ng-click="prepararActaConformidadDuplicado(item)"><i class="fas fa-download"></i></button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- end card -->
+        </div>
+    </div>
+
     <!-- Modal -->
     <div class="modal fade" id="montoModal"  tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -320,7 +474,43 @@
                 format: 'dd/mm/yyyy'
             });
 
+            $('#fecha_inicio_otxt').datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                calendarWeeks: true,
+                autoclose: true,
+                format: 'dd/mm/yyyy'
+            });
+
+            $('#fecha_inicio_actxt').datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                calendarWeeks: true,
+                autoclose: true,
+                format: 'dd/mm/yyyy'
+            });
+
             $('#fecha_finaltxt').datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                calendarWeeks: true,
+                autoclose: true,
+                format: 'dd/mm/yyyy'
+            });
+
+            $('#fecha_final_otxt').datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                calendarWeeks: true,
+                autoclose: true,
+                format: 'dd/mm/yyyy'
+            });
+
+            $('#fecha_final_actxt').datepicker({
                 todayBtn: "linked",
                 keyboardNavigation: false,
                 forceParse: false,

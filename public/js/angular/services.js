@@ -84,6 +84,12 @@ app.factory('vuelosService', function($http){
         obtenerDatosGeneradosOficio: function ($params) {
             return $http.post("vuelos/obtenerDatosGeneradosOficio", $params)
         },
+        listarOficios: function ($params) {
+            return $http.post("vuelos/listarOficios", $params)
+        },
+        listarActaConformidad: function ($params) {
+            return $http.post("vuelos/listarActaConformidad", $params)
+        },
 
     }
 });

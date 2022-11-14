@@ -148,6 +148,20 @@ class FligthController extends Controller
         return new JsonResponse($this->service->obtenerDatosGeneradosOficio($params));
     }
 
+    public function listarOficios(Request $request){
+        $request->isXmlHttpRequest();
+        $content = $request->getContent();
+        $params = json_decode($content);
+        return new JsonResponse($this->service->listarOficios($params));
+    }
+
+    public function listarActaConformidad(Request $request){
+        $request->isXmlHttpRequest();
+        $content = $request->getContent();
+        $params = json_decode($content);
+        return new JsonResponse($this->service->listarActaConformidad($params));
+    }
+
     public function exportarReservasPasajesEmpresa(Request $request){
         return Excel::download(new ReservedReportExport($request->get('estado'), $request->get('fecha_inicio'), $request->get('fecha_final'), $request->get('numero_documento')), 'ReporteReservaPasaje_'.date('YmdHis').'.xlsx');
     }
