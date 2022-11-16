@@ -46,6 +46,7 @@ app.controller('fligthController', function ($scope, $http, $timeout, vuelosServ
         $scope.registro.detalle_personal = [];
         $scope.registro.tipo_servicio = 'PASAJE AEREO';
         $scope.registro.vuelos = 'SOLO IDA';
+        $scope.registro.ida_retorno = 'IDA';
 
         $timeout(function () {
             $("#idtipodocumentocmb").val(1).change();
@@ -72,6 +73,7 @@ app.controller('fligthController', function ($scope, $http, $timeout, vuelosServ
     $scope.cambiarVuelos = function () {
         if ($scope.registro.tipo_servicio == 'PASAJE AEREO'){
             $scope.registro.vuelos = 'SOLO IDA';
+            $scope.registro.ida_retorno = 'IDA';
         }else {
             $scope.registro.vuelos = 'IDA Y VUELTA';
         }
@@ -168,7 +170,13 @@ app.controller('fligthController', function ($scope, $http, $timeout, vuelosServ
     }
 
     $scope.guardarPasaje = function () {
-        var valid = validar_campo(['#idtipodocumentocmb','#numerodocumentotxt','#apellido_paternotxt','#apellido_maternotxt','#nombrestxt','#edadtxt','#telefonotxt','#origen_destinocmb','#fecha_citatxt','#tipopasajerocmb']);
+        var valid = false;
+        if ($scope.registro.ida_retorno == 'IDA'){
+            valid = validar_campo(['#idtipodocumentocmb','#numerodocumentotxt','#apellido_paternotxt','#apellido_maternotxt','#nombrestxt','#edadtxt','#telefonotxt','#origen_destinocmb','#fecha_citatxt','#tipopasajerocmb']);
+        }else {
+            valid = validar_campo(['#idtipodocumentocmb','#numerodocumentotxt','#apellido_paternotxt','#apellido_maternotxt','#nombrestxt','#edadtxt','#telefonotxt','#origen_destinocmb','#tipopasajerocmb']);
+        }
+
         if (valid){
             //var cantidad_item = ;
             for (var i = 0; i < $scope.rutas.length; i++){
@@ -183,8 +191,8 @@ app.controller('fligthController', function ($scope, $http, $timeout, vuelosServ
                                 $scope.registro.monto_empresa = $scope.rutas[i].precio_infante_compra;
                             }else {
                                 if ($("#tipopasajerocmb").val() == 'NIÑO'){
-                                    $scope.registro.precio_unitario = $scope.rutas[i].precio_infante_venta;
-                                    $scope.registro.monto_empresa = $scope.rutas[i].precio_infante_compra;
+                                    $scope.registro.precio_unitario = $scope.rutas[i].precio_ninio_venta;
+                                    $scope.registro.monto_empresa = $scope.rutas[i].precio_ninio_compra;
                                 }
                             }
                         }
@@ -214,8 +222,8 @@ app.controller('fligthController', function ($scope, $http, $timeout, vuelosServ
                                         $scope.registro.detalle_acompanante[j].monto_empresa = $scope.rutas[i].precio_infante_compra;
                                     }else {
                                         if ($scope.registro.detalle_acompanante[j].tipo_pasajero == 'NIÑO'){
-                                            $scope.registro.detalle_acompanante[j].precio_unitario = $scope.rutas[i].precio_infante_venta;
-                                            $scope.registro.detalle_acompanante[j].monto_empresa = $scope.rutas[i].precio_infante_compra;
+                                            $scope.registro.detalle_acompanante[j].precio_unitario = $scope.rutas[i].precio_ninio_venta;
+                                            $scope.registro.detalle_acompanante[j].monto_empresa = $scope.rutas[i].precio_ninio_compra;
                                         }
                                     }
                                 }
@@ -290,7 +298,6 @@ app.controller('fligthController', function ($scope, $http, $timeout, vuelosServ
                                 },
                             });
                         }
-                        //console.log("Después de enviar los archivos, el servidor dice:", respuesta.data);
                     })
                     .catch(function (detallesDelError) {
                         swal("Error!", "No se pudo completar el registro!", {
@@ -301,9 +308,7 @@ app.controller('fligthController', function ($scope, $http, $timeout, vuelosServ
                                 }
                             },
                         });
-                        //console.warn("Error al enviar archivos:", detallesDelError);
                     })
-
             }else {
                 swal("Error!", "Campos obligatorios!", {
                     icon : "danger",
@@ -470,56 +475,9 @@ app.controller('fligthController', function ($scope, $http, $timeout, vuelosServ
         }
 
         //doc.autoPrint({variant: 'non-conform'});
-        doc.save('comprobante.pdf');
+        doc.save('ticket.pdf');
 
     }
-
-    /*$scope.imprimirTickets = function () {
-        var opciones = {
-            orientation: 'p',
-            unit: 'mm',
-            format: [80, 258]
-        };
-
-        var doc = new jsPDF(opciones);
-        var indice = 0;
-        for (var i = 0; i < $scope.lista.length; i++){
-            if ($scope.lista[i].check_imprimir == true){
-                if(indice != 0){
-                    doc.addPage();
-                }
-                doc.setFontSize(10);
-                doc.setFont('Verdana','bold');
-                doc.text(10, 30, 'FENIX EMERGENCY GROUP EIRL');
-                doc.text(20, 35, 'RUC: 20606397322');
-                var codigo_generado = $scope.lista[i].codigo_generado!=undefined?$scope.lista[i].codigo_generado:'';
-                doc.text(25, 40, 'Ticket Nro.: ' + codigo_generado);
-                doc.line(5, 44, 75, 44, 'F');
-                doc.setFont('Verdana','normal');
-                doc.setFontSize(9);
-                doc.text(5, 55, 'DNI:'); doc.text(15, 55, '' + $scope.lista[i].numero_documento);
-                doc.text(5, 60, 'Nombres:');
-                doc.setFontSize(7);
-                doc.text(20, 60, '' + $scope.lista[i].apellido_paterno + ' ' + $scope.lista[i].apellido_materno + ' ' + $scope.lista[i].nombres);
-                doc.setFontSize(9);
-                doc.text(5, 65, 'Edad:'); doc.text(15, 65, '' + $scope.lista[i].edad);
-                doc.text(5, 70, 'Tipo de Pasajero:'); doc.text(33, 70, '' + $scope.lista[i].tipo_pasajero);
-                doc.text(5, 75, 'Pasajero:'); doc.text(25, 75, '' + $scope.lista[i].tipo_paciente);
-                doc.text(5, 80, 'Servicio:'); doc.text(19, 80, '' + $scope.lista[i].tipo_servicio);
-                doc.text(5, 87, '------------------------------------------------------------------');
-                doc.text(7, 90, 'Origen'); doc.text(30, 90, 'Destino'); doc.text(55, 90, 'Fecha Cita');
-                doc.text(5, 93, '------------------------------------------------------------------');
-                doc.text(5, 98, '' + $scope.lista[i].origen); doc.text(30, 98, '' + $scope.lista[i].destino); doc.text(55, 98, '' + $scope.lista[i].fecha_cita);
-                doc.text(5, 102, '------------------------------------------------------------------');
-                doc.text(5, 107, 'Estado: ' + $scope.lista[i].nom_estado);
-                indice++;
-            }
-        }
-
-        doc.autoPrint({variant: 'non-conform'});
-        doc.save('comprobante.pdf');
-
-    }*/
 
     $scope.elementos.dtOptions = DTOptionsBuilder.newOptions().withPaginationType('full_numbers').withLanguage({
         "sEmptyTable": "No hay Datos Disponibles",

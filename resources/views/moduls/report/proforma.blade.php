@@ -209,7 +209,7 @@
                         <div class="col-lg-12">
                             <div class="text-center align-items-center justify-content-center">
                                 <button type="button" class="btn btn-primary" ng-click="guardarOficio()"><i class="fas fa-file-pdf"></i> Guardar y Descargar</button>
-                                <button type="button" class="btn btn-danger"><i class="fas fa-times"></i> Salir</button>
+                                <button type="button" class="btn btn-danger" ng-click="salir()"><i class="fas fa-times"></i> Salir</button>
                             </div>
                         </div>
                     </div>
@@ -259,7 +259,7 @@
                         <div class="col-lg-12">
                             <div class="text-center align-items-center justify-content-center">
                                 <button type="button" class="btn btn-primary" ng-click="guardarActaConformidad()"><i class="fas fa-file-pdf"></i> Guardar y Descargar</button>
-                                <button type="button" class="btn btn-danger"><i class="fas fa-times"></i> Salir</button>
+                                <button type="button" class="btn btn-danger" ng-click="salir()"><i class="fas fa-times"></i> Salir</button>
                             </div>
                         </div>
                     </div>

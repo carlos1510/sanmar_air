@@ -297,7 +297,7 @@ app.controller('proformaController', function ($scope, $timeout, empresaService,
 
         pdf.autoPrint({variant: 'non-conform'});
 
-        pdf.save('declaracion_jurada.pdf');
+        pdf.save('declaracion_jurada_personas_juridicas.pdf');
     }
 
     $scope.generarProforma = function () {
@@ -1145,7 +1145,7 @@ app.controller('proformaController', function ($scope, $timeout, empresaService,
         pdf.setFontSize(10);
         pdf.text( 'NOMBRE       : Sandra Marleny Anticona Lara', 15, 213);
 
-        pdf.save('declaracion_jurada_de_no_estar_inhabilitado.pdf');
+        pdf.save('declaracion_jurada_pacto_integridad.pdf');
     }
 
     $scope.inicio();

@@ -100,7 +100,7 @@
                     <div class="mb-2 pl-3 pt-3 pr-3 pb-3 border-3 border-dark border-top border-bottom border-left border-right" style="border-radius: 5px !important;">
                         <h4>Datos del Pasaje</h4>
                         <div class="row">
-                            <div class="col-lg-5">
+                            <div class="col-lg-4">
                                 <div class="form-check">
                                     <label>Servicios</label>
                                     <br>
@@ -114,7 +114,7 @@
                                     </label>
                                 </div>
                             </div>
-                            <div class="col-lg-5">
+                            <div class="col-lg-3">
                                 <div class="form-check">
                                     <label>Vuelos</label>
                                     <br>
@@ -125,6 +125,20 @@
                                     <label class="form-radio-label ml-3" ng-show="registro.tipo_servicio == 'PASAJE AEREO'">
                                         <input class="form-radio-input" type="radio" value="SOLO IDA" name="vuelosRadios" ng-model="registro.vuelos">
                                         <span class="form-radio-sign">Sólo Ida</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-lg-3" ng-show="registro.tipo_servicio == 'PASAJE AEREO'">
+                                <div class="form-check">
+                                    <label>Vuelos de Ida o Retorno</label>
+                                    <br>
+                                    <label class="form-radio-label" >
+                                        <input class="form-radio-input" type="radio" value="IDA" name="ida_retornoRadios" ng-model="registro.ida_retorno" >
+                                        <span class="form-radio-sign">Ida</span>
+                                    </label>
+                                    <label class="form-radio-label ml-3" >
+                                        <input class="form-radio-input" type="radio" value="RETORNO" name="ida_retornoRadios" ng-model="registro.ida_retorno">
+                                        <span class="form-radio-sign">Retorno</span>
                                     </label>
                                 </div>
                             </div>
@@ -145,7 +159,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-3" ng-show="registro.ida_retorno == 'IDA'">
                                 <div class="mb-3 position-relative">
                                     <label class="form-label" for="validationTooltip04">Fecha Cita <span class="text-danger">(*)</span></label>
                                     <div class="input-group date">
@@ -156,7 +170,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-3" ng-show="registro.ida_retorno == 'RETORNO'">
                                 <div class="mb-3 position-relative">
                                     <label class="form-label" for="validationTooltip04">Fecha Salida</label>
                                     <div class="input-group date">

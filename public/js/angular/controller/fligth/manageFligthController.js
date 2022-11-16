@@ -45,6 +45,7 @@ app.controller('manageFligthController', function ($scope, $timeout, empresaServ
     $scope.cambiarVuelos = function () {
         if ($scope.registro.tipo_servicio == 'PASAJE AEREO'){
             $scope.registro.vuelos = 'SOLO IDA';
+            $scope.registro.ida_retorno = 'IDA';
         }else {
             $scope.registro.vuelos = 'IDA Y VUELTA';
         }
@@ -59,12 +60,15 @@ app.controller('manageFligthController', function ($scope, $timeout, empresaServ
                     if ($scope.rutas[i].id == $("#origen_destinocmb").val()){
                         if ($("#tipopasajerocmb").val() == 'ADULTO'){
                             $scope.registro.precio_unitario = $scope.rutas[i].precio_adulto_venta;
+                            $scope.registro.monto_empresa = $scope.rutas[i].precio_adulto_compra;
                         }else {
                             if ($("#tipopasajerocmb").val() == 'INFANTE'){
                                 $scope.registro.precio_unitario = $scope.rutas[i].precio_infante_venta;
+                                $scope.registro.monto_empresa = $scope.rutas[i].precio_infante_compra;
                             }else {
                                 if ($("#tipopasajerocmb").val() == 'NIÑO'){
-                                    $scope.registro.precio_unitario = $scope.rutas[i].precio_infante_venta;
+                                    $scope.registro.precio_unitario = $scope.rutas[i].precio_ninio_venta;
+                                    $scope.registro.monto_empresa = $scope.rutas[i].precio_ninio_compra;
                                 }
                             }
                         }
@@ -87,12 +91,15 @@ app.controller('manageFligthController', function ($scope, $timeout, empresaServ
                             if ($scope.rutas[i].id == $("#origen_destinocmb").val()){
                                 if ($scope.registro.detalle_acompanante[j].tipo_pasajero == 'ADULTO'){
                                     $scope.registro.detalle_acompanante[j].precio_unitario = $scope.rutas[i].precio_adulto_venta;
+                                    $scope.registro.detalle_acompanante[j].monto_empresa = $scope.rutas[i].precio_adulto_compra;
                                 }else {
                                     if ($scope.registro.detalle_acompanante[j].tipo_pasajero == 'INFANTE'){
                                         $scope.registro.detalle_acompanante[j].precio_unitario = $scope.rutas[i].precio_infante_venta;
+                                        $scope.registro.detalle_acompanante[j].monto_empresa = $scope.rutas[i].precio_infante_compra;
                                     }else {
                                         if ($scope.registro.detalle_acompanante[j].tipo_pasajero == 'NIÑO'){
-                                            $scope.registro.detalle_acompanante[j].precio_unitario = $scope.rutas[i].precio_infante_venta;
+                                            $scope.registro.detalle_acompanante[j].precio_unitario = $scope.rutas[i].precio_ninio_venta;
+                                            $scope.registro.detalle_acompanante[j].monto_empresa = $scope.rutas[i].precio_ninio_venta;
                                         }
                                     }
                                 }
@@ -164,7 +171,6 @@ app.controller('manageFligthController', function ($scope, $timeout, empresaServ
                                 },
                             });
                         }
-                        //console.log("Después de enviar los archivos, el servidor dice:", respuesta.data);
                     })
                     .catch(function (detallesDelError) {
                         swal("Error!", "No se pudo completar el registro!", {
@@ -175,7 +181,6 @@ app.controller('manageFligthController', function ($scope, $timeout, empresaServ
                                 }
                             },
                         });
-                        //console.warn("Error al enviar archivos:", detallesDelError);
                     })
 
             }else {
