@@ -52,9 +52,14 @@ app.controller('manageFligthController', function ($scope, $timeout, empresaServ
     }
 
     $scope.guardarPasaje = function () {
-        var valid = validar_campo(['#idtipodocumentocmb','#numerodocumentotxt','#apellido_paternotxt','#apellido_maternotxt','#nombrestxt','#edadtxt','#telefonotxt','#origen_destinocmb','#fecha_citatxt','#tipopasajerocmb','#empresacmb','#estadocmb']);
+        var valid = false;
+        if ($scope.registro.ida_retorno == 'IDA'){
+            valid = validar_campo(['#idtipodocumentocmb','#numerodocumentotxt','#apellido_paternotxt','#apellido_maternotxt','#nombrestxt','#edadtxt','#telefonotxt','#origen_destinocmb','#fecha_citatxt','#tipopasajerocmb','#empresacmb','#estadocmb']);
+        }else {
+            valid = validar_campo(['#idtipodocumentocmb','#numerodocumentotxt','#apellido_paternotxt','#apellido_maternotxt','#nombrestxt','#edadtxt','#telefonotxt','#origen_destinocmb','#tipopasajerocmb','#empresacmb','#estadocmb']);
+        }
+
         if (valid){
-            //var cantidad_item = ;
             for (var i = 0; i < $scope.rutas.length; i++){
                 if ($scope.registro.tipo_servicio == 'PASAJE AEREO'){
                     if ($scope.rutas[i].id == $("#origen_destinocmb").val()){
