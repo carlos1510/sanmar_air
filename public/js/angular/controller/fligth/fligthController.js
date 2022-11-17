@@ -171,7 +171,7 @@ app.controller('fligthController', function ($scope, $http, $timeout, vuelosServ
 
     $scope.guardarPasaje = function () {
         var valid = false;
-        if ($scope.registro.ida_retorno == 'IDA'){
+        if ($scope.registro.ida_retorno == 'IDA' || $scope.registro.tipo_servicio=='VUELO CHARTER'){
             valid = validar_campo(['#idtipodocumentocmb','#numerodocumentotxt','#apellido_paternotxt','#apellido_maternotxt','#nombrestxt','#edadtxt','#telefonotxt','#origen_destinocmb','#fecha_citatxt','#tipopasajerocmb']);
         }else {
             valid = validar_campo(['#idtipodocumentocmb','#numerodocumentotxt','#apellido_paternotxt','#apellido_maternotxt','#nombrestxt','#edadtxt','#telefonotxt','#origen_destinocmb','#tipopasajerocmb']);

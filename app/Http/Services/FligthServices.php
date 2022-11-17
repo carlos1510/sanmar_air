@@ -106,4 +106,9 @@ class FligthServices
         $params = (object)$params;
         return $this->repository->listarActaConformidad($params);
     }
+
+    public function listarOficiosDetalle($params){
+        $params = (object)$params;
+        return $this->repository->listarOficiosDetalle($params);
+    }
 }

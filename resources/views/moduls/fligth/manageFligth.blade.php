@@ -220,75 +220,78 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-lg-2">
-                            <div class="form-group">
-                                <label>Tipo de Servicio:</label>
-                                <select class="form-control" placeholder="Seleccione" ng-model="filtro.tipo_servicio">
-                                    <option value="">TODOS</option>
-                                    <option value="PASAJE AEREO">PASAJE AEREO</option>
-                                    <option value="VUELO CHARTER">VUELO CHARTER</option>
-                                </select>
+                    <form role="form" method="post">
+                        <div class="row">
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label>Tipo de Servicio:</label>
+                                    <select class="form-control" placeholder="Seleccione" ng-model="filtro.tipo_servicio" name="tipo_servicio">
+                                        <option value="">TODOS</option>
+                                        <option value="PASAJE AEREO">PASAJE AEREO</option>
+                                        <option value="VUELO CHARTER">VUELO CHARTER</option>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-lg-2">
-                            <div class="form-group">
-                                <label>Estado:</label>
-                                <select class="form-control" id="estadobuscarcmb" placeholder="Seleccione" ng-model="filtro.estado">
-                                    <option value="">TODOS</option>
-                                    <option value="1">PENDIENTE</option>
-                                    <option value="2">ACEPTADO</option>
-                                    <option value="3">OBSERVADOS</option>
-                                </select>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label>Estado:</label>
+                                    <select class="form-control" id="estadobuscarcmb" placeholder="Seleccione" ng-model="filtro.estado" name="estado">
+                                        <option value="">TODOS</option>
+                                        <option value="1">PENDIENTE</option>
+                                        <option value="2">ACEPTADO</option>
+                                        <option value="3">OBSERVADOS</option>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="col-lg-3">
-                            <div class="form-group">
-                                <label class="form-label" for="validationTooltip04">Fecha Inicio</label>
-                                <div class="input-group date">
-                                    <div class="input-group-prepend">
-                                        <span  class="input-group-text"><i class="fa fa-calendar"></i></span>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label class="form-label" >Fecha Inicio</label>
+                                    <div class="input-group date">
+                                        <div class="input-group-prepend">
+                                            <span  class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                        </div>
+                                        <input class="form-control " type="text" id="fecha_iniciotxt" maxlength="10" autocomplete="off" placeholder="dd/mm/yyyy" ng-model="filtro.fecha_inicio" name="fecha_inicio">
                                     </div>
-                                    <input class="form-control " type="text" id="fecha_iniciotxt" maxlength="10" autocomplete="off" placeholder="dd/mm/yyyy" ng-model="filtro.fecha_inicio">
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label class="form-label" >Fecha Final</label>
+                                    <div class="input-group date">
+                                        <div class="input-group-prepend">
+                                            <span  class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                        </div>
+                                        <input class="form-control " type="text" id="fecha_finaltxt" maxlength="10" autocomplete="off" placeholder="dd/mm/yyyy" ng-model="filtro.fecha_final" name="fecha_final">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label>DNI:</label>
+                                    <input type="text" class="form-control" ng-model="filtro.numero_documento" name="numero_documento">
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label for="">Ruta Origen - Destino</label>
+                                    <select class="form-control" placeholder="Seleccione" id="rutaviajecmb" ng-model="filtro.idruta_viaje_precio" name="idruta_viaje_precio">
+                                        <option value="">TODOS</option>
+                                        <option ng-repeat="item in rutas" value="@{{ item.id }}">@{{ item.nom_ruta }}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div style="padding-top: 35px !important;" class="text-center align-items-center justify-content-center">
+                                    <button type="button" class="btn btn-block btn-default" ng-click="listar()"><i class="fas fa-search"></i> Buscar</button>
+                                    <button type="submit" class="btn btn-block btn-primary" ><i class="fas fa-file-excel"></i> Exportar</button>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-3">
-                            <div class="form-group">
-                                <label class="form-label" for="validationTooltip04">Fecha Final</label>
-                                <div class="input-group date">
-                                    <div class="input-group-prepend">
-                                        <span  class="input-group-text"><i class="fa fa-calendar"></i></span>
-                                    </div>
-                                    <input class="form-control " type="text" id="fecha_finaltxt" maxlength="10" autocomplete="off" placeholder="dd/mm/yyyy" ng-model="filtro.fecha_final">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-2">
-                            <div class="form-group">
-                                <label>DNI:</label>
-                                <input type="text" class="form-control" ng-model="filtro.numero_documento">
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-4">
-                            <div class="form-group">
-                                <label for="">Ruta Origen - Destino</label>
-                                <select class="form-control" placeholder="Seleccione" id="rutaviajecmb" ng-model="filtro.idruta_viaje_precio">
-                                    <option value="">TODOS</option>
-                                    <option ng-repeat="item in rutas" value="@{{ item.id }}">@{{ item.nom_ruta }}</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-lg-2">
-                            <div style="padding-top: 35px !important;">
-                                <button type="button" class="btn btn-block btn-default" ng-click="listar()"><i class="fas fa-search"></i> Buscar</button>
-                            </div>
-                        </div>
-                    </div>
+                    </form>
                 </div>
                 <div class="card-footer">
                     <div class="table-responsive">

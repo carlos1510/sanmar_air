@@ -35,7 +35,7 @@ class FligthRepository
                 ));
 
                 $sql_pasaje = "UPDATE pasaje_paciente SET idpersona=:idpersona, idempresa=:idempresa, tipo=:tipo, tipo_servicio=:tipo_servicio, vuelos=:vuelos, ida_retorno=:ida_retorno, idruta_viaje_precio=:idruta_viaje_precio, fecha_cita=:fecha_cita, fecha_salida=:fecha_salida, fecha_viaje=:fecha_viaje, fecha_retorno=:fecha_retorno, tipo_pasajero=:tipo_pasajero, edad=:edad, observacion=:observacion, tipo_paciente=:tipo_paciente, idpasaje_paciente_ac=:idpasaje_paciente_ac,
-                           monto_empresa=:monto_empresa, codigo_generado=:codigo_generado, codigo=:codigo, unidad_medida=:unidad_medida, cantidad=:cantidad, precio_unitario=:precio_unitario, fecha_modificacion=:fecha_modificacion, idusuario_modificacion=:idusuario_modificacion, estado=:estado WHERE id=:id;";
+                           monto_empresa=:monto_empresa, codigo_generado=:codigo_generado, codigo=:codigo, unidad_medida=:unidad_medida, cantidad=:cantidad, precio_unitario=:precio_unitario, diagnostico=:diagnostico, fecha_modificacion=:fecha_modificacion, idusuario_modificacion=:idusuario_modificacion, estado=:estado WHERE id=:id;";
                 DB::update($sql_pasaje, array(
                     'idpersona' => isset($params->idpersona)?$params->idpersona:null,
                     'idempresa' => (Session::get('idnivel') == 2?(isset($params->tipo_servicio)?($params->tipo_servicio=='PASAJE AEREO'?1:null):null):(isset($params->idempresa)?($params->idempresa!=""?$params->idempresa:null):null)),
@@ -59,6 +59,7 @@ class FligthRepository
                     'unidad_medida' => isset($params->unidad_medida)?($params->unidad_medida!=""?$params->unidad_medida:null):null,
                     'cantidad' => isset($params->cantidad)?($params->cantidad!=""?$params->cantidad:null):null,
                     'precio_unitario' => isset($params->precio_unitario)?($params->precio_unitario!=""?$params->precio_unitario:null):null,
+                    'diagnostico' => isset($params->diagnostico)?($params->diagnostico!=""?$params->diagnostico:null):null,
                     'fecha_modificacion' => date('Y-m-d H:i:s'),
                     'idusuario_modificacion' => Session::get('idusuario'),
                     'estado' => isset($params->estado)?($params->estado!=""?$params->estado:1):1,
@@ -144,7 +145,7 @@ class FligthRepository
                             $idper_acom = DB::selectOne('SELECT max(id) as id FROM persona');
                         }
 
-                        $sql_pasaje_acomp = "INSERT INTO pasaje_paciente (idpersona, idempresa, tipo, tipo_servicio, vuelos, ida_retorno, idruta_viaje_precio, fecha_cita, fecha_salida, fecha_viaje, fecha_retorno, tipo_pasajero, edad, observacion, tipo_paciente, idpasaje_paciente_ac, monto_empresa, codigo_generado, codigo, unidad_medida, cantidad, precio_unitario, fecha_registro, idusuario, fecha_modificacion, idusuario_modificacion, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+                        $sql_pasaje_acomp = "INSERT INTO pasaje_paciente (idpersona, idempresa, tipo, tipo_servicio, vuelos, ida_retorno, idruta_viaje_precio, fecha_cita, fecha_salida, fecha_viaje, fecha_retorno, tipo_pasajero, edad, observacion, tipo_paciente, idpasaje_paciente_ac, monto_empresa, codigo_generado, codigo, unidad_medida, cantidad, precio_unitario, diagnostico, fecha_registro, idusuario, fecha_modificacion, idusuario_modificacion, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
                         DB::insert($sql_pasaje_acomp, [
                             isset($item->idpersona)?$item->idpersona:$idper_acom->id,
                             (Session::get('idnivel') == 2?(isset($params->tipo_servicio)?($params->tipo_servicio=='PASAJE AEREO'?1:null):null):(isset($params->idempresa)?($params->idempresa!=""?$params->idempresa:null):null)),
@@ -168,6 +169,7 @@ class FligthRepository
                             isset($params->unidad_medida)?($params->unidad_medida!=""?$params->unidad_medida:'NIU'):'NIU',
                             isset($params->cantidad)?($params->cantidad!=""?$params->cantidad:1):1,
                             isset($item->precio_unitario)?($item->precio_unitario!=""?$item->precio_unitario:null):null,
+                            isset($item->diagnostico)?($item->diagnostico!=""?$item->diagnostico:null):null,
                             date('Y-m-d H:i:s'),
                             Session::get('idusuario'),
                             null,
@@ -256,7 +258,7 @@ class FligthRepository
                             $idper_acom = DB::selectOne('SELECT max(id) as id FROM persona');
                         }
 
-                        $sql_pasaje_acomp = "INSERT INTO pasaje_paciente (idpersona, idempresa, tipo, tipo_servicio, vuelos, ida_retorno, idruta_viaje_precio, fecha_cita, fecha_salida, fecha_viaje, fecha_retorno, tipo_pasajero, edad, observacion, tipo_paciente, idpasaje_paciente_ac, monto_empresa, codigo_generado, codigo, unidad_medida, cantidad, precio_unitario, fecha_registro, idusuario, fecha_modificacion, idusuario_modificacion, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+                        $sql_pasaje_acomp = "INSERT INTO pasaje_paciente (idpersona, idempresa, tipo, tipo_servicio, vuelos, ida_retorno, idruta_viaje_precio, fecha_cita, fecha_salida, fecha_viaje, fecha_retorno, tipo_pasajero, edad, observacion, tipo_paciente, idpasaje_paciente_ac, monto_empresa, codigo_generado, codigo, unidad_medida, cantidad, precio_unitario, diagnostico, fecha_registro, idusuario, fecha_modificacion, idusuario_modificacion, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
                         DB::insert($sql_pasaje_acomp, [
                             isset($item->idpersona)?$item->idpersona:$idper_acom->id,
                             (Session::get('idnivel') == 2?(isset($params->tipo_servicio)?($params->tipo_servicio=='PASAJE AEREO'?1:null):null):(isset($params->idempresa)?($params->idempresa!=""?$params->idempresa:null):null)),
@@ -280,6 +282,7 @@ class FligthRepository
                             isset($params->unidad_medida)?($params->unidad_medida!=""?$params->unidad_medida:'NIU'):'NIU',
                             isset($params->cantidad)?($params->cantidad!=""?$params->cantidad:1):1,
                             isset($item->precio_unitario)?($item->precio_unitario!=""?$item->precio_unitario:null):null,
+                            isset($item->diagnostico)?($item->diagnostico!=""?$item->diagnostico:null):null,
                             date('Y-m-d H:i:s'),
                             Session::get('idusuario'),
                             null,
@@ -322,7 +325,7 @@ class FligthRepository
                     $idper = DB::selectOne('SELECT max(id) as id FROM persona');
                 }
 
-                $sql_pasaje = "INSERT INTO pasaje_paciente (idpersona, idempresa, tipo, tipo_servicio, vuelos, ida_retorno, idruta_viaje_precio, fecha_cita, fecha_salida, fecha_viaje, fecha_retorno, tipo_pasajero, edad, observacion, tipo_paciente, idpasaje_paciente_ac, monto_empresa, codigo_generado, codigo, unidad_medida, cantidad, precio_unitario, fecha_registro, idusuario, fecha_modificacion, idusuario_modificacion, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+                $sql_pasaje = "INSERT INTO pasaje_paciente (idpersona, idempresa, tipo, tipo_servicio, vuelos, ida_retorno, idruta_viaje_precio, fecha_cita, fecha_salida, fecha_viaje, fecha_retorno, tipo_pasajero, edad, observacion, tipo_paciente, idpasaje_paciente_ac, monto_empresa, codigo_generado, codigo, unidad_medida, cantidad, precio_unitario, diagnostico, fecha_registro, idusuario, fecha_modificacion, idusuario_modificacion, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
                 DB::insert($sql_pasaje, [
                     isset($params->idpersona)?$params->idpersona:$idper->id,
                     (Session::get('idnivel') == 2?(isset($params->tipo_servicio)?($params->tipo_servicio=='PASAJE AEREO'?1:null):null):(isset($params->idempresa)?($params->idempresa!=""?$params->idempresa:null):null)),
@@ -346,6 +349,7 @@ class FligthRepository
                     isset($params->unidad_medida)?($params->unidad_medida!=""?$params->unidad_medida:'NIU'):'NIU',
                     isset($params->cantidad)?($params->cantidad!=""?$params->cantidad:1):1,
                     isset($params->precio_unitario)?($params->precio_unitario!=""?$params->precio_unitario:null):null,
+                    isset($params->diagnostico)?($params->diagnostico!=""?$params->diagnostico:null):null,
                     date('Y-m-d H:i:s'),
                     Session::get('idusuario'),
                     null,
@@ -387,7 +391,7 @@ class FligthRepository
                         ]);
                         $idper_acom = DB::selectOne('SELECT max(id) as id FROM persona');
                     }
-                    $sql_pasaje_acomp = "INSERT INTO pasaje_paciente (idpersona, idempresa, tipo, tipo_servicio, vuelos, ida_retorno, idruta_viaje_precio, fecha_cita, fecha_salida, fecha_viaje, fecha_retorno, tipo_pasajero, edad, observacion, tipo_paciente, idpasaje_paciente_ac, monto_empresa, codigo_generado, codigo, unidad_medida, cantidad, precio_unitario, fecha_registro, idusuario, fecha_modificacion, idusuario_modificacion, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+                    $sql_pasaje_acomp = "INSERT INTO pasaje_paciente (idpersona, idempresa, tipo, tipo_servicio, vuelos, ida_retorno, idruta_viaje_precio, fecha_cita, fecha_salida, fecha_viaje, fecha_retorno, tipo_pasajero, edad, observacion, tipo_paciente, idpasaje_paciente_ac, monto_empresa, codigo_generado, codigo, unidad_medida, cantidad, precio_unitario, diagnostico, fecha_registro, idusuario, fecha_modificacion, idusuario_modificacion, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
                     DB::insert($sql_pasaje_acomp, [
                         isset($item->idpersona)?$item->idpersona:$idper_acom->id,
                         (Session::get('idnivel') == 2?(isset($params->tipo_servicio)?($params->tipo_servicio=='PASAJE AEREO'?1:null):null):(isset($params->idempresa)?($params->idempresa!=""?$params->idempresa:null):null)),
@@ -411,6 +415,7 @@ class FligthRepository
                         isset($params->unidad_medida)?($params->unidad_medida!=""?$params->unidad_medida:'NIU'):'NIU',
                         isset($params->cantidad)?($params->cantidad!=""?$params->cantidad:1):1,
                         isset($item->precio_unitario)?($item->precio_unitario!=""?$item->precio_unitario:null):null,
+                        isset($item->diagnostico)?($item->diagnostico!=""?$item->diagnostico:null):null,
                         date('Y-m-d H:i:s'),
                         Session::get('idusuario'),
                         null,
@@ -451,7 +456,7 @@ class FligthRepository
                         ]);
                         $idper_acom = DB::selectOne('SELECT max(id) as id FROM persona');
                     }
-                    $sql_pasaje_acomp = "INSERT INTO pasaje_paciente (idpersona, idempresa, tipo, tipo_servicio, vuelos, ida_retorno, idruta_viaje_precio, fecha_cita, fecha_salida, fecha_viaje, fecha_retorno, tipo_pasajero, edad, observacion, tipo_paciente, idpasaje_paciente_ac, monto_empresa, codigo_generado, codigo, unidad_medida, cantidad, precio_unitario, fecha_registro, idusuario, fecha_modificacion, idusuario_modificacion, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+                    $sql_pasaje_acomp = "INSERT INTO pasaje_paciente (idpersona, idempresa, tipo, tipo_servicio, vuelos, ida_retorno, idruta_viaje_precio, fecha_cita, fecha_salida, fecha_viaje, fecha_retorno, tipo_pasajero, edad, observacion, tipo_paciente, idpasaje_paciente_ac, monto_empresa, codigo_generado, codigo, unidad_medida, cantidad, precio_unitario, diagnostico, fecha_registro, idusuario, fecha_modificacion, idusuario_modificacion, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
                     DB::insert($sql_pasaje_acomp, [
                         isset($item->idpersona)?$item->idpersona:$idper_acom->id,
                         (Session::get('idnivel') == 2?(isset($params->tipo_servicio)?($params->tipo_servicio=='PASAJE AEREO'?1:null):null):(isset($params->idempresa)?($params->idempresa!=""?$params->idempresa:null):null)),
@@ -475,6 +480,7 @@ class FligthRepository
                         isset($params->unidad_medida)?($params->unidad_medida!=""?$params->unidad_medida:'NIU'):'NIU',
                         isset($params->cantidad)?($params->cantidad!=""?$params->cantidad:1):1,
                         isset($item->precio_unitario)?($item->precio_unitario!=""?$item->precio_unitario:null):null,
+                        isset($item->diagnostico)?($item->diagnostico!=""?$item->diagnostico:null):null,
                         date('Y-m-d H:i:s'),
                         Session::get('idusuario'),
                         null,
@@ -485,8 +491,6 @@ class FligthRepository
 
                 $data['idpasaje_paciente'] = $id_paciente->id;
             }
-           /* $id_paciente = DB::selectOne("SELECT max(id) as id FROM pasaje_paciente");
-            $data['idpasaje_paciente'] = $id_paciente->id;*/
             $data['confirm'] = true;
             return $data;
         }catch (Exception $ex){
@@ -512,7 +516,7 @@ class FligthRepository
 
     public function listarPasajesPaciente($params){
         $sql = "SELECT pp.id AS idpasaje_paciente, pp.idpersona, pp.tipo, pp.vuelos, pp.idruta_viaje_precio, DATE_FORMAT(pp.fecha_cita,'%d/%m/%Y') AS fecha_cita, DATE_FORMAT(IFNULL(pp.fecha_viaje,pp.fecha_salida),'%d/%m/%Y') AS fecha_salida, pp.ida_retorno,
-            DATE_FORMAT(pp.fecha_viaje,'%d/%m/%Y') AS fecha_viaje, DATE_FORMAT(pp.fecha_retorno,'%d/%m/%Y') AS fecha_retorno, pp.tipo_pasajero, pp.edad, pp.observacion, pp.tipo_paciente, pp.idpasaje_paciente_ac, pp.codigo, pp.codigo_generado,
+            DATE_FORMAT(pp.fecha_viaje,'%d/%m/%Y') AS fecha_viaje, DATE_FORMAT(pp.fecha_retorno,'%d/%m/%Y') AS fecha_retorno, pp.tipo_pasajero, pp.edad, pp.observacion, pp.tipo_paciente, pp.idpasaje_paciente_ac, pp.codigo, pp.codigo_generado, pp.diagnostico,
             p.idtipo_documento, p.numero_documento, p.apellido_paterno, p.apellido_materno, p.nombres, p.sexo, DATE_FORMAT(p.fecha_nacimiento,'%d/%m/%Y') AS fecha_nacimiento, p.telefono,pp.monto_empresa, pp.idempresa, pp.unidad_medida, pp.cantidad, pp.precio_unitario,
             p.correo, p.direccion, IF(pp.estado=1, 'PENDIENTE', IF(pp.estado=2,'APROVADO',IF(pp.estado=3, 'OBSERVADO', 'ELIMINADO'))) AS nom_estado, pp.estado, pp.tipo_servicio, CONCAT_WS(' - ',rvp.origen,rvp.destino) AS nomb_origen_destino, rvp.origen, rvp.destino
              FROM pasaje_paciente pp INNER JOIN persona p ON pp.idpersona=p.id
@@ -526,7 +530,7 @@ class FligthRepository
 
     public function listarPasajesReservadosEmpresa($params){
         $sql = "SELECT pp.id AS idpasaje_paciente, pp.idpersona, pp.vuelos, pp.idruta_viaje_precio, DATE_FORMAT(pp.fecha_cita,'%d/%m/%Y') AS fecha_cita, DATE_FORMAT(IFNULL(pp.fecha_viaje,pp.fecha_salida),'%d/%m/%Y') AS fecha_salida, pp.ida_retorno,
-            DATE_FORMAT(pp.fecha_viaje,'%d/%m/%Y') AS fecha_viaje, DATE_FORMAT(pp.fecha_retorno,'%d/%m/%Y') AS fecha_retorno, pp.tipo_pasajero, pp.edad, pp.observacion, pp.tipo_paciente, pp.idpasaje_paciente_ac, pp.codigo, pp.codigo_generado,
+            DATE_FORMAT(pp.fecha_viaje,'%d/%m/%Y') AS fecha_viaje, DATE_FORMAT(pp.fecha_retorno,'%d/%m/%Y') AS fecha_retorno, pp.tipo_pasajero, pp.edad, pp.observacion, pp.tipo_paciente, pp.idpasaje_paciente_ac, pp.codigo, pp.codigo_generado, pp.diagnostico,
             p.idtipo_documento, p.numero_documento, p.apellido_paterno, p.apellido_materno, p.nombres, p.sexo, DATE_FORMAT(p.fecha_nacimiento,'%d/%m/%Y') AS fecha_nacimiento, p.telefono,pp.monto_empresa, pp.idempresa, pp.unidad_medida, pp.cantidad, pp.precio_unitario,
             p.correo, p.direccion, IF(pp.estado=1, 'PENDIENTE', IF(pp.estado=2,'APROVADO',IF(pp.estado=3, 'OBSERVADO', 'ELIMINADO'))) AS nom_estado, pp.estado, pp.tipo_servicio, CONCAT_WS(' - ',rvp.origen,rvp.destino) AS nomb_origen_destino
              FROM pasaje_paciente pp INNER JOIN persona p ON pp.idpersona=p.id
@@ -610,7 +614,7 @@ class FligthRepository
 
     public function listarPasajesReservados($params){
         $sql = "SELECT pp.id AS idpasaje_paciente, pp.idpersona, pp.vuelos, pp.idruta_viaje_precio, DATE_FORMAT(pp.fecha_cita,'%d/%m/%Y') AS fecha_cita, DATE_FORMAT(IFNULL(pp.fecha_viaje,pp.fecha_salida),'%d/%m/%Y') AS fecha_salida, pp.ida_retorno,
-            DATE_FORMAT(pp.fecha_viaje,'%d/%m/%Y') AS fecha_viaje, DATE_FORMAT(pp.fecha_retorno,'%d/%m/%Y') AS fecha_retorno, pp.tipo_pasajero, pp.edad, pp.observacion, pp.tipo_paciente, pp.idpasaje_paciente_ac,
+            DATE_FORMAT(pp.fecha_viaje,'%d/%m/%Y') AS fecha_viaje, DATE_FORMAT(pp.fecha_retorno,'%d/%m/%Y') AS fecha_retorno, pp.tipo_pasajero, pp.edad, pp.observacion, pp.tipo_paciente, pp.idpasaje_paciente_ac, pp.diagnostico,
             p.idtipo_documento, p.numero_documento, p.apellido_paterno, p.apellido_materno, p.nombres, p.sexo, DATE_FORMAT(p.fecha_nacimiento,'%d/%m/%Y') AS fecha_nacimiento, p.telefono,pp.monto_empresa, pp.idempresa,
             p.correo, p.direccion, IF(pp.estado=1, 'PENDIENTE', IF(pp.estado=2,'APROVADO',IF(pp.estado=3, 'OBSERVADO', 'ELIMINADO'))) AS nom_estado, pp.estado, pp.tipo_servicio, CONCAT_WS(' - ',rvp.origen,rvp.destino) AS nomb_origen_destino,
             pp.unidad_medida, pp.cantidad, pp.precio_unitario
@@ -653,10 +657,10 @@ class FligthRepository
              INNER JOIN ruta_viaje_precio rvp ON pp.idruta_viaje_precio=rvp.id
             WHERE pp.tipo IN (1,2) AND pp.estado=2 AND pp.tipo_servicio='PASAJE AEREO' ".
                 (isset($params->idruta_viaje_precio)?($params->idruta_viaje_precio!=""?" AND pp.idruta_viaje_precio=$params->idruta_viaje_precio":""):"").
-                (isset($params->fecha_inicio)?($params->fecha_inicio!=""?(isset($params->fecha_final)?($params->fecha_final!=""?" AND pp.fecha_cita BETWEEN '".Util::convertirStringFecha($params->fecha_inicio, false)."' AND '".Util::convertirStringFecha($params->fecha_final, false)."'":""):""):""):"");
+                (isset($params->fecha_inicio)?($params->fecha_inicio!=""?(isset($params->fecha_final)?($params->fecha_final!=""?" AND pp.fecha_viaje BETWEEN '".Util::convertirStringFecha($params->fecha_inicio, false)."' AND '".Util::convertirStringFecha($params->fecha_final, false)."'":""):""):""):"");
         }else{
             //charter
-            $sql = "SELECT pp.id as idpasaje_paciente, pp.tipo_servicio, CONCAT_WS(' - ',rvp.origen,rvp.destino) AS nomb_origen_destino,
+            $sql = "SELECT pp.id as idpasaje_paciente, pp.tipo_servicio, CONCAT_WS(' - ',rvp.origen,rvp.destino) AS nomb_origen_destino, p.apellido_paterno, p.apellido_materno, p.nombres, DATE_FORMAT(pp.fecha_viaje, '%d/%m/%Y') as fecha_viaje, pp.diagnostico,
                 IF(pp.tipo_servicio='VUELO CHARTER',CONCAT_WS(' ','SERVICIO',pp.tipo_servicio,'EN LA RUTA',CONCAT_WS(' - ',rvp.origen,rvp.destino)),'') AS descripcion, pp.unidad_medida, pp.cantidad, pp.precio_unitario, (pp.precio_unitario * pp.cantidad) as total,
                 IF(pp.tipo_servicio='VUELO CHARTER','SERVICIO VUELO CHARTER EN LA', CONCAT_WS(' ',pp.tipo_servicio, CONCAT_WS(' - ',rvp.origen,rvp.destino))) AS descrip_1,
                 IF(pp.tipo_servicio='VUELO CHARTER',CONCAT_WS(' ','RUTA ', CONCAT_WS(' - ',rvp.origen,rvp.destino)), '') AS descrip_2,
@@ -665,9 +669,8 @@ class FligthRepository
              INNER JOIN ruta_viaje_precio rvp ON pp.idruta_viaje_precio=rvp.id
             WHERE pp.tipo IN (1,2) AND pp.estado=2 AND pp.tipo_servicio='VUELO CHARTER' AND pp.tipo_paciente='PACIENTE' ".
                 (isset($params->idruta_viaje_precio)?($params->idruta_viaje_precio!=""?" AND pp.idruta_viaje_precio=$params->idruta_viaje_precio":""):"").
-                (isset($params->fecha_inicio)?($params->fecha_inicio!=""?(isset($params->fecha_final)?($params->fecha_final!=""?" AND pp.fecha_cita BETWEEN '".Util::convertirStringFecha($params->fecha_inicio, false)."' AND '".Util::convertirStringFecha($params->fecha_final, false)."'":""):""):""):"");
+                (isset($params->fecha_inicio)?($params->fecha_inicio!=""?(isset($params->fecha_final)?($params->fecha_final!=""?" AND pp.fecha_viaje BETWEEN '".Util::convertirStringFecha($params->fecha_inicio, false)."' AND '".Util::convertirStringFecha($params->fecha_final, false)."'":""):""):""):"");
         }
-
         return DB::select($sql);
     }
 
@@ -685,7 +688,7 @@ class FligthRepository
     public function guardarOficioProforma($params){
         try {
             //
-            $sql = "INSERT INTO oficio (nombre_anio, nro_oficio, anio, fecha_inicio, nom_ruta, fecha_final, precio_total, nro_factura, fecha_generado, idusuario) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+            $sql = "INSERT INTO oficio (nombre_anio, nro_oficio, anio, fecha_inicio, nom_ruta, fecha_final, precio_total, nro_factura, tipo_servicio, fecha_generado, idusuario, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
             DB::insert($sql, [
                 isset($params->nombre_anio)?($params->nombre_anio!=""?$params->nombre_anio:null):null,
                 isset($params->nro_oficio)?($params->nro_oficio!=""?$params->nro_oficio:null):null,
@@ -695,9 +698,19 @@ class FligthRepository
                 isset($params->fecha_final)?($params->fecha_final!=""?Util::convertirStringFecha($params->fecha_final, false):null):null,
                 isset($params->precio_total)?($params->precio_total!=""?$params->precio_total:0):0,
                 isset($params->nro_factura)?($params->nro_factura!=""?$params->nro_factura:null):null,
+                isset($params->tipo_servicio)?($params->tipo_servicio!=""?$params->tipo_servicio:null):null,
                 date('Y-m-d H:i:s'),
-                Session::get('idusuario')
+                Session::get('idusuario'),
+                1
             ]);
+            $idoficio = DB::selectOne('SELECT max(id) as id FROM oficio');
+            foreach ($params->detalle as $item){
+                $sql_detalle = "INSERT INTO oficio_detalle (idoficio, apellido_paterno, apellido_materno, nombres, precio, fecha_viaje, ap_pat_prof, ap_mat_prof, nom_prof, nom_ruta, diagnostico) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+                DB::insert($sql_detalle,
+                    [$idoficio->id, isset($item->apellido_paterno)?$item->apellido_paterno:null, isset($item->apellido_materno)?$item->apellido_materno:null, isset($item->nombres)?$item->nombres:null, isset($item->precio)?$item->precio:null,
+                        isset($item->fecha_viaje)?($item->fecha_viaje!=""?Util::convertirStringFecha($item->fecha_viaje, false):null):null, isset($item->ap_pat_prof)?$item->ap_pat_prof:null, isset($item->ap_mat_prof)?$item->ap_mat_prof:null,
+                        isset($item->nom_prof)?$item->nom_prof:null, isset($item->nom_ruta)?$item->nom_ruta:null, isset($item->diagnostico)?$item->diagnostico:null]);
+            }
             $data['confirm'] = true;
             return $data;
         }catch (Exception $ex){
@@ -757,8 +770,14 @@ class FligthRepository
     }
 
     public function listarOficios($params){
-        $sql = "SELECT id, nombre_anio, nro_factura, anio, DATE_FORMAT(fecha_inicio,'%d/%m/%Y') AS fecha_inicio, nom_ruta, DATE_FORMAT(fecha_final,'%d/%m/%Y') AS fecha_final, precio_total, nro_oficio FROM oficio ".
-            (isset($params->fecha_inicio)?($params->fecha_inicio!=""?(isset($params->fecha_final)?($params->fecha_final!=""?" WHERE DATE_FORMAT(fecha_generado,'%Y-%m-%d') BETWEEN ".Util::convertirStringFecha($params->fecha_inicio, false)." AND '".Util::convertirStringFecha($params->fecha_final, false)."'":""):""):""):"");
+        $sql = "SELECT id, nombre_anio, nro_factura, anio, DATE_FORMAT(fecha_inicio,'%d/%m/%Y') AS fecha_inicio, nom_ruta, DATE_FORMAT(fecha_final,'%d/%m/%Y') AS fecha_final, precio_total, nro_oficio FROM oficio WHERE estado=1 ".
+            (isset($params->fecha_inicio)?($params->fecha_inicio!=""?(isset($params->fecha_final)?($params->fecha_final!=""?" AND DATE_FORMAT(fecha_generado,'%Y-%m-%d') BETWEEN ".Util::convertirStringFecha($params->fecha_inicio, false)." AND '".Util::convertirStringFecha($params->fecha_final, false)."'":""):""):""):"");
+        return DB::select($sql);
+    }
+
+    public function listarOficiosDetalle($params){
+        $sql = "SELECT apellido_materno, apellido_paterno, nombres, precio, DATE_FORMAT(fecha_viaje,'%d/%m/%Y%') AS fecha_viaje, ap_pat_prof, ap_mat_prof, nom_prof, nom_ruta, diagnostico
+                    FROM oficio_detalle  WHERE idoficio=".$params->idoficio;
         return DB::select($sql);
     }
 

@@ -90,6 +90,9 @@ app.factory('vuelosService', function($http){
         listarActaConformidad: function ($params) {
             return $http.post("vuelos/listarActaConformidad", $params)
         },
+        listarOficiosDetalle: function ($params) {
+            return $http.post("vuelos/listarOficiosDetalle", $params)
+        },
 
     }
 });

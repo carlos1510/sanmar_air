@@ -85,6 +85,12 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-lg-9">
+                                <div class="mb-3 ">
+                                    <label class="form-label ">Diagnostico del Paciente: </label>
+                                    <input type="text" class="form-control" id="diagnosticotxt" maxlength="250" ng-model="registro.diagnostico" >
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -159,7 +165,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-lg-3" ng-show="registro.ida_retorno == 'IDA'">
+                            <div class="col-lg-3" ng-show="registro.ida_retorno == 'IDA' || registro.tipo_servicio=='VUELO CHARTER'">
                                 <div class="mb-3 position-relative">
                                     <label class="form-label" for="validationTooltip04">Fecha Cita <span class="text-danger">(*)</span></label>
                                     <div class="input-group date">
