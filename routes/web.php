@@ -57,6 +57,7 @@ Route::post('vuelos/obtenerDatosGeneradosOficio', 'App\Http\Controllers\FligthCo
 Route::post('vuelos/listarOficios', 'App\Http\Controllers\FligthController@listarOficios');
 Route::post('vuelos/listarActaConformidad', 'App\Http\Controllers\FligthController@listarActaConformidad');
 Route::post('vuelos/listarOficiosDetalle', 'App\Http\Controllers\FligthController@listarOficiosDetalle');
+Route::post('vuelos/listarActaConformidadDetalle', 'App\Http\Controllers\FligthController@listarActaConformidadDetalle');
 
 // Rutas Paciente
 Route::post('paciente/registrarPaciente', 'App\Http\Controllers\PatientController@registrarPaciente');
@@ -67,5 +68,6 @@ Route::post('paciente/buscarPersonaDocumento', 'App\Http\Controllers\PatientCont
 
 //exportar excel
 Route::post('/exportarReservaPasaje', 'App\Http\Controllers\FligthController@exportarReservasPasajesEmpresa');
+
 
 

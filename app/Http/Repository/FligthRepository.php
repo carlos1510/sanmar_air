@@ -660,7 +660,7 @@ class FligthRepository
                 (isset($params->fecha_inicio)?($params->fecha_inicio!=""?(isset($params->fecha_final)?($params->fecha_final!=""?" AND pp.fecha_viaje BETWEEN '".Util::convertirStringFecha($params->fecha_inicio, false)."' AND '".Util::convertirStringFecha($params->fecha_final, false)."'":""):""):""):"");
         }else{
             //charter
-            $sql = "SELECT pp.id as idpasaje_paciente, pp.tipo_servicio, CONCAT_WS(' - ',rvp.origen,rvp.destino) AS nomb_origen_destino, p.apellido_paterno, p.apellido_materno, p.nombres, DATE_FORMAT(pp.fecha_viaje, '%d/%m/%Y') as fecha_viaje, pp.diagnostico,
+            $sql = "SELECT pp.id as idpasaje_paciente, pp.tipo_servicio, CONCAT_WS(' - ',rvp.origen,rvp.destino) AS nomb_origen_destino, p.apellido_paterno, p.apellido_materno, p.nombres, DATE_FORMAT(pp.fecha_viaje, '%d/%m/%Y') as fecha_viaje, pp.diagnostico, p.numero_documento, pp.edad,
                 IF(pp.tipo_servicio='VUELO CHARTER',CONCAT_WS(' ','SERVICIO',pp.tipo_servicio,'EN LA RUTA',CONCAT_WS(' - ',rvp.origen,rvp.destino)),'') AS descripcion, pp.unidad_medida, pp.cantidad, pp.precio_unitario, (pp.precio_unitario * pp.cantidad) as total,
                 IF(pp.tipo_servicio='VUELO CHARTER','SERVICIO VUELO CHARTER EN LA', CONCAT_WS(' ',pp.tipo_servicio, CONCAT_WS(' - ',rvp.origen,rvp.destino))) AS descrip_1,
                 IF(pp.tipo_servicio='VUELO CHARTER',CONCAT_WS(' ','RUTA ', CONCAT_WS(' - ',rvp.origen,rvp.destino)), '') AS descrip_2,
@@ -731,6 +731,28 @@ class FligthRepository
                 date('Y-m-d H:i:s'),
                 Session::get('idusuario')
             ]);
+            $idacta_conformidad = DB::selectOne('SELECT max(id) as id FROM acta_conformidad');
+            foreach($params->detalle as $item){
+                $sql_detalle = "INSERT INTO acta_conformidad_detalle (idacta_conformidad, apellido_paterno, apellido_materno, nombres, edad, numero_documento, diagnostico, ap_pat_prof, 
+                ap_mat_prof, nom_prof, edad_prof, numero_documento_prof, precio, fecha_viaje, nom_ruta) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+                DB::insert($sql_detalle, [
+                    $idacta_conformidad->id,
+                    isset($item->apellido_paterno)?$item->apellido_paterno:null,
+                    isset($item->apellido_materno)?$item->apellido_materno:null,
+                    isset($item->nombres)?$item->nombres:null,
+                    isset($item->edad)?$item->edad:null,
+                    isset($item->numero_documento)?$item->numero_documento:null,
+                    isset($item->diagnostico)?$item->diagnostico:null,
+                    isset($item->ap_pat_prof)?$item->ap_pat_prof:null,
+                    isset($item->ap_mat_prof)?$item->ap_mat_prof:null,
+                    isset($item->nom_prof)?$item->nom_prof:null,
+                    isset($item->edad_prof)?$item->edad_prof:null,
+                    isset($item->numero_documento_prof)?$item->numero_documento_prof:null,
+                    isset($item->precio)?$item->precio:null,
+                    isset($item->fecha_viaje)?($item->fecha_viaje!=""?Util::convertirStringFecha($item->fecha_viaje, false):null):null,
+                    isset($item->nom_ruta)?$item->nom_ruta:null
+                ]);
+            }
             $data['confirm'] = true;
             return $data;
         }catch (Exception $ex){
@@ -782,8 +804,15 @@ class FligthRepository
     }
 
     public function listarActaConformidad($params){
-        $sql = "SELECT DATE_FORMAT(fecha_inicio,'%d/%m/%Y') AS fecha_inicio, DATE_FORMAT(fecha_final,'%d/%m/%Y') AS fecha_final, nom_ruta, precio_total FROM acta_conformidad ".
+        $sql = "SELECT id, DATE_FORMAT(fecha_inicio,'%d/%m/%Y') AS fecha_inicio, DATE_FORMAT(fecha_final,'%d/%m/%Y') AS fecha_final, nom_ruta, precio_total FROM acta_conformidad ".
             (isset($params->fecha_inicio)?($params->fecha_inicio!=""?(isset($params->fecha_final)?($params->fecha_final!=""?" WHERE DATE_FORMAT(fecha_generado,'%Y-%m-%d') BETWEEN ".Util::convertirStringFecha($params->fecha_inicio, false)." AND '".Util::convertirStringFecha($params->fecha_final, false)."'":""):""):""):"");
+        return DB::select($sql);
+    }
+
+    public function listarActaConformidadDetalle($params){
+        $sql = "SELECT idacta_conformidad, apellido_paterno, apellido_materno, nombres, edad,numero_documento, diagnostico,
+        ap_pat_prof, ap_mat_prof,nom_prof,edad_prof,numero_documento_prof, precio, fecha_viaje, nom_ruta
+        FROM acta_conformidad_detalle  WHERE idacta_conformidad=".$params->idacta_conformidad;
         return DB::select($sql);
     }
 }

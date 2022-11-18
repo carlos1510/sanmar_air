@@ -82,3 +82,13 @@ function calculateAge(birthday) {
     return Math.abs(ageDate.getUTCFullYear() - 1970);
 }
 
+function padEnd(length, text, type) {
+    if (text.toString().length <= length) return padEnd(length, text+""+type+"", type);
+    else return text;
+}
+
+function ponerCeros(obj) {
+    while (obj.length<100)
+        obj = obj+' ';
+    return obj;
+}
