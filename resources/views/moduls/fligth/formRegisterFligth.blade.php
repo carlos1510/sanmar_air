@@ -167,7 +167,8 @@
                             </div>
                             <div class="col-lg-3" ng-show="registro.ida_retorno == 'IDA' || registro.tipo_servicio=='VUELO CHARTER'">
                                 <div class="mb-3 position-relative">
-                                    <label class="form-label" for="validationTooltip04">Fecha Cita <span class="text-danger">(*)</span></label>
+                                    <label class="form-label" ng-show="registro.tipo_servicio == 'PASAJE AEREO'" >Fecha Cita <span class="text-danger">(*)</span></label>
+                                    <label class="form-label" ng-show="registro.tipo_servicio == 'VUELO CHARTER'">Fecha de Charter <span class="text-danger">(*)</span></label>
                                     <div class="input-group date">
                                         <div class="input-group-prepend">
                                             <span  class="input-group-text"><i class="fa fa-calendar"></i></span>

@@ -184,8 +184,7 @@
                 forceParse: false,
                 calendarWeeks: true,
                 autoclose: true,
-                format: 'dd/mm/yyyy',
-                startDate: new Date()
+                format: 'dd/mm/yyyy'
             });
 
             $('#fecha_salidatxt').datepicker({
