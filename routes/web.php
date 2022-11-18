@@ -68,6 +68,7 @@ Route::post('paciente/buscarPersonaDocumento', 'App\Http\Controllers\PatientCont
 
 //exportar excel
 Route::post('/exportarReservaPasaje', 'App\Http\Controllers\FligthController@exportarReservasPasajesEmpresa');
+Route::post('/exportarPasajesReservadosReporte', 'App\Http\Controllers\FligthController@exportarPasajesReservadosReporte');
 
 
 

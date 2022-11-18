@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Exports\PasajesReportExport;
 use App\Http\Exports\ReservedReportExport;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -178,5 +179,9 @@ class FligthController extends Controller
 
     public function exportarReservasPasajesEmpresa(Request $request){
         return Excel::download(new ReservedReportExport($request->get('estado'), $request->get('fecha_inicio'), $request->get('fecha_final'), $request->get('numero_documento')), 'ReporteReservaPasaje_'.date('YmdHis').'.xlsx');
+    }
+
+    public function exportarPasajesReservadosReporte(Request $request){
+        return Excel::download(new PasajesReportExport($request->get('estado'), $request->get('fecha_inicio'), $request->get('fecha_final'), $request->get('numero_documento'), $request->get('tipo_servicio'), $request->get('idruta_viaje_precio')), 'ReporteReservaPasaje_'.date('YmdHis').'.xlsx');
     }
 }

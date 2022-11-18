@@ -44,7 +44,7 @@ class PasajesReportExport implements FromCollection, WithHeadings, WithEvents, S
 
     public function headings(): array
     {
-        return ['ESTADO','TIPO DE SERVICIO','DNI','PASAJERO','TELEFONO','EDAD','TIPO DE PASAJERO','PAC/ACOMP.','ORIGEN - DESTINO','FECHA DE CITA','FECHA DE VIAJE','MONTO'];
+        return ['ESTADO','TIPO DE SERVICIO','DNI','PASAJERO','TELEFONO','EDAD','TIPO DE PASAJERO','PAC/ACOMP.','ORIGEN - DESTINO','FECHA DE CITA','FECHA DE VIAJE'];
     }
 
     public function registerEvents(): array
@@ -67,14 +67,16 @@ class PasajesReportExport implements FromCollection, WithHeadings, WithEvents, S
         $dato['fecha_inicio'] = isset($this->fecha_inicio)?$this->fecha_inicio:null;
         $dato['fecha_final'] = isset($this->fecha_final)?$this->fecha_final:null;
         $dato['numero_documento'] = isset($this->dni)?$this->dni:null;
+        $dato['tipo_servicio'] = isset($this->tipo_servicio)?$this->tipo_servicio:null;
+        $dato['idruta_viaje_precio'] = isset($this->idruta_viaje_precio)?$this->idruta_viaje_precio:null;
         $params = (array)$dato;
 
         $result = $this->service->listarPasajesReservados($params);
         $data = array();
         foreach ($result as $item){
-            $data[] = array('nom_estado' => $item->nom_estado, 'dni' => $item->numero_documento, 'pasajero' => $item->apellido_paterno.' '.$item->apellido_materno.' '.$item->nombres, 'telefono' => $item->telefono,
-                'edad' => $item->edad, 'tipo_pasajero' => $item->tipo_pasajero, 'pac_acomp' => $item->tipo_paciente, 'tipo_servicio' => $item->tipo_servicio, 'origen_destino' => $item->nomb_origen_destino,
-                'fecha_cita' => $item->fecha_cita, 'fecha_viaje' => $item->fecha_viaje, 'monto' => $item->monto_empresa);
+            $data[] = array('nom_estado' => $item->nom_estado, 'tipo_servicio' => $item->tipo_servicio, 'dni' => $item->numero_documento, 'pasajero' => $item->apellido_paterno.' '.$item->apellido_materno.' '.$item->nombres, 'telefono' => $item->telefono,
+                'edad' => $item->edad, 'tipo_pasajero' => $item->tipo_pasajero, 'pac_acomp' => $item->tipo_paciente, 'origen_destino' => $item->nomb_origen_destino,
+                'fecha_cita' => $item->fecha_cita, 'fecha_viaje' => $item->fecha_viaje);
         }
 
         $collection = collect($data);

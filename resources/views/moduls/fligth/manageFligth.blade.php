@@ -220,7 +220,8 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <form role="form" method="post">
+                    <form role="form" method="post" action="{{ url('exportarPasajesReservadosReporte') }}">
+                        @csrf
                         <div class="row">
                             <div class="col-lg-2">
                                 <div class="form-group">
@@ -287,7 +288,11 @@
                             <div class="col-lg-2">
                                 <div style="padding-top: 35px !important;" class="text-center align-items-center justify-content-center">
                                     <button type="button" class="btn btn-block btn-default" ng-click="listar()"><i class="fas fa-search"></i> Buscar</button>
-                                    <button type="submit" class="btn btn-block btn-primary" ><i class="fas fa-file-excel"></i> Exportar</button>
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div style="padding-top: 35px !important;" class="text-center align-items-center justify-content-center">
+                                    <button type="submit" class="btn btn-block btn-success" ><i class="fas fa-file-excel"></i> Exportar</button>
                                 </div>
                             </div>
                         </div>
