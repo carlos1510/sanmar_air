@@ -30,6 +30,8 @@ class PasajesReportExport implements FromCollection, WithHeadings, WithEvents, S
         $this->fecha_inicio = $fecha_inicio;
         $this->fecha_final = $fecha_final;
         $this->dni = $dni;
+        $this->tipo_servicio = $tipo_servicio;
+        $this->idruta_viaje_precio = $idruta_viaje_precio;
     }
 
     public function styles(Worksheet $sheet)
@@ -42,7 +44,7 @@ class PasajesReportExport implements FromCollection, WithHeadings, WithEvents, S
 
     public function headings(): array
     {
-        return ['ESTADO','DNI','PASAJERO','TELEFONO','EDAD','TIPO DE PASAJERO','PAC/ACOMP.','TIPO DE SERVICIO','ORIGEN - DESTINO','FECHA DE CITA','FECHA DE VIAJE','MONTO'];
+        return ['ESTADO','TIPO DE SERVICIO','DNI','PASAJERO','TELEFONO','EDAD','TIPO DE PASAJERO','PAC/ACOMP.','ORIGEN - DESTINO','FECHA DE CITA','FECHA DE VIAJE','MONTO'];
     }
 
     public function registerEvents(): array
