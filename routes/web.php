@@ -23,6 +23,7 @@ Route::get('/usuario', 'App\Http\Controllers\HomeController@viewUser');
 Route::get('/administrar_vuelo', 'App\Http\Controllers\HomeController@viewManageFligth');
 Route::get('/reservados', 'App\Http\Controllers\HomeController@viewReserved');
 Route::get('/proforma', 'App\Http\Controllers\HomeController@viewReportProforma');
+Route::get('/indicadores', 'App\Http\Controllers\HomeController@viewIndicadores');
 
 // Rutas Usuarios
 Route::post('usuario/login', 'App\Http\Controllers\UserController@login');

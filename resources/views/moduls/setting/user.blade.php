@@ -49,6 +49,8 @@
                                             <option value="1">Administrador</option>
                                             <option value="2">EsSalud</option>
                                             <option value="3">Empresa</option>
+                                            <option value="4">Secretaria</option>
+                                            <option value="5">Establecimiento</option>
                                         </select>
                                     </div>
                                 </div>

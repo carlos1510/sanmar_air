@@ -440,6 +440,64 @@ app.controller('fligthController', function ($scope, $http, $timeout, vuelosServ
         }
     }
 
+    $scope.prepararRecibirPasaje = function (item) {
+        $scope.registro = {};
+        $scope.registro = item;
+        $scope.registro.detalle_acompanante = [];
+        vuelosService.obtenerListaAcompanantes({idpasaje_paciente: item.idpasaje_paciente}).success(function (data) {
+            $scope.registro.detalle_acompanante = data;
+        })
+        vuelosService.obtenerListaPersonalSalud({idpasaje_paciente: item.idpasaje_paciente}).success(function (data) {
+            $scope.registro.detalle_personal = data;
+        })
+        $timeout(function () {
+            $("#estadoRecibidocmb").val(2).change();
+            $scope.estado_registro = 2;
+        }, 100);
+    }
+
+    $scope.guardarRecibirPasaje = function () {
+        var valid = true;
+        valid = validar_campo(['#estadoRecibidocmb']);
+
+        if (valid){
+            vuelosService.guardarConfirmarReservaPasaje($scope.registro).success(function (data) {
+                if (data.confirm == true){
+                    swal("Exito!", "Se registro correctamente la información!", {
+                        icon : "success",
+                        buttons: {
+                            confirm: {
+                                className : 'btn btn-success'
+                            }
+                        },
+                    });
+                    $timeout(function () {
+                        $scope.estado_registro = 0;
+                        $scope.listar();
+                    }, 0);
+                }else {
+                    swal("Error!", "No se pudo completar el registro!", {
+                        icon : "warning",
+                        buttons: {
+                            confirm: {
+                                className : 'btn btn-warning'
+                            }
+                        },
+                    });
+                }
+            })
+        }else {
+            swal("Error!", "Campos obligatorios!", {
+                icon : "danger",
+                buttons: {
+                    confirm: {
+                        className : 'btn btn-danger'
+                    }
+                },
+            });
+        }
+    }
+
     $scope.imprimirTickets = function () {
         var doc = new jsPDF("p","mm","a4");
         var indice = 0;

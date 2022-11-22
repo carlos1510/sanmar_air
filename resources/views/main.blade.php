@@ -208,7 +208,7 @@
 							</span>
                             <h4 class="text-section">Opciones</h4>
                         </li>
-                        @if(Session::get('idnivel') == 2 || Session::get('idnivel') == 1)
+                        @if(Session::get('idnivel') == 2 || Session::get('idnivel') == 1 || Session::get('idnivel') == 5)
                             <li @if(Session::get('menu_primario')=='vuelos')class="nav-item active" @else class="nav-item" @endif >
                                 <a href="{{ url('vuelos') }}">
                                     <i class="fas fa-plane"></i>
@@ -238,6 +238,14 @@
                                 <a href="{{ url('proforma') }}">
                                     <i class="fas fa-file-pdf"></i>
                                     <p>PROFORMA</p>
+                                </a>
+                            </li>
+                        @endif
+                        @if(Session::get('idnivel') == 1)
+                            <li @if(Session::get('menu_primario')=='indicadores')class="nav-item active" @else class="nav-item" @endif >
+                                <a href="{{ url('indicadores') }}">
+                                    <i class="fas fa-chart-bar"></i>
+                                    <p>INDICADORES</p>
                                 </a>
                             </li>
                         @endif

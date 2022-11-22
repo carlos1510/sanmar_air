@@ -238,9 +238,9 @@
                                     <label>Estado:</label>
                                     <select class="form-control" id="estadobuscarcmb" placeholder="Seleccione" ng-model="filtro.estado" name="estado">
                                         <option value="">TODOS</option>
-                                        <option value="1">PENDIENTE</option>
-                                        <option value="2">ACEPTADO</option>
-                                        <option value="3">OBSERVADOS</option>
+                                        <option value="2">PENDIENTE</option>
+                                        <option value="3">ACEPTADO</option>
+                                        <option value="4">OBSERVADOS</option>
                                     </select>
                                 </div>
                             </div>
@@ -319,7 +319,7 @@
                             <tbody>
                             <tr ng-repeat="item in lista">
                                 <td>@{{ ($index + 1) }}</td>
-                                <td class="text-center"><i ng-class="{'flaticon-success text-success text-xl-center': item.estado==2, 'flaticon-exclamation text-warning': item.estado==3, 'flaticon-round text-primary': item.estado==1}"></i></td>
+                                <td class="text-center"><i ng-class="{'flaticon-round text-primary text-xl-center': item.estado==2, 'flaticon-success text-success text-xl-center': item.estado==3, 'flaticon-exclamation text-warning': item.estado==4}"></i></td>
                                 <td>@{{ item.tipo_servicio }}</td>
                                 <td>@{{ item.numero_documento }}</td>
                                 <td>@{{ item.apellido_paterno }} @{{ item.apellido_materno }} @{{ item.nombres }}</td>
@@ -333,10 +333,10 @@
                                 <td>
                                     <div class="text-center align-items-center justify-content-center">
                                         <button type="button" ng-show="item.tipo_paciente=='PACIENTE'" data-toggle="modal" data-target="#verDocumentosModal" ng-click="listarArchivos(item.idpasaje_paciente)" class="btn btn-success btn-sm" title="Ver Archivos"><i class="fas fa-download"></i></button>
-                                        <button type="button" ng-show="item.estado==3 && item.tipo_paciente=='PACIENTE'" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#verObservacionModal" ng-click="prepararVerObservacion(item)" title="Ver Observacion"><i class="fas fa-eye"></i></button>
-                                        <button type="button" ng-show="item.estado==3 && item.tipo_paciente=='PACIENTE'" class="btn btn-success btn-sm"  ng-click="prepararEditar(item)"  title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button type="button" ng-show="item.estado==4 && item.tipo_paciente=='PACIENTE'" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#verObservacionModal" ng-click="prepararVerObservacion(item)" title="Ver Observacion"><i class="fas fa-eye"></i></button>
+                                        <button type="button" ng-show="item.estado==4 && item.tipo_paciente=='PACIENTE'" class="btn btn-success btn-sm"  ng-click="prepararEditar(item)"  title="Editar"><i class="fas fa-edit"></i></button>
                                         <button type="button" ng-show="item.tipo_paciente=='PACIENTE'" class="btn btn-primary btn-sm" ng-click="prepararAsignar(item)" title="Asignar Empresa"><i class="fas fa-check"></i></button>
-                                        <button type="button" ng-show="(item.estado==1 || item.estado==3) && item.tipo_paciente=='PACIENTE'" class="btn btn-danger btn-sm" ng-click="eliminarPasaje(item)" title="Anular o Eliminar"><i class="fas fa-times"></i></button>
+                                        <button type="button" ng-show="(item.estado==2 || item.estado==4) && item.tipo_paciente=='PACIENTE'" class="btn btn-danger btn-sm" ng-click="eliminarPasaje(item)" title="Anular o Eliminar"><i class="fas fa-times"></i></button>
                                     </div>
                                 </td>
                             </tr>

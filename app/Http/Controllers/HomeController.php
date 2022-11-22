@@ -147,4 +147,19 @@ class HomeController extends Controller
             return redirect('/');
         }
     }
+
+    /**
+     * Vista Reporte Indicadores
+     * @param Request $request
+     * @return void
+     */
+    public function viewIndicadores(Request $request)
+    {
+        if(Session::has('idusuario')){
+            Session::put('menu_primario', 'indicadores');
+            return view('moduls.report.indicadores');
+        }else{
+            return redirect('/');
+        }
+    }
 }

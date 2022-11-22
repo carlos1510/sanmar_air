@@ -79,7 +79,8 @@
                                 </div>
                                 <div class="col-lg-3">
                                     <div class="form-group form-group-default">
-                                        <label>Fecha de Cita</label>
+                                        <label class="form-label" ng-show="registro.tipo_servicio == 'PASAJE AEREO'" >Fecha Cita</label>
+                                        <label class="form-label" ng-show="registro.tipo_servicio == 'VUELO CHARTER'">Fecha de Charter</label>
                                         <input class="form-control" type="text" ng-model="registro.fecha_cita" readonly>
                                     </div>
                                 </div>
@@ -89,8 +90,8 @@
                                     <div class="form-group form-group-default">
                                         <label>Estado</label>
                                         <select id="estadocmb" class="form-control" ng-model="registro.estado">
-                                            <option value="2">Aceptado</option>
-                                            <option value="3">Observado</option>
+                                            <option value="3">Aceptado</option>
+                                            <option value="4">Observado</option>
                                         </select>
                                     </div>
                                 </div>
@@ -215,9 +216,9 @@
                                     <label>Estado:</label>
                                     <select class="form-control" id="estado_busquedacmb" placeholder="Seleccione" ng-model="filtro.estado" name="estado">
                                         <option value="">TODOS</option>
-                                        <option value="1">PENDIENTE</option>
-                                        <option value="2">ACEPTADO</option>
-                                        <option value="3">OBSERVADO</option>
+                                        <option value="2">PENDIENTE</option>
+                                        <option value="3">ACEPTADO</option>
+                                        <option value="4">OBSERVADO</option>
                                     </select>
                                 </div>
                             </div>
@@ -284,7 +285,7 @@
                             <tbody>
                             <tr ng-repeat="item in lista">
                                 <td>@{{ ($index + 1) }}</td>
-                                <td class="text-center"><i ng-class="{'flaticon-success text-success text-xl-center': item.estado==2, 'flaticon-exclamation text-warning': item.estado==3, 'flaticon-round text-primary': item.estado==1}"></i></td>
+                                <td class="text-center"><i ng-class="{'flaticon-round text-primary text-xl-center': item.estado==2, 'flaticon-success text-success': item.estado==3, 'flaticon-exclamation text-warning': item.estado==4, 'flaticon-round text-primary': item.estado==1}"></i></td>
                                 <td>@{{ item.numero_documento }}</td>
                                 <td>@{{ item.apellido_paterno }} @{{ item.apellido_materno }} @{{ item.nombres }}</td>
                                 <td>@{{ item.telefono }}</td>

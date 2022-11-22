@@ -518,13 +518,19 @@ class FligthRepository
         $sql = "SELECT pp.id AS idpasaje_paciente, pp.idpersona, pp.tipo, pp.vuelos, pp.idruta_viaje_precio, DATE_FORMAT(pp.fecha_cita,'%d/%m/%Y') AS fecha_cita, DATE_FORMAT(IFNULL(pp.fecha_viaje,pp.fecha_salida),'%d/%m/%Y') AS fecha_salida, pp.ida_retorno,
             DATE_FORMAT(pp.fecha_viaje,'%d/%m/%Y') AS fecha_viaje, DATE_FORMAT(pp.fecha_retorno,'%d/%m/%Y') AS fecha_retorno, pp.tipo_pasajero, pp.edad, pp.observacion, pp.tipo_paciente, pp.idpasaje_paciente_ac, pp.codigo, pp.codigo_generado, pp.diagnostico,
             p.idtipo_documento, p.numero_documento, p.apellido_paterno, p.apellido_materno, p.nombres, p.sexo, DATE_FORMAT(p.fecha_nacimiento,'%d/%m/%Y') AS fecha_nacimiento, p.telefono,pp.monto_empresa, pp.idempresa, pp.unidad_medida, pp.cantidad, pp.precio_unitario,
-            p.correo, p.direccion, IF(pp.estado=1, 'PENDIENTE', IF(pp.estado=2,'APROVADO',IF(pp.estado=3, 'OBSERVADO', 'ELIMINADO'))) AS nom_estado, pp.estado, pp.tipo_servicio, IF(pp.tipo_servicio='PASAJE AEREO',CONCAT_WS(' - ',rvp.origen,rvp.destino),CONCAT_WS(' - ',rvp.origen,rvp.destino,rvp.origen)) AS nomb_origen_destino, rvp.origen, rvp.destino
+            p.correo, p.direccion, IF(pp.estado=1, 'PENDIENTE', IF(pp.estado=2,'RECIBIDO',IF(pp.estado=3, 'APROVADO', IF(pp.estado=4, 'OBSERVADO', 'ELIMINADO')))) AS nom_estado, pp.estado, pp.tipo_servicio, IF(pp.tipo_servicio='PASAJE AEREO',CONCAT_WS(' - ',rvp.origen,rvp.destino),CONCAT_WS(' - ',rvp.origen,rvp.destino,rvp.origen)) AS nomb_origen_destino, rvp.origen, rvp.destino
              FROM pasaje_paciente pp INNER JOIN persona p ON pp.idpersona=p.id
              INNER JOIN ruta_viaje_precio rvp ON pp.idruta_viaje_precio=rvp.id
             WHERE (pp.tipo IN (1,2) OR pp.tipo is null)".
             (isset($params->estado)?($params->estado!=""?" AND pp.estado=$params->estado":""):"").
             (isset($params->numero_documento)?($params->numero_documento!=""?" AND p.numero_documento='$params->numero_documento'":""):"").
             (isset($params->fecha_inicio)?($params->fecha_inicio!=""?(isset($params->fecha_final)?($params->fecha_final!=""?" AND pp.fecha_cita BETWEEN '".Util::convertirStringFecha($params->fecha_inicio, false)."' AND '".Util::convertirStringFecha($params->fecha_final, false)."'":""):""):""):"");
+
+        if(Session::has('idnivel')){
+            if (Session::get('idnivel') == 5){
+                $sql.=" AND pp.idusuario=".Session::get('idusuario');
+            }
+        }
         return DB::select($sql);
     }
 
@@ -532,11 +538,11 @@ class FligthRepository
         $sql = "SELECT pp.id AS idpasaje_paciente, pp.idpersona, pp.vuelos, pp.idruta_viaje_precio, DATE_FORMAT(pp.fecha_cita,'%d/%m/%Y') AS fecha_cita, DATE_FORMAT(IFNULL(pp.fecha_viaje,pp.fecha_salida),'%d/%m/%Y') AS fecha_salida, pp.ida_retorno,
             DATE_FORMAT(pp.fecha_viaje,'%d/%m/%Y') AS fecha_viaje, DATE_FORMAT(pp.fecha_retorno,'%d/%m/%Y') AS fecha_retorno, pp.tipo_pasajero, pp.edad, pp.observacion, pp.tipo_paciente, pp.idpasaje_paciente_ac, pp.codigo, pp.codigo_generado, pp.diagnostico,
             p.idtipo_documento, p.numero_documento, p.apellido_paterno, p.apellido_materno, p.nombres, p.sexo, DATE_FORMAT(p.fecha_nacimiento,'%d/%m/%Y') AS fecha_nacimiento, p.telefono,pp.monto_empresa, pp.idempresa, pp.unidad_medida, pp.cantidad, pp.precio_unitario,
-            p.correo, p.direccion, IF(pp.estado=1, 'PENDIENTE', IF(pp.estado=2,'APROVADO',IF(pp.estado=3, 'OBSERVADO', 'ELIMINADO'))) AS nom_estado, pp.estado, pp.tipo_servicio, IF(pp.tipo_servicio='PASAJE AEREO',CONCAT_WS(' - ',rvp.origen,rvp.destino),CONCAT_WS(' - ',rvp.origen,rvp.destino,rvp.origen)) AS nomb_origen_destino
+            p.correo, p.direccion, IF(pp.estado=2, 'PENDIENTE', IF(pp.estado=3,'APROVADO',IF(pp.estado=4, 'OBSERVADO', 'ELIMINADO'))) AS nom_estado, pp.estado, pp.tipo_servicio, IF(pp.tipo_servicio='PASAJE AEREO',CONCAT_WS(' - ',rvp.origen,rvp.destino),CONCAT_WS(' - ',rvp.origen,rvp.destino,rvp.origen)) AS nomb_origen_destino
              FROM pasaje_paciente pp INNER JOIN persona p ON pp.idpersona=p.id
              INNER JOIN ruta_viaje_precio rvp ON pp.idruta_viaje_precio=rvp.id
             WHERE pp.tipo IN (1,2) ".
-            (isset($params->estado)?($params->estado!=""?" AND pp.estado=$params->estado ":" AND pp.estado!=0 "):" AND pp.estado!=0 ").
+            (isset($params->estado)?($params->estado!=""?" AND pp.estado=$params->estado ":" AND pp.estado > 1 "):" AND pp.estado > 1 ").
             (Session::get('idnivel')==1?"":" AND pp.idempresa=".Session::get('idempresa')).
             (isset($params->numero_documento)?($params->numero_documento!=""?" AND p.numero_documento='$params->numero_documento'":""):"").
             (isset($params->fecha_inicio)?($params->fecha_inicio!=""?(isset($params->fecha_final)?($params->fecha_final!=""?" AND pp.fecha_viaje BETWEEN '".Util::convertirStringFecha($params->fecha_inicio, false)."' AND '".Util::convertirStringFecha($params->fecha_final, false)."'":""):""):""):"");
@@ -550,9 +556,9 @@ class FligthRepository
                 'fecha_viaje' => isset($params->fecha_viaje)?($params->fecha_viaje!=""?Util::convertirStringFecha($params->fecha_viaje, false):null):null,
                 'fecha_retorno' => isset($params->fecha_retorno)?($params->fecha_retorno!=""?Util::convertirStringFecha($params->fecha_retorno, false):null):null,
                 'observacion' => isset($params->observacion)?$params->observacion:null,
-                'monto_empresa' => isset($params->monto_empresa)?$params->monto_empresa:null,
-                'idempresa' => isset($params->idempresa)?$params->idempresa:null,
-                'precio_unitario' => isset($params->precio_unitario)?$params->precio_unitario:null,
+                'monto_empresa' => isset($params->monto_empresa)?$params->monto_empresa:0,
+                'idempresa' => isset($params->idempresa)?$params->idempresa:(Session::get('idnivel')==2?($params->tipo_servicio == 'VUELO CHARTER'?null:1):null),
+                'precio_unitario' => isset($params->precio_unitario)?$params->precio_unitario:0,
                 'fecha_modificacion' => date('Y-m-d H:i:s'),
                 'idusuario_modificacion' => Session::get('idusuario'),
                 'estado' => isset($params->estado)?$params->estado:1,
@@ -564,9 +570,9 @@ class FligthRepository
                     'fecha_viaje' => isset($params->fecha_viaje)?($params->fecha_viaje!=""?Util::convertirStringFecha($params->fecha_viaje, false):null):null,
                     'fecha_retorno' => isset($params->fecha_retorno)?($params->fecha_retorno!=""?Util::convertirStringFecha($params->fecha_retorno, false):null):null,
                     'observacion' => isset($params->observacion)?$params->observacion:null,
-                    'monto_empresa' => ($params->tipo_servicio == 'VUELO CHARTER'?0:(isset($params->monto_empresa)?$params->monto_empresa:null)),
-                    'idempresa' => isset($params->idempresa)?$params->idempresa:null,
-                    'precio_unitario' => ($params->tipo_servicio == 'VUELO CHARTER'?0:(isset($params->precio_unitario)?$params->precio_unitario:null)),
+                    'monto_empresa' => ($params->tipo_servicio == 'VUELO CHARTER'?0:(isset($params->monto_empresa)?$params->monto_empresa:0)),
+                    'idempresa' => isset($params->idempresa)?$params->idempresa:(Session::get('idnivel')==2?($params->tipo_servicio == 'VUELO CHARTER'?null:1):null),
+                    'precio_unitario' => ($params->tipo_servicio == 'VUELO CHARTER'?0:(isset($params->precio_unitario)?$params->precio_unitario:0)),
                     'fecha_modificacion' => date('Y-m-d H:i:s'),
                     'idusuario_modificacion' => Session::get('idusuario'),
                     'estado' => isset($params->estado)?$params->estado:1,
@@ -581,8 +587,8 @@ class FligthRepository
                     'fecha_retorno' => isset($params->fecha_retorno)?($params->fecha_retorno!=""?Util::convertirStringFecha($params->fecha_retorno, false):null):null,
                     'observacion' => isset($params->observacion)?$params->observacion:null,
                     'monto_empresa' => 0,
-                    'idempresa' => isset($params->idempresa)?$params->idempresa:null,
-                    'precio_unitario' => ($params->tipo_servicio == 'VUELO CHARTER'?0:(isset($params->precio_unitario)?$params->precio_unitario:null)),
+                    'idempresa' => isset($params->idempresa)?$params->idempresa:(Session::get('idnivel')==2?($params->tipo_servicio == 'VUELO CHARTER'?null:1):null),
+                    'precio_unitario' => ($params->tipo_servicio == 'VUELO CHARTER'?0:(isset($params->precio_unitario)?$params->precio_unitario:0)),
                     'fecha_modificacion' => date('Y-m-d H:i:s'),
                     'idusuario_modificacion' => Session::get('idusuario'),
                     'estado' => isset($params->estado)?$params->estado:1,
@@ -616,12 +622,12 @@ class FligthRepository
         $sql = "SELECT pp.id AS idpasaje_paciente, pp.idpersona, pp.vuelos, pp.idruta_viaje_precio, DATE_FORMAT(pp.fecha_cita,'%d/%m/%Y') AS fecha_cita, DATE_FORMAT(IFNULL(pp.fecha_viaje,pp.fecha_salida),'%d/%m/%Y') AS fecha_salida, pp.ida_retorno,
             DATE_FORMAT(pp.fecha_viaje,'%d/%m/%Y') AS fecha_viaje, DATE_FORMAT(pp.fecha_retorno,'%d/%m/%Y') AS fecha_retorno, pp.tipo_pasajero, pp.edad, pp.observacion, pp.tipo_paciente, pp.idpasaje_paciente_ac, pp.diagnostico,
             p.idtipo_documento, p.numero_documento, p.apellido_paterno, p.apellido_materno, p.nombres, p.sexo, DATE_FORMAT(p.fecha_nacimiento,'%d/%m/%Y') AS fecha_nacimiento, p.telefono,pp.monto_empresa, pp.idempresa,
-            p.correo, p.direccion, IF(pp.estado=1, 'PENDIENTE', IF(pp.estado=2,'APROVADO',IF(pp.estado=3, 'OBSERVADO', 'ELIMINADO'))) AS nom_estado, pp.estado, pp.tipo_servicio, IF(pp.tipo_servicio='PASAJE AEREO',CONCAT_WS(' - ',rvp.origen,rvp.destino),CONCAT_WS(' - ',rvp.origen,rvp.destino,rvp.origen)) AS nomb_origen_destino,
+            p.correo, p.direccion, IF(pp.estado=2, 'PENDIENTE', IF(pp.estado=3,'APROVADO',IF(pp.estado=4, 'OBSERVADO', 'ELIMINADO'))) AS nom_estado, pp.estado, pp.tipo_servicio, IF(pp.tipo_servicio='PASAJE AEREO',CONCAT_WS(' - ',rvp.origen,rvp.destino),CONCAT_WS(' - ',rvp.origen,rvp.destino,rvp.origen)) AS nomb_origen_destino,
             pp.unidad_medida, pp.cantidad, pp.precio_unitario
              FROM pasaje_paciente pp INNER JOIN persona p ON pp.idpersona=p.id
              INNER JOIN ruta_viaje_precio rvp ON pp.idruta_viaje_precio=rvp.id
             WHERE (pp.tipo IN (1,2) OR pp.tipo IS NULL) ".
-            (isset($params->estado)?($params->estado!=""?" AND pp.estado=$params->estado ":" AND pp.estado!=0 "):" AND pp.estado!=0 ").
+            (isset($params->estado)?($params->estado!=""?" AND pp.estado=$params->estado ":" AND pp.estado>1 "):" AND pp.estado>1 ").
             (isset($params->numero_documento)?($params->numero_documento!=""?" AND p.numero_documento='$params->numero_documento'":""):"").
             (isset($params->tipo_servicio)?($params->tipo_servicio!=""?" AND pp.tipo_servicio='$params->tipo_servicio'":""):"").
             (isset($params->idruta_viaje_precio)?($params->idruta_viaje_precio!=""?" AND pp.idruta_viaje_precio=$params->idruta_viaje_precio":""):"").
@@ -655,19 +661,19 @@ class FligthRepository
 
              FROM pasaje_paciente pp INNER JOIN persona p ON pp.idpersona=p.id
              INNER JOIN ruta_viaje_precio rvp ON pp.idruta_viaje_precio=rvp.id
-            WHERE pp.tipo IN (1,2) AND pp.estado=2 AND pp.tipo_servicio='PASAJE AEREO' ".
+            WHERE pp.tipo IN (1,2) AND pp.estado=3 AND pp.tipo_servicio='PASAJE AEREO' ".
                 (isset($params->idruta_viaje_precio)?($params->idruta_viaje_precio!=""?" AND pp.idruta_viaje_precio=$params->idruta_viaje_precio":""):"").
                 (isset($params->fecha_inicio)?($params->fecha_inicio!=""?(isset($params->fecha_final)?($params->fecha_final!=""?" AND pp.fecha_viaje BETWEEN '".Util::convertirStringFecha($params->fecha_inicio, false)."' AND '".Util::convertirStringFecha($params->fecha_final, false)."'":""):""):""):"");
         }else{
             //charter
             $sql = "SELECT pp.id as idpasaje_paciente, pp.tipo_servicio, CONCAT_WS(' - ',rvp.origen,rvp.destino) AS nomb_origen_destino, p.apellido_paterno, p.apellido_materno, p.nombres, DATE_FORMAT(pp.fecha_viaje, '%d/%m/%Y') as fecha_viaje, pp.diagnostico, p.numero_documento, pp.edad,
-                IF(pp.tipo_servicio='VUELO CHARTER',CONCAT_WS(' ','SERVICIO',pp.tipo_servicio,'EN LA RUTA',CONCAT_WS(' - ',rvp.origen,rvp.destino)),'') AS descripcion, pp.unidad_medida, pp.cantidad, pp.precio_unitario, (pp.precio_unitario * pp.cantidad) as total,
+                IF(pp.tipo_servicio='VUELO CHARTER',CONCAT_WS(' ','SERVICIO',pp.tipo_servicio,'EN LA RUTA',CONCAT_WS(' - ',rvp.origen,rvp.destino, rvp.origen)),'') AS descripcion, pp.unidad_medida, pp.cantidad, pp.precio_unitario, (pp.precio_unitario * pp.cantidad) as total,
                 IF(pp.tipo_servicio='VUELO CHARTER','SERVICIO VUELO CHARTER EN LA', CONCAT_WS(' ',pp.tipo_servicio, CONCAT_WS(' - ',rvp.origen,rvp.destino))) AS descrip_1,
                 IF(pp.tipo_servicio='VUELO CHARTER',CONCAT_WS(' ','RUTA ', CONCAT_WS(' - ',rvp.origen,rvp.destino)), '') AS descrip_2,
                 IF(pp.tipo_servicio='VUELO CHARTER',CONCAT_WS(' - ','',rvp.origen),'') AS descrip_3
              FROM pasaje_paciente pp INNER JOIN persona p ON pp.idpersona=p.id
              INNER JOIN ruta_viaje_precio rvp ON pp.idruta_viaje_precio=rvp.id
-            WHERE pp.tipo IN (1,2) AND pp.estado=2 AND pp.tipo_servicio='VUELO CHARTER' AND pp.tipo_paciente='PACIENTE' ".
+            WHERE pp.tipo IN (1,2) AND pp.estado=3 AND pp.tipo_servicio='VUELO CHARTER' AND pp.tipo_paciente='PACIENTE' ".
                 (isset($params->idruta_viaje_precio)?($params->idruta_viaje_precio!=""?" AND pp.idruta_viaje_precio=$params->idruta_viaje_precio":""):"").
                 (isset($params->fecha_inicio)?($params->fecha_inicio!=""?(isset($params->fecha_final)?($params->fecha_final!=""?" AND pp.fecha_viaje BETWEEN '".Util::convertirStringFecha($params->fecha_inicio, false)."' AND '".Util::convertirStringFecha($params->fecha_final, false)."'":""):""):""):"");
         }

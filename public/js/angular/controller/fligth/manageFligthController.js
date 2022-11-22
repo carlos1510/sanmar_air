@@ -29,7 +29,7 @@ app.controller('manageFligthController', function ($scope, $timeout, empresaServ
         var primerDia = new Date(date.getFullYear(), date.getMonth() , 1);
         var ultimoDia = new Date(date.getFullYear(), (date.getMonth() + 1), 0);
         $timeout(function () {
-            $("#estadobuscarcmb").val(1).change();
+            $("#estadobuscarcmb").val(2).change();
         }, 0);
 
         //$scope.filtro.fecha_inicio = ('0'+primerDia.getDate()).toString().substr(-2)+'/'+('0'+(primerDia.getMonth()+1)).toString().substr(-2)+'/'+primerDia.getFullYear();
