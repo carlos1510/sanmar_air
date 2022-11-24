@@ -85,6 +85,9 @@
                 </a>
 
             </div>
+        @endif
+
+        @if(Session::get('idnivel') == 1 || Session::get('idnivel') == 4)
             <div class="col-lg-3">
                 <a href="{{ url('proforma') }}" style="text-decoration: none" >
                     <div class="card card-stats card-danger card-round">

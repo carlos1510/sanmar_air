@@ -161,7 +161,10 @@
                                     <label for="choices-single-default" class="form-label ">Origen - Destino <span class="text-danger">(*)</span></label>
                                     <select class="form-control" data-trigger id="origen_destinocmb" placeholder="Seleccione" ng-model="registro.idruta_viaje_precio" >
                                         <option value="">---</option>
-                                        <option ng-repeat="item in rutas" value="@{{ item.id }}">@{{ item.nom_ruta }}</option>
+                                        <option value="1" ng-show="(registro.tipo_servicio == 'PASAJE AEREO' && registro.ida_retorno == 'RETORNO') || registro.tipo_servicio == 'VUELO CHARTER'">PUCALLPA - ATALAYA</option>
+                                        <option value="2" ng-show="(registro.tipo_servicio == 'PASAJE AEREO' && registro.ida_retorno == 'RETORNO') || registro.tipo_servicio == 'VUELO CHARTER'">PUCALLPA - CONTAMANA</option>
+                                        <option value="3" ng-show="registro.tipo_servicio == 'PASAJE AEREO' && registro.ida_retorno == 'IDA'">ATALAYA - PUCALLPA</option>
+                                        <option value="4" ng-show="registro.tipo_servicio == 'PASAJE AEREO' && registro.ida_retorno == 'IDA'">CONTAMANA - PUCALLPA</option>
                                     </select>
                                 </div>
                             </div>

@@ -280,7 +280,7 @@ app.controller('proformaController', function ($scope, $timeout, empresaService,
         })
         $timeout(function () {
             $scope.generarOficio(1);
-        }, 700);
+        }, 1000);
     }
 
     $scope.verListaActaConformidad = function () {
@@ -310,7 +310,7 @@ app.controller('proformaController', function ($scope, $timeout, empresaService,
         })
         $timeout(function () {
             $scope.generarActa(1);
-        }, 700);
+        }, 1000);
     }
 
     $scope.generarDeclaracionJurada = function () {
@@ -606,38 +606,11 @@ app.controller('proformaController', function ($scope, $timeout, empresaService,
                     for (var i=0; i < $scope.lista.length; i++){
                         pdf.rect(10, posicion_recta, 15, 14, 'S'); pdf.text(''+indice, 17, posicion_top_texto, 'center');
                         pdf.rect(25, posicion_recta, 84, 14, 'S');
-                        if ($scope.lista[i].descrip_2.length < 19 ){
-                            padding_left_descp2 = 43;
-                        }else {
-                            if ($scope.lista[i].descrip_2.length >18 && $scope.lista[i].descrip_2.length < 25){
-                                padding_left_descp2 = 45;
-                            }else {
-                                if ($scope.lista[i].descrip_2.length >24 && $scope.lista[i].descrip_2.length < 31){
-                                    padding_left_descp2 = 50;
-                                }else {
-                                    if ($scope.lista[i].descrip_2.length >30 && $scope.lista[i].descrip_2.length < 38){
-                                        padding_left_descp2 = 55;
-                                    }else {
-                                        if ($scope.lista[i].descrip_2.length >37 && $scope.lista[i].descrip_2.length < 45){
-                                            padding_left_descp2 = 60;
-                                        }else {
-                                            if ($scope.lista[i].descrip_2.length >44 && $scope.lista[i].descrip_2.length < 50){
-                                                padding_left_descp2 = 65;
-                                            }else {
-                                                if ($scope.lista[i].descrip_2.length > 50){
-                                                    padding_left_descp2 = 67;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
 
-                        }
                         valor_total+=parseFloat($scope.lista[i].precio_unitario);
-                        pdf.text(''+$scope.lista[i].descrip_1, 55, posicion_top_texto_descripcion1, 'center');
-                        pdf.text(''+$scope.lista[i].descrip_2, padding_left_descp2, posicion_top_texto_descripcion2, 'center');
-                        pdf.text(''+$scope.lista[i].descrip_3, 48, posicion_top_texto_descripcion3, 'center');
+                        pdf.text(''+$scope.lista[i].descrip_1, 27, posicion_top_texto_descripcion1);
+                        pdf.text(''+$scope.lista[i].descrip_2, 27, posicion_top_texto_descripcion2);
+                        pdf.text(''+$scope.lista[i].descrip_3, 27, posicion_top_texto_descripcion3);
 
                         pdf.rect(109, posicion_recta, 23, 14, 'S'); pdf.text('1 ', 122, posicion_top_texto, 'center');
                         pdf.rect(132, posicion_recta, 23, 14, 'S'); pdf.text('NIU', 143, posicion_top_texto, 'center');
@@ -1145,7 +1118,7 @@ app.controller('proformaController', function ($scope, $timeout, empresaService,
             putOnlyUsedFonts:true
         };
         var pdf = new jsPDF(options);
-        if ($scope.oficio.tipo_servicio == 'PASAJE AEREO'){
+        if ($scope.acta_conformidad.tipo_servicio == 'PASAJE AEREO'){
             if (tipo == 0){
                 //nuevo
                 var valid = validar_campo(['#tipoServiciocmb','#rutaviajecmb','#fecha_iniciotxt','#fecha_finaltxt']);
@@ -1171,7 +1144,7 @@ app.controller('proformaController', function ($scope, $timeout, empresaService,
                         pdf.rect(155, 80, 35, 12, 'S'); pdf.text('PRECIO TOTAL', 173, 88, 'center');
                         pdf.setFont('Arial','normal');
                         pdf.rect(30, 92, 15, 15, 'S'); pdf.text('1', 35, 100, 'center');
-                        pdf.rect(45, 92, 70, 15, 'S'); pdf.text('' + $scope.acta_conformidad.nom_ruta + ';', 80, 100, 'center');
+                        pdf.rect(45, 92, 70, 15, 'S'); pdf.text('' + $scope.acta_conformidad.nom_ruta, 80, 100, 'center');
                         pdf.rect(115, 92, 40, 15, 'S'); pdf.text('' + $scope.acta_conformidad.fecha_inicio + ' al', 135, 98, 'center'); pdf.text('' + $scope.acta_conformidad.fecha_final, 135, 103, 'center');
                         pdf.rect(155, 92, 35, 15, 'S'); pdf.text('' + $scope.acta_conformidad.precio_total, 173, 100, 'center');
 
@@ -1241,7 +1214,7 @@ app.controller('proformaController', function ($scope, $timeout, empresaService,
                 pdf.rect(155, 80, 35, 12, 'S'); pdf.text('PRECIO TOTAL', 173, 88, 'center');
                 pdf.setFont('Arial','normal');
                 pdf.rect(30, 92, 15, 15, 'S'); pdf.text('1', 35, 100, 'center');
-                pdf.rect(45, 92, 70, 15, 'S'); pdf.text('' + $scope.acta_conformidad.nom_ruta + ';', 80, 100, 'center');
+                pdf.rect(45, 92, 70, 15, 'S'); pdf.text('' + $scope.acta_conformidad.nom_ruta, 80, 100, 'center');
                 pdf.rect(115, 92, 40, 15, 'S'); pdf.text('' + $scope.acta_conformidad.fecha_inicio + ' al', 135, 98, 'center'); pdf.text('' + $scope.acta_conformidad.fecha_final, 135, 103, 'center');
                 pdf.rect(155, 92, 35, 15, 'S'); pdf.text('' + $scope.acta_conformidad.precio_total, 173, 100, 'center');
 
@@ -1283,7 +1256,7 @@ app.controller('proformaController', function ($scope, $timeout, empresaService,
             var posicion_texto_top = 65;
             for (var i = 0; i < $scope.acta_conformidad.detalle.length; i++){
                 var nombre_paciente = $scope.acta_conformidad.detalle[i].apellido_paterno+' '+$scope.acta_conformidad.detalle[i].apellido_materno+', '+$scope.acta_conformidad.detalle[i].nombres;
-            
+
                 var nombre_profesional = $scope.acta_conformidad.detalle[i].ap_pat_prof + ' ' +$scope.acta_conformidad.detalle[i].ap_mat_prof + ', ' +$scope.acta_conformidad.detalle[i].nom_prof;
 
                 pdf.setFont('Arial','bold');
@@ -1291,7 +1264,7 @@ app.controller('proformaController', function ($scope, $timeout, empresaService,
                 pdf.setFont('Arial','normal');
                 pdf.text('(Asegurado al ESSALUD)', 70, posicion_texto_top, 'center');
                 posicion_texto_top+=5;
-                pdf.text('*  N y A', 35.4, posicion_texto_top, 'center'); pdf.text(':', 50, posicion_texto_top, 'center'); pdf.text('' + nombre_paciente, 55, posicion_texto_top); 
+                pdf.text('*  N y A', 35.4, posicion_texto_top, 'center'); pdf.text(':', 50, posicion_texto_top, 'center'); pdf.text('' + nombre_paciente, 55, posicion_texto_top);
                 posicion_texto_top+=5;
                 pdf.text('*  EDAD', 36, posicion_texto_top, 'center'); pdf.text(':', 50, posicion_texto_top, 'center'); pdf.text(''+$scope.acta_conformidad.detalle[i].edad+' AÑOS', 63, posicion_texto_top, 'center');
                 posicion_texto_top+=5;
@@ -1316,26 +1289,26 @@ app.controller('proformaController', function ($scope, $timeout, empresaService,
             if(posicion_texto_top > 265 && posicion_texto_top < 271){
                 pdf.addPage();
                 posicion_texto_top = 20;
-            } 
+            }
             pdf.setFontSize(10);
             pdf.text( 'Costo del servicio      : El expreso aéreo fue pactado por '+ formatter.format($scope.acta_conformidad.precio_total) +' soles.' , 25, posicion_texto_top);
             posicion_texto_top+=10;
             if(posicion_texto_top > 265 && posicion_texto_top < 271){
                 pdf.addPage();
                 posicion_texto_top = 20;
-            } 
+            }
             pdf.text( 'Servicio solicitado por : COORDINACIONES DE REFERENCIA Y CONTRAREFERENCIA, de' , 25, posicion_texto_top);
             posicion_texto_top+=5;
             if(posicion_texto_top > 265 && posicion_texto_top < 271){
                 pdf.addPage();
                 posicion_texto_top = 20;
-            } 
+            }
             pdf.text( 'pacientes asegurado al ESSALUD.' , 25, posicion_texto_top);
             posicion_texto_top+=10;
             if(posicion_texto_top > 265 && posicion_texto_top < 271){
                 pdf.addPage();
                 posicion_texto_top = 20;
-            } 
+            }
 
             pdf.text( '............................................................................................................................................................', 25, posicion_texto_top);
             posicion_texto_top+=10;
@@ -1358,12 +1331,12 @@ app.controller('proformaController', function ($scope, $timeout, empresaService,
                 }else{
                     posicion_texto_top+=44;
                 }
-                
+
             }
 
-            
 
-            
+
+
             pdf.addImage('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/' +
                 '2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wgARCAHnA6kDASIAAhEBAxEB/8QAGwABAAIDAQEAAAAAAAAAAAAAAAEGAwQFAgf/' +
                 'xAAXAQEBAQEAAAAAAAAAAAAAAAAAAQID/9oADAMBAAIQAxAAAAK1AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +

@@ -226,14 +226,15 @@
                             </li>
                         @endif
 
-                        @if(Session::get('idnivel') == 1 || Session::get('idnivel') == 4)
+                        @if(Session::get('idnivel') == 1)
                             <li @if(Session::get('menu_primario')=='administrar_vuelo')class="nav-item active" @else class="nav-item" @endif >
                                 <a href="{{ url('administrar_vuelo') }}">
                                     <i class="fas fa-route"></i>
                                     <p>ADMINISTRAR VUELOS</p>
                                 </a>
                             </li>
-
+                        @endif
+                        @if(Session::get('idnivel') == 1 || Session::get('idnivel') == 4)
                             <li @if(Session::get('menu_primario')=='proforma')class="nav-item active" @else class="nav-item" @endif >
                                 <a href="{{ url('proforma') }}">
                                     <i class="fas fa-file-pdf"></i>
@@ -249,7 +250,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if(Session::get('idnivel') == 1 || Session::get('idnivel') == 4)
+                        @if(Session::get('idnivel') == 1)
                             <li @if(Session::get('menu_primario')=='empresa')class="nav-item active" @else class="nav-item" @endif >
                                 <a href="{{ url('empresa') }}">
                                     <i class="fas fa-handshake"></i>
