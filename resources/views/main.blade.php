@@ -242,14 +242,14 @@
                                 </a>
                             </li>
                         @endif
-                        @if(Session::get('idnivel') == 1)
+                        {{--@if(Session::get('idnivel') == 1)
                             <li @if(Session::get('menu_primario')=='indicadores')class="nav-item active" @else class="nav-item" @endif >
                                 <a href="{{ url('indicadores') }}">
                                     <i class="fas fa-chart-bar"></i>
                                     <p>INDICADORES</p>
                                 </a>
                             </li>
-                        @endif
+                        @endif--}}
                         @if(Session::get('idnivel') == 1)
                             <li @if(Session::get('menu_primario')=='empresa')class="nav-item active" @else class="nav-item" @endif >
                                 <a href="{{ url('empresa') }}">

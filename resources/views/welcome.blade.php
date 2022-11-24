@@ -114,7 +114,7 @@
     </div>
     <div class="row">
         @if(Session::get('idnivel') == 1)
-            <div class="col-lg-3">
+            {{--<div class="col-lg-3">
                 <a href="{{ url('indicadores') }}" style="text-decoration: none" >
                     <div class="card card-stats card-info card-round">
                         <div class="card-body">
@@ -134,7 +134,7 @@
                         </div>
                     </div>
                 </a>
-            </div>
+            </div>--}}
             <div class="col-lg-3">
                 <a href="{{ url('empresa') }}" style="text-decoration: none" >
                     <div class="card card-stats card-warning card-round">
